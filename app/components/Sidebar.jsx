@@ -68,7 +68,6 @@ const Sidebar = () => {
 				sidebarButtons[i].classList.toggle('space-x-3');
 				sidebarButtons[i].classList.toggle('justify-center');
 				sidebarButtonIcon[i].classList.toggle('text-2xl');
-				// toggleSidebarIcon.classList.toggle('hidden');
 			}
 		} else {
 			sidebar.classList.toggle('w-72');
