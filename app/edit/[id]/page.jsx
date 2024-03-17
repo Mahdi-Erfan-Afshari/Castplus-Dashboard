@@ -1,7 +1,7 @@
-import YourEpisodeSection from "./YourEpisodeSection"
+import EditSection from "@/app/components/EditSection"
 import { server } from "@/app/lib/server"
 
-const DashboardPage = async () => {
+const editCurrentEpisode = async ({ params: { id } }) => {
 	const fetchPodcasts = async () => {
 		const res = await fetch(`${server}/api/podcasts`)
 		const data = await res.json();
@@ -11,10 +11,10 @@ const DashboardPage = async () => {
 	const data = await fetchPodcasts()
 
   return (
-	<>
-		<YourEpisodeSection data={data} />
-	</>
+	<div>
+		<EditSection id={id} data={data} />
+	</div>
   )
 }
 
-export default DashboardPage
+export default editCurrentEpisode

@@ -1,3 +1,25 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@font-face {
+	font-family: nunito;
+	src: url('C:\Users\Jon\Desktop\zz\nunito.ttf')  format('truetype');
+}
+@font-face {
+	font-family: vazir;
+	src: url('C:\Users\Jon\Desktop\zz\vazir.ttf')  format('truetype');
+}
+
+.nunito {
+	font-family: nunito;
+}
+
+.vazir {
+	font-family: vazir;
+}
+
+.number-input::-webkit-inner-spin-button {
+	-webkit-appearance: none;
+    margin: 0;
+}
