@@ -5,7 +5,7 @@ const editCurrentEpisode = async ({ params: { id } }) => {
 	const fetchPodcasts = async () => {
 		const res = await fetch(`${server}/api/podcasts`)
 		const data = await res.json();
-		return data
+		return data;
 	}
 	
 	const data = await fetchPodcasts()

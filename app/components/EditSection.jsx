@@ -3,7 +3,7 @@ import { HiOutlineTrash } from "react-icons/hi2";
 import { nunito } from "../utils/fonts"
 import { CgAdd } from "react-icons/cg";
 import Link from "next/link";
-import { server } from "@/app/api/podcasts/route"
+import { server } from "@/app/lib/server"
 
 const EditSection = ({ id, data }) => {
 	const episodes = data[0].episodes;
@@ -163,31 +163,14 @@ const EditSection = ({ id, data }) => {
 			},)
 			i++
 		})
-		console.log(sectionsList);
-		// console.log(JSON.stringify(sectionsList));
 		await fetch(`${server}/api/podcasts`,{
-        	method:'PUT',
+        	method:'POST',
         	cache:'no-cache',
-        	body:JSON.stringify(
+        	body:JSON.stringify({
+				'id': data[0].id,
 				sectionsList
-			)
+			})
     	})
-		// await fetch(`${server}/api/podcasts`,{
-        // 	method:'PUT',
-        // 	cache:'no-cache',
-        // 	body:JSON.stringify({
-		// 		'id': data[0].id,
-		// 		sectionsList
-		// 	})
-    	// })
-		// const response = await resp.json();
-		// if(response.data.rowCount < 1){
-		// 	toast.error("No Data Found!",{
-		// 		duration : 1500,
-		// 		position:'top-center'
-		// 	})
-		// }
-		// console.log(sectionsList);
 	}
 
 	return (
