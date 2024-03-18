@@ -1,15 +1,19 @@
-// import DashboardPage from "./components/Dashboard"
-import dynamic from 'next/dynamic';
+import { Suspense } from 'react'
+import DashboardPage from "./components/Dashboard"
+// import dynamic from 'next/dynamic';
 
-const DynamicDashboardPage = dynamic(
-	() => import('./components/Dashboard'),
-	{ ssr: false }
-);
+// const DynamicDashboardPage = dynamic(
+// 	() => import('./components/Dashboard'),
+// 	{ ssr: false }
+// );
 
 export default function Home() {
 	return (
 		<main>
-			<DynamicDashboardPage />
+			<Suspense>
+				<DashboardPage />
+   			</Suspense>
+			{/* <DynamicDashboardPage /> */}
 		</main>
 	)
 }
