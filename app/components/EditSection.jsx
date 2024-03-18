@@ -4,8 +4,10 @@ import { nunito } from "../utils/fonts"
 import { CgAdd } from "react-icons/cg";
 import Link from "next/link";
 import { server } from "@/app/lib/server"
+import { useRouter } from "next/navigation";
 
 const EditSection = ({ id, data }) => {
+	const router = useRouter()
 	const episodes = data[0].episodes;
 	const episode = episodes.filter((episode) => episode.id === id )[0];
 	const sections = episode.sections;
@@ -171,6 +173,8 @@ const EditSection = ({ id, data }) => {
 				sectionsList
 			})
     	})
+
+		router.push('/')
 	}
 
 	return (
