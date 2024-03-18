@@ -1,4 +1,4 @@
-import { Suspense } from 'react'
+// import { Suspense } from 'react'
 import DashboardPage from "./components/Dashboard"
 // import dynamic from 'next/dynamic';
 
@@ -10,12 +10,12 @@ import DashboardPage from "./components/Dashboard"
 export default function Home() {
 	return (
 		<main>
-			<Suspense>
+			{/* <Suspense> */}
 				<DashboardPage />
-   			</Suspense>
+   			{/* </Suspense> */}
 			{/* <DynamicDashboardPage /> */}
 		</main>
 	)
 }
 
-export const dynamic = 'auto'
+export const dynamic = 'force-dynamic'
