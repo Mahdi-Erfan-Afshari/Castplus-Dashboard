@@ -174,7 +174,7 @@ const EditSection = ({ id, data }) => {
 			})
     	})
 
-		router.push('/')
+		router.push('/');
 	}
 
 	return (
@@ -242,7 +242,7 @@ const EditSection = ({ id, data }) => {
 				</div>
 				<div className="flex w-full justify-end px-6 py-3 gap-3">
 					<Link href='/'><button className="bg-gray-400 text-white px-4 py-2 rounded-lg">Cancel</button></Link>
-					<button className="bg-Blue text-white px-4 py-2 rounded-lg" onClick={saveSections}>Save</button>
+					<button className="bg-Blue text-white px-4 py-2 rounded-lg" onClick={saveSections} type="submit">Save</button>
 				</div>
 			</div>
 		</div>

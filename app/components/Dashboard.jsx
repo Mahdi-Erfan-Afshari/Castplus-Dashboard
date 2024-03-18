@@ -4,7 +4,7 @@ import { server } from "@/app/lib/server"
 const DashboardPage = async () => {
 	const fetchPodcasts = async () => {
 		const res = await fetch(`${server}/api/podcasts`, {
-			next: { revalidate: 10 },
+			next: { revalidate: 1 },
 		  })
 		const data = await res.json();
 		return data
