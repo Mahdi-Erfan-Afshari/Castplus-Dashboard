@@ -1,2 +1,2 @@
 const dev = process.env.NODE_ENV !== 'production'
-export const server = dev ? 'http://localhost:3000' : 'https://dashboard-castplus.vercel.app/'
+export const server = dev ? 'http://localhost:3000' : 'https://castplus.vercel.app/'
