@@ -2,7 +2,6 @@
 const editPage = () => {
   return (
 	<>
-	  <div>hello</div>
 	</>
   )
 }
