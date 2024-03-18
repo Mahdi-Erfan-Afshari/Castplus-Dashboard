@@ -4,8 +4,7 @@ import {BiSolidEditAlt} from 'react-icons/bi'
 import {IoTrashSharp} from 'react-icons/io5'
 
 const YourEpisodeSection = ({ data }) => {
-	const episodes = data[0].episodes;
-	console.log(data);
+	const episodes = data[2].episodes;
   return (
 	<div className={`${nunito.className} ${"flex justify-end w-full"}`}>
 		<div id="right-section" className="h-full lg:w-[calc(100%_-_18rem)]">

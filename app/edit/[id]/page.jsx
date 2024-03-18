@@ -3,13 +3,14 @@ import { server } from "@/app/lib/server"
 
 const editCurrentEpisode = async ({ params: { id } }) => {
 	const fetchPodcasts = async () => {
-		const res = await fetch(`${server}/api/podcasts`)
+		const res = await fetch(`${server}/api/podcasts`, {
+			next: { revalidate: 10 },
+		  })
 		const data = await res.json();
 		return data;
 	}
 	
 	const data = await fetchPodcasts()
-
   return (
 	<div>
 		<EditSection id={id} data={data} />

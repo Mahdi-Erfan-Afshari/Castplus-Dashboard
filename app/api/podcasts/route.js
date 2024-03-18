@@ -13,15 +13,13 @@ export async function POST(request){
 	let db = client.db('castplus')
 	const data = await request.json();
 	const { id } = data;
-	console.log('id',id);
-	console.log('data',data);
 	let episode = await db.collection("podcasts").updateOne(
 		{
 			id: id,
 		},
 		{
 		  $set: {
-			episodes: data.sectionsList,
+			episodes: [data.sectionsList],
 		  },
 		}
 	);

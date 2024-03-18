@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation";
 
 const EditSection = ({ id, data }) => {
 	const router = useRouter()
-	const episodes = data[0].episodes;
+	const episodes = data[2].episodes;
 	const episode = episodes.filter((episode) => episode.id === id )[0];
 	const sections = episode.sections;
 	const removeSection = (e) => {
@@ -169,7 +169,7 @@ const EditSection = ({ id, data }) => {
         	method:'POST',
         	cache:'no-cache',
         	body:JSON.stringify({
-				'id': data[0].id,
+				'id': data[2].id,
 				sectionsList
 			})
     	})

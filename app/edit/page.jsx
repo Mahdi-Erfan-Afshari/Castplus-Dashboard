@@ -1,6 +1,6 @@
 
-const editPage = () => {
-  return (
+const editPage = async () => {
+	return (
 	<>
 	</>
   )
