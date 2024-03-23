@@ -11,6 +11,54 @@
 	src: url('C:\Users\Jon\Desktop\zz\vazir.ttf')  format('truetype');
 }
 
+
+.loader{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.search-loader{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 40vh;
+}
+
+.loading-item{
+    width: 5px;
+    height: 40px;
+    background-color: #2e56f3;
+    border-radius: 100px;
+    animation: wave 1s ease-in-out infinite;
+}
+
+.audio-loading div span{
+    width: 4px;
+    height: 32px;
+}
+
+.loading-item1{
+    animation-delay: -600ms;
+}
+
+.loading-item2{
+    animation-delay: -450ms;
+}
+
+.loading-item3{
+    animation-delay: -300ms;
+}
+
+.loading-item4{
+    animation-delay: -150ms;
+}
+
+.loading-item5{
+    animation-delay: 0ms;
+}
+
 .nunito {
 	font-family: nunito;
 }
@@ -22,4 +70,33 @@
 .number-input::-webkit-inner-spin-button {
 	-webkit-appearance: none;
     margin: 0;
+}
+
+.no-scrollbar {
+	-ms-overflow-style: none;  /* IE and Edge */
+	scrollbar-width: none;  /* Firefox */
+}
+
+.no-scrollbar::-webkit-scrollbar {
+	display: none;
+}
+
+.rtl {
+	direction: rtl;
+}
+
+.ltr {
+	direction: ltr;
+}
+
+@keyframes wave {
+    0% {
+        transform: scaleY(0.3);
+    }
+    50% {
+        transform: scaleY(1);
+    }
+    100% {
+        transform: scaleY(0.3);
+    }
 }

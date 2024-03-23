@@ -5,10 +5,13 @@ import { CgAdd } from "react-icons/cg";
 import Link from "next/link";
 import { server } from "@/app/lib/server"
 import { useRouter } from "next/navigation";
+import { useState } from "react";
+import Loading from '@/app/components/Loading'
 
 const EditSection = ({ id, data }) => {
+	const [loading, setLoading] = useState(false)
 	const router = useRouter()
-	const episodes = data[2].episodes;
+	const episodes = data[1].episodes;
 	const episode = episodes.filter((episode) => episode.id === id )[0];
 	const sections = episode.sections;
 	const removeSection = (e) => {
@@ -165,88 +168,103 @@ const EditSection = ({ id, data }) => {
 			},)
 			i++
 		})
+		setLoading(true)
 		await fetch(`${server}/api/podcasts`,{
         	method:'POST',
         	cache:'no-cache',
         	body:JSON.stringify({
-				'id': data[2].id,
+				'id': data[1].id,
 				sectionsList
 			})
     	})
-
+		.then((response) => response.json())
+			.then((data) => {
+				setLoading(false)
+				getSearchResults(data);
+			})
+			.catch((error) => {
+				console.error(error);
+		});
+		router.refresh()
 		router.push('/');
+		router.refresh()
 	}
 
 	return (
-	<div className={`${nunito.className} ${"flex justify-end w-full"}`}>
-		<div id="right-section" className="h-full lg:w-[calc(100%_-_18rem)]">
-			<div className="flex flex-col gap-y-4 p-6">
-				<div className="flex flex-col w-full bg-white px-6 py-3 rounded-xl">
-					<h1 className="text-xl font-bold nunito">Title</h1>
-					<div className="mt-4">
-						<input className="episode-title outline-none border-2 border-gray-150 rounded-lg text-sm py-2 px-4 w-6/12 vazir" type="text" defaultValue={episode.title} />
+		<>
+		{loading ? <Loading /> : <div className={`${nunito.className} ${"container mx-auto flex justify-center w-full lg:mt-[72px] mt-[56px]"}`}>
+		 {/* <div id="right-section" className="h-full lg:w-[calc(100%_-_18rem)]"> */}
+		 <div id="right-section" className="h-full w-full">
+			<form action={saveSections}>
+				<div className="flex flex-col gap-y-4 p-6">
+					<div className="flex flex-col w-full bg-white px-6 py-3 rounded-xl">
+						<h1 className="text-xl font-bold nunito">Title</h1>
+						<div className="mt-4">
+							<input className="episode-title outline-none border-2 border-gray-150 rounded-lg text-sm py-2 px-4 w-6/12 vazir" type="text" defaultValue={episode.title} />
+						</div>
 					</div>
-				</div>
-				<div className="flex flex-col w-full bg-white px-6 py-3 rounded-xl">
-					<h1 className="text-xl font-bold nunito">Description</h1>
-					<div className="mt-4">
-						<textarea className="episode-description min-h-[80px] w-full resize-none outline-none text-sm border-2 border-gray-150 rounded-lg vazir p-3" rows="2" defaultValue={episode.description}></textarea>
+					<div className="flex flex-col w-full bg-white px-6 py-3 rounded-xl">
+						<h1 className="text-xl font-bold nunito">Description</h1>
+						<div className="mt-4">
+							<textarea className="episode-description min-h-[80px] w-full resize-none outline-none text-sm border-2 border-gray-150 rounded-lg vazir p-3" rows="2" defaultValue={episode.description}></textarea>
+						</div>
 					</div>
-				</div>
-				<div className="flex flex-col w-full bg-white px-6 py-6 rounded-xl">
-					<div id="section-details" className="flex flex-col w-full bg-white px-6 py-6 rounded-xl">
-						<h1 className="text-xl font-bold nunito">Sections</h1>
-						{
-							sections.map((section) => (
-								<div className="section ms-6 mt-6 bg-[#f7f7f794] py-4 ps-6 pe-4 rounded-xl">
-									<div className="flex justify-between">
-										<div>
+					<div className="flex flex-col w-full bg-white px-6 py-6 rounded-xl">
+						<div id="section-details" className="flex flex-col w-full bg-white px-6 py-6 rounded-xl">
+							<h1 className="text-xl font-bold nunito">Sections</h1>
+							{
+								sections.map((section) => (
+									<div className="section ms-6 mt-6 bg-[#f7f7f794] py-4 ps-6 pe-4 rounded-xl">
+										<div className="flex justify-between">
 											<div>
-												<h1 className="text-lg font-bold nunito mb-1">Title</h1>
-												<input className="section-title outline-none bg-[#f7f7f794] border-2 border-gray-150 rounded-lg text-sm py-2 px-4 w-6/12 vazir" type="text" defaultValue={section.title} />
-											</div>
-											<div className="mt-6">
-												<h1 className="text-lg mb-1 font-bold nunito">Time Start</h1>
-												<div className="flex gap-3">
-													<input className="section-hour number-input bg-[#f7f7f794] outline-none border-2 border-gray-150 rounded-lg text-sm py-2 px-4 w-2/12 vazir" type="number" placeholder="hour" defaultValue={Math.floor(Math.floor(section.timeStart / 3600)) } />
-													<input className="section-minute number-input bg-[#f7f7f794] outline-none border-2 border-gray-150 rounded-lg text-sm py-2 px-4 w-2/12 vazir" type="number" placeholder="minute" defaultValue={Math.floor(section.timeStart % 3600 / 60)} />
-													<input className="section-second section-hournumber-input bg-[#f7f7f794] outline-none border-2 border-gray-150 rounded-lg text-sm py-2 px-4 w-2/12 vazir" type="number" placeholder="second" defaultValue={Math.floor(section.timeStart % 60)} />
+												<div>
+													<h1 className="text-lg font-bold nunito mb-1">Title</h1>
+													<input className="section-title outline-none bg-[#f7f7f794] border-2 border-gray-150 rounded-lg text-sm py-2 px-4 w-6/12 vazir" type="text" defaultValue={section.title} />
+												</div>
+												<div className="mt-6">
+													<h1 className="text-lg mb-1 font-bold nunito">Time Start</h1>
+													<div className="flex gap-3">
+														<input className="section-hour number-input bg-[#f7f7f794] outline-none border-2 border-gray-150 rounded-lg text-sm py-2 px-4 w-2/12 vazir" type="number" placeholder="hour" defaultValue={Math.floor(Math.floor(section.timeStart / 3600)) } />
+														<input className="section-minute number-input bg-[#f7f7f794] outline-none border-2 border-gray-150 rounded-lg text-sm py-2 px-4 w-2/12 vazir" type="number" placeholder="minute" defaultValue={Math.floor(section.timeStart % 3600 / 60)} />
+														<input className="section-second section-hournumber-input bg-[#f7f7f794] outline-none border-2 border-gray-150 rounded-lg text-sm py-2 px-4 w-2/12 vazir" type="number" placeholder="second" defaultValue={Math.floor(section.timeStart % 60)} />
+													</div>
 												</div>
 											</div>
+											<button className="h-fit" onClick={(e) => removeSection(e)} ><HiOutlineTrash className="hover:bg-[#ff1c1c1c] hover:text-Red p-3 box-content rounded-xl text-2xl duration-100" /></button>
 										</div>
-										<button className="h-fit" onClick={(e) => removeSection(e)} ><HiOutlineTrash className="hover:bg-[#ff1c1c1c] hover:text-Red p-3 box-content rounded-xl text-2xl duration-100" /></button>
-									</div>
-									<div className="flex flex-col w-full mt-5">
-										<h1 className="text-xl font-bold nunito">Summary</h1>
-										<div className="w-full">
-											<textarea className="section-summary min-h-[150px] w-full bg-[#f7f7f794] resize-none outline-none text-sm border-2 border-gray-150 rounded-lg vazir p-3" rows="2" defaultValue={section.summary}></textarea>
+										<div className="flex flex-col w-full mt-5">
+											<h1 className="text-xl font-bold nunito">Summary</h1>
+											<div className="w-full">
+												<textarea className="section-summary min-h-[150px] w-full bg-[#f7f7f794] resize-none outline-none text-sm border-2 border-gray-150 rounded-lg vazir p-3" rows="2" defaultValue={section.summary}></textarea>
+											</div>
+										</div>
+										<div className="flex flex-col w-full mt-5">
+											<h1 className="text-xl font-bold nunito">Transcript</h1>
+											<div className="w-full">
+												<textarea className="section-transcript min-h-[150px] w-full bg-[#f7f7f794] resize-none outline-none text-sm border-2 border-gray-150 rounded-lg vazir p-3" rows="2" defaultValue={section.transcript}></textarea>
+											</div>
+										</div>
+										<div className="flex flex-col w-full mt-5">
+											<h1 className="text-xl font-bold nunito">Refrences</h1>
+											<div className="w-full">
+												<textarea className="section-refrences min-h-[150px] w-full bg-[#f7f7f794] resize-none outline-none text-sm border-2 border-gray-150 rounded-lg vazir p-3" rows="2" defaultValue={section.refrences}></textarea>
+											</div>
 										</div>
 									</div>
-									<div className="flex flex-col w-full mt-5">
-										<h1 className="text-xl font-bold nunito">Transcript</h1>
-										<div className="w-full">
-											<textarea className="section-transcript min-h-[150px] w-full bg-[#f7f7f794] resize-none outline-none text-sm border-2 border-gray-150 rounded-lg vazir p-3" rows="2" defaultValue={section.transcript}></textarea>
-										</div>
-									</div>
-									<div className="flex flex-col w-full mt-5">
-										<h1 className="text-xl font-bold nunito">Refrences</h1>
-										<div className="w-full">
-											<textarea className="section-refrences min-h-[150px] w-full bg-[#f7f7f794] resize-none outline-none text-sm border-2 border-gray-150 rounded-lg vazir p-3" rows="2" defaultValue={section.refrences}></textarea>
-										</div>
-									</div>
-								</div>
-							))
-						}
+								))
+							}
+						</div>
+						<div className="flex items-center gap-1 bg-Blue text-white px-4 py-2 rounded-lg w-fit ms-6 mt-5 cursor-pointer" onClick={addSection}> <CgAdd className="text-xl" /> <button>Add</button></div>
 					</div>
-					<div className="flex items-center gap-1 bg-Blue text-white px-4 py-2 rounded-lg w-fit ms-6 mt-5 cursor-pointer" onClick={addSection}> <CgAdd className="text-xl" /> <button>Add</button></div>
+					<div className="flex w-full justify-end px-6 py-3 gap-3">
+						<Link href='/'><button className="bg-gray-400 text-white px-4 py-2 rounded-lg">Cancel</button></Link>
+						<button className="bg-Blue text-white px-4 py-2 rounded-lg" type="submit">Save</button>
+					</div>
 				</div>
-				<div className="flex w-full justify-end px-6 py-3 gap-3">
-					<Link href='/'><button className="bg-gray-400 text-white px-4 py-2 rounded-lg">Cancel</button></Link>
-					<button className="bg-Blue text-white px-4 py-2 rounded-lg" onClick={saveSections} type="submit">Save</button>
-				</div>
-			</div>
+			</form>
 		</div>
-	</div>
+	</div>}
+	</>
   )
 }
 
