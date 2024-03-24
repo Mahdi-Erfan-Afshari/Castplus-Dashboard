@@ -1,5 +1,4 @@
 'use client'
-import { useSession, signIn, signOut } from 'next-auth/react'
 import { nunito } from '../utils/fonts'
 import Link from 'next/link';
 import Image from 'next/image'
@@ -13,8 +12,8 @@ const Header = () => {
 		sidebar.classList.toggle('w-0');
 	}
 	return (
-		<div className={`${nunito.className} ${'fixed top-0 left-0 w-full z-10 '}`}>
-			<nav className='container mx-auto w-full shadow-sm backdrop-blur-lg bg-white/60'>
+		<div className={`${nunito.className} ${'fixed top-0 left-0 w-full z-10 backdrop-blur-lg bg-white/60 shadow-sm'}`}>
+			<nav className='container mx-auto w-full'>
 				<div className='lg:grid hidden grid-cols-12 items-center py-4 w-full'>
 					<div className='p-2 cursor-pointer col-span-1 z-20' onClick={toggleSidebar}>
 						<HiMenuAlt2 className='text-2xl z-20' />

@@ -20,15 +20,13 @@ const EditSection = ({ id, data }) => {
 	const addSection = async () => {
 		let sectionDetails = document.getElementById('section-details')
 		let parentDiv = document.createElement('div');
-		parentDiv.className = 'section ms-6 mt-6 bg-[#f7f7f794] py-4 ps-6 pe-4 rounded-xl';
+		parentDiv.className = 'section lg:mt-6 mt-3 bg-[#f7f7f794] py-4 ps-6 pe-4 rounded-xl';
 
 		let firstection = document.createElement('div');
-		firstection.className = 'flex justify-between'
+		firstection.className = 'flex justify-between items-center'
 
 		parentDiv.appendChild(firstection)
 
-		let titleTime = document.createElement('div');
-		let title = document.createElement('div');
 		let timeStart = document.createElement('div');
 		timeStart.className = 'mt-6'
 
@@ -36,30 +34,28 @@ const EditSection = ({ id, data }) => {
 		titleHeading.innerText = 'Title'
 		titleHeading.className = 'text-lg font-bold nunito mb-1'
 		let titleInput = document.createElement('input');
-		titleInput.className = 'section-title outline-none bg-[#f7f7f794] border-2 border-gray-150 rounded-lg text-sm py-2 px-4 w-6/12 vazir';
+		titleInput.className = 'section-title outline-none bg-[#f7f7f794] border-2 border-gray-150 rounded-lg text-sm py-2 px-4 lg:w-6/12 w-full vazir';
 		titleInput.setAttribute('type' , 'text');
-		title.appendChild(titleHeading)
-		title.appendChild(titleInput)
 
 		let timeStartHeading = document.createElement('h1');
 		timeStartHeading.innerText = 'Time Start'
 		timeStartHeading.className = 'text-lg mb-1 font-bold nunito'
 
 		let TimeStartInputs = document.createElement('div');
-		TimeStartInputs.className = 'flex gap-3'
+		TimeStartInputs.className = 'flex lg:gap-3 gap-2'
 
 		let TimeStartInput1 = document.createElement('input');
-		TimeStartInput1.className = 'section-hour number-input bg-[#f7f7f794] outline-none border-2 border-gray-150 rounded-lg text-sm py-2 px-4 w-2/12 vazir'
+		TimeStartInput1.className = 'section-hour number-input bg-[#f7f7f794] outline-none border-2 border-gray-150 rounded-lg text-sm py-2 lg:px-4 px-2 lg:w-2/12 w-4/12 vazir'
 		TimeStartInput1.setAttribute('type' , 'number');
 		TimeStartInput1.setAttribute('placeholder' , 'hour');
 
 		let TimeStartInput2 = document.createElement('input');
-		TimeStartInput2.className = 'section-minute number-input bg-[#f7f7f794] outline-none border-2 border-gray-150 rounded-lg text-sm py-2 px-4 w-2/12 vazir'
+		TimeStartInput2.className = 'section-minute number-input bg-[#f7f7f794] outline-none border-2 border-gray-150 rounded-lg text-sm py-2 lg:px-4 px-2 lg:w-2/12 w-4/12 vazir'
 		TimeStartInput2.setAttribute('type' , 'number');
 		TimeStartInput2.setAttribute('placeholder' , 'minute');
 		
 		let TimeStartInput3 = document.createElement('input');
-		TimeStartInput3.className = 'section-second number-input bg-[#f7f7f794] outline-none border-2 border-gray-150 rounded-lg text-sm py-2 px-4 w-2/12 vazir'
+		TimeStartInput3.className = 'section-second number-input bg-[#f7f7f794] outline-none border-2 border-gray-150 rounded-lg text-sm py-2 lg:px-4 px-2 lg:w-2/12 w-4/12 vazir'
 		TimeStartInput3.setAttribute('type' , 'number');
 		TimeStartInput3.setAttribute('placeholder' , 'second');
 		TimeStartInputs.appendChild(TimeStartInput1)
@@ -69,17 +65,16 @@ const EditSection = ({ id, data }) => {
 		timeStart.appendChild(timeStartHeading)
 		timeStart.appendChild(TimeStartInputs)
 		
-		titleTime.appendChild(title)
-		titleTime.appendChild(timeStart)
-		
 		let deleteButton = document.createElement('button');
 		deleteButton.className = 'h-fit'
-		let trashIcon = '<svg stroke="currentColor" fill="none" stroke-width="1.5" viewBox="0 0 24 24" aria-hidden="true" class="hover:bg-[#ff1c1c1c] hover:text-Red p-3 box-content rounded-xl text-2xl duration-100" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"></path></svg>'
+		let trashIcon = '<svg stroke="currentColor" fill="none" stroke-width="1.5" viewBox="0 0 24 24" aria-hidden="true" class="hover:bg-[#ff1c1c1c] hover:text-Red lg:p-3 p-2 box-content rounded-xl lg:text-2xl text-xl duration-100" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"></path></svg>'
 		deleteButton.addEventListener('click', (event) => removeSection(event))
 		
 		deleteButton.innerHTML = trashIcon
-		firstection.appendChild(titleTime)
+		firstection.appendChild(titleHeading)
 		firstection.appendChild(deleteButton)
+		parentDiv.appendChild(titleInput)
+		parentDiv.appendChild(timeStart)
 
 		let summarySection = document.createElement('div');
 		summarySection.className = 'flex flex-col w-full mt-5'
@@ -192,45 +187,40 @@ const EditSection = ({ id, data }) => {
 
 	return (
 		<>
-		{loading ? <Loading /> : <div className={`${nunito.className} ${"container mx-auto flex justify-center w-full lg:mt-[72px] mt-[56px]"}`}>
-		 {/* <div id="right-section" className="h-full lg:w-[calc(100%_-_18rem)]"> */}
+		{loading ? <Loading /> : <div className={`${nunito.className} ${"container mx-auto flex justify-center w-full lg:mt-[100px] mt-[70px]"}`}>
 		 <div id="right-section" className="h-full w-full">
 			<form action={saveSections}>
-				<div className="flex flex-col gap-y-4 p-6">
-					<div className="flex flex-col w-full bg-white px-6 py-3 rounded-xl">
+				<div className="flex flex-col gap-y-4 lg:p-6">
+					<div className="flex flex-col w-full bg-white lg:px-6 px-4 py-3 rounded-xl">
 						<h1 className="text-xl font-bold nunito">Title</h1>
 						<div className="mt-4">
-							<input className="episode-title outline-none border-2 border-gray-150 rounded-lg text-sm py-2 px-4 w-6/12 vazir" type="text" defaultValue={episode.title} />
+							<input className="episode-title outline-none border-2 border-gray-150 rounded-lg text-sm py-2 px-4 lg:w-6/12 w-full vazir" type="text" defaultValue={episode.title} />
 						</div>
 					</div>
-					<div className="flex flex-col w-full bg-white px-6 py-3 rounded-xl">
+					<div className="flex flex-col w-full bg-white lg:px-6 px-4 py-3 rounded-xl">
 						<h1 className="text-xl font-bold nunito">Description</h1>
 						<div className="mt-4">
 							<textarea className="episode-description min-h-[80px] w-full resize-none outline-none text-sm border-2 border-gray-150 rounded-lg vazir p-3" rows="2" defaultValue={episode.description}></textarea>
 						</div>
 					</div>
-					<div className="flex flex-col w-full bg-white px-6 py-6 rounded-xl">
-						<div id="section-details" className="flex flex-col w-full bg-white px-6 py-6 rounded-xl">
+					<div className="flex flex-col w-full bg-white lg:px-6 px-4 lg:py-6 py-3 rounded-xl">
+						<div id="section-details" className="flex flex-col w-full bg-white lg:px-6 lg:py-6 py-3 rounded-xl">
 							<h1 className="text-xl font-bold nunito">Sections</h1>
 							{
 								sections.map((section) => (
-									<div className="section ms-6 mt-6 bg-[#f7f7f794] py-4 ps-6 pe-4 rounded-xl">
-										<div className="flex justify-between">
-											<div>
-												<div>
-													<h1 className="text-lg font-bold nunito mb-1">Title</h1>
-													<input className="section-title outline-none bg-[#f7f7f794] border-2 border-gray-150 rounded-lg text-sm py-2 px-4 w-6/12 vazir" type="text" defaultValue={section.title} />
-												</div>
-												<div className="mt-6">
-													<h1 className="text-lg mb-1 font-bold nunito">Time Start</h1>
-													<div className="flex gap-3">
-														<input className="section-hour number-input bg-[#f7f7f794] outline-none border-2 border-gray-150 rounded-lg text-sm py-2 px-4 w-2/12 vazir" type="number" placeholder="hour" defaultValue={Math.floor(Math.floor(section.timeStart / 3600)) } />
-														<input className="section-minute number-input bg-[#f7f7f794] outline-none border-2 border-gray-150 rounded-lg text-sm py-2 px-4 w-2/12 vazir" type="number" placeholder="minute" defaultValue={Math.floor(section.timeStart % 3600 / 60)} />
-														<input className="section-second section-hournumber-input bg-[#f7f7f794] outline-none border-2 border-gray-150 rounded-lg text-sm py-2 px-4 w-2/12 vazir" type="number" placeholder="second" defaultValue={Math.floor(section.timeStart % 60)} />
-													</div>
-												</div>
+									<div className="section lg:mt-6 mt-3 bg-[#f7f7f794] py-4 px-6 rounded-xl">
+										<div className="flex justify-between items-center">
+											<h1 className="text-lg font-bold nunito">Title</h1>
+											<button className="h-fit" onClick={(e) => removeSection(e)} ><HiOutlineTrash className="hover:bg-[#ff1c1c1c] hover:text-Red lg:p-3 p-2 box-content rounded-xl lg:text-2xl text-xl duration-100" /></button>
+										</div>
+										<input className="section-title outline-none bg-[#f7f7f794] border-2 border-gray-150 rounded-lg text-sm py-2 px-4 lg:w-6/12 w-full vazir" type="text" defaultValue={section.title} />
+										<div className="mt-6">
+											<h1 className="text-lg mb-1 font-bold nunito">Time Start</h1>
+											<div className="flex lg:gap-3 gap-2">
+												<input className="section-hour number-input bg-[#f7f7f794] outline-none border-2 border-gray-150 rounded-lg text-sm py-2 lg:px-4 px-3 lg:w-2/12 w-4/12 vazir" type="number" placeholder="hour" defaultValue={Math.floor(Math.floor(section.timeStart / 3600)) } />
+												<input className="section-minute number-input bg-[#f7f7f794] outline-none border-2 border-gray-150 rounded-lg text-sm py-2 lg:px-4 px-3 lg:w-2/12 w-4/12 vazir" type="number" placeholder="minute" defaultValue={Math.floor(section.timeStart % 3600 / 60)} />
+												<input className="section-second section-hournumber-input bg-[#f7f7f794] outline-none border-2 border-gray-150 rounded-lg text-sm py-2 lg:px-4 px-3 lg:w-2/12 w-4/12 vazir" type="number" placeholder="second" defaultValue={Math.floor(section.timeStart % 60)} />
 											</div>
-											<button className="h-fit" onClick={(e) => removeSection(e)} ><HiOutlineTrash className="hover:bg-[#ff1c1c1c] hover:text-Red p-3 box-content rounded-xl text-2xl duration-100" /></button>
 										</div>
 										<div className="flex flex-col w-full mt-5">
 											<h1 className="text-xl font-bold nunito">Summary</h1>
@@ -254,7 +244,7 @@ const EditSection = ({ id, data }) => {
 								))
 							}
 						</div>
-						<div className="flex items-center gap-1 bg-Blue text-white px-4 py-2 rounded-lg w-fit ms-6 mt-5 cursor-pointer" onClick={addSection}> <CgAdd className="text-xl" /> <button>Add</button></div>
+						<div className="flex items-center gap-1 bg-Blue text-white px-4 py-2 rounded-lg w-fit ms-6 mt-5 cursor-pointer" onClick={addSection}> <CgAdd className="text-xl" /> Add</div>
 					</div>
 					<div className="flex w-full justify-end px-6 py-3 gap-3">
 						<Link href='/'><button className="bg-gray-400 text-white px-4 py-2 rounded-lg">Cancel</button></Link>
