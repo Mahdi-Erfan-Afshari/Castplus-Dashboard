@@ -15,7 +15,11 @@ const EditSection = ({ id, data }) => {
 	const episode = episodes.filter((episode) => episode.id === id )[0];
 	const sections = episode.sections;
 	const removeSection = (e) => {
-		e.target.parentElement.parentElement.parentElement.remove();
+		if (e.target.tagName !== 'path') {
+			e.target.parentElement.parentElement.parentElement.remove();
+		} else {
+			e.target.parentElement.parentElement.parentElement.parentElement.remove();
+		}
 	}
 	const addSection = async () => {
 		let sectionDetails = document.getElementById('section-details')
