@@ -112,7 +112,6 @@ const EditSection = ({ id, data }) => {
 		router.refresh();
 	}
 
-
 	const openDeleteModal = (e) => {
 		const modal = document.querySelector('#delete-modal');
 		modal.classList.remove('hidden');
@@ -484,6 +483,7 @@ const EditSection = ({ id, data }) => {
 			deletedModal.classList.add('hidden');
 		}, 3000);
 	}
+
 	const toggleSectionEditedModal = () => {
 		const deletedModal = document.querySelector('#section-edited-modal');
 		deletedModal.classList.remove('hidden');
@@ -599,12 +599,12 @@ const EditSection = ({ id, data }) => {
 												<div className="col-span-11 lg:ms-0 ms-4">
 													<h1 className="text-sm sm:text-md font-semibold">{section.title}</h1>
 													<p className="text-gray-600 text-xs sm:text-sm pe-4 truncate">{section.summary}</p>
-													<p className="flex lg:hidden text-sm text-gray-600">duration: <span className="ms-1">{section.duration}</span>s</p>
+													<p className="flex lg:hidden text-sm text-gray-600">duration: <span className="ms-1">{Math.round(section.duration / 3600)}</span> : <span> {Math.round(section.duration % 3600 / 60 )} </span>  : <span>{Math.round(section.duration % 60 )}</span></p>
 												</div>
 											</div>
 										</div>
 										<div className="hidden lg:flex justify-center items-center xl:col-span-1 lg:col-span-2 col-span-1">
-											<p className="flex text-gray-600 text-md">duration: <span className="ms-1">{section.duration}</span>s</p>
+											<p className="flex text-gray-600 text-md">duration: <span className="ms-1">{Math.round(section.duration / 3600)}</span> : <span> {Math.round(section.duration % 3600 / 60 )} </span>  : <span>{Math.round(section.duration % 60 )}</span></p>
 										</div>
 										<div className="section-more-body flex justify-center items-center col-span-1 relative">
 											<div className="ul-more-section-button section-more-button hover:bg-hover-gray p-2 rounded-full duration-150 cursor-pointer z-1 border-[1px] border-border-gray" onClick={sectionShowMore}>
@@ -625,14 +625,28 @@ const EditSection = ({ id, data }) => {
 										<div className="flex justify-between items-center">
 											<h1 className="text-lg font-bold nunito">Title</h1>
 										</div>
-										<input id="section-title" className="value section-title outline-none bg-[#f7f7f794] border-2 border-gray-150 rounded-lg text-sm py-2 px-4 lg:w-6/12 w-full vazir" type="text" />
+										<input id="section-title" className="value section-title outline-none bg-[#f7f7f794] border-2 border-gray-150 rounded-lg text-sm py-2 px-4 w-full vazir" type="text" />
 										<div className="mt-6">
 											<h1 className="text-lg mb-1 font-bold nunito">Time Start</h1>
-											<div className="flex lg:gap-3 gap-2">
-												<input id="section-hour" className="value section-hour number-input bg-[#f7f7f794] outline-none border-2 border-gray-150 rounded-lg text-sm py-2 lg:px-4 px-3 lg:w-2/12 w-4/12 vazir" type="number" placeholder="hour" />
-												<input id="section-minute" className="value section-minute number-input bg-[#f7f7f794] outline-none border-2 border-gray-150 rounded-lg text-sm py-2 lg:px-4 px-3 lg:w-2/12 w-4/12 vazir" type="number" placeholder="minute" />
-												<input id="section-second" className="value section-second section-hournumber-input bg-[#f7f7f794] outline-none border-2 border-gray-150 rounded-lg text-sm py-2 lg:px-4 px-3 lg:w-2/12 w-4/12 vazir" type="number" placeholder="second" />
-												<input id="section-duration" className="value section-duration section-hournumber-input bg-[#f7f7f794] outline-none border-2 border-gray-150 rounded-lg text-sm py-2 lg:px-4 px-3 lg:w-2/12 w-4/12 vazir" type="number" placeholder="duration" />
+											<div className="flex flex-col gap-4">
+												<div className="flex items-end">
+													<div className="flex flex-col justify-center lg:w-2/12 w-4/12 ">
+														<p className="text-xs ms-1">Hours</p>
+														<input id="section-hour" className="value section-hour number-input bg-[#f7f7f794] outline-none border-2 border-gray-150 rounded-lg text-sm py-2 lg:px-4 px-3 w-full vazir" type="number" placeholder="hour" />
+													</div> <span className="text-xl mx-2 pb-2">:</span>
+													<div className="flex flex-col lg:w-2/12 w-4/12 ">
+														<p className="text-xs ms-1">Minutes</p>
+														<input id="section-minute" className="value section-minute number-input bg-[#f7f7f794] outline-none border-2 border-gray-150 rounded-lg text-sm py-2 lg:px-4 px-3 w-full vazir" type="number" placeholder="minute" />
+													</div> <span className="text-xl mx-2 pb-2">:</span>
+													<div className="flex flex-col lg:w-2/12 w-4/12 ">
+														<p className="text-xs ms-1">Seconds</p>
+														<input id="section-second" className="value section-second section-hour number-input bg-[#f7f7f794] outline-none border-2 border-gray-150 rounded-lg text-sm py-2 lg:px-4 px-3 w-full vazir" type="number" placeholder="second" />
+													</div>
+												</div>
+												<div className="flex flex-col">
+													<p className="text-xs ms-1">Duration</p>
+													<input id="section-duration" className="value section-duration section-hour number-input bg-[#f7f7f794] outline-none border-2 border-gray-150 rounded-lg text-sm py-2 lg:px-4 px-3 lg:w-2/12 w-4/12 vazir" type="number" placeholder="duration" />
+												</div>
 											</div>
 										</div>
 										<div className="flex flex-col w-full mt-5">
@@ -670,11 +684,25 @@ const EditSection = ({ id, data }) => {
 										<input id="section-title" className="value section-title outline-none bg-[#f7f7f794] border-2 border-gray-150 rounded-lg text-sm py-2 px-4 lg:w-6/12 w-full vazir" type="text" />
 										<div className="mt-6">
 											<h1 className="text-lg mb-1 font-bold nunito">Time Start</h1>
-											<div className="flex lg:gap-3 gap-2">
-												<input id="section-hour" className="value section-hour number-input bg-[#f7f7f794] outline-none border-2 border-gray-150 rounded-lg text-sm py-2 lg:px-4 px-3 lg:w-2/12 w-4/12 vazir" type="number" placeholder="hour" />
-												<input id="section-minute" className="value section-minute number-input bg-[#f7f7f794] outline-none border-2 border-gray-150 rounded-lg text-sm py-2 lg:px-4 px-3 lg:w-2/12 w-4/12 vazir" type="number" placeholder="minute" />
-												<input id="section-second" className="value section-second section-hournumber-input bg-[#f7f7f794] outline-none border-2 border-gray-150 rounded-lg text-sm py-2 lg:px-4 px-3 lg:w-2/12 w-4/12 vazir" type="number" placeholder="second" />
-												<input id="section-duration" className="value section-duration section-hournumber-input bg-[#f7f7f794] outline-none border-2 border-gray-150 rounded-lg text-sm py-2 lg:px-4 px-3 lg:w-2/12 w-4/12 vazir" type="number" placeholder="duration" />
+											<div className="flex flex-col gap-4">
+												<div className="flex items-end">
+													<div className="flex flex-col justify-center lg:w-2/12 w-4/12 ">
+														<p className="text-xs ms-1">Hours</p>
+														<input id="section-hour" className="value section-hour number-input bg-[#f7f7f794] outline-none border-2 border-gray-150 rounded-lg text-sm py-2 lg:px-4 px-3 w-full vazir" type="number" placeholder="hour" />
+													</div> <span className="text-xl mx-2 pb-2">:</span>
+													<div className="flex flex-col lg:w-2/12 w-4/12 ">
+														<p className="text-xs ms-1">Minutes</p>
+														<input id="section-minute" className="value section-minute number-input bg-[#f7f7f794] outline-none border-2 border-gray-150 rounded-lg text-sm py-2 lg:px-4 px-3 w-full vazir" type="number" placeholder="minute" />
+													</div> <span className="text-xl mx-2 pb-2">:</span>
+													<div className="flex flex-col lg:w-2/12 w-4/12 ">
+														<p className="text-xs ms-1">Seconds</p>
+														<input id="section-second" className="value section-second section-hour number-input bg-[#f7f7f794] outline-none border-2 border-gray-150 rounded-lg text-sm py-2 lg:px-4 px-3 w-full vazir" type="number" placeholder="second" />
+													</div>
+												</div>
+												<div className="flex flex-col">
+													<p className="text-xs ms-1">Duration</p>
+													<input id="section-duration" className="value section-duration section-hour number-input bg-[#f7f7f794] outline-none border-2 border-gray-150 rounded-lg text-sm py-2 lg:px-4 px-3 lg:w-2/12 w-4/12 vazir" type="number" placeholder="duration" />
+												</div>
 											</div>
 										</div>
 										<div className="flex flex-col w-full mt-5">

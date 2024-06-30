@@ -22,8 +22,8 @@ const Sidebar = () => {
 	}
 
   return (
-	<div className={`${nunito.className} ${'fixed top-[56px] left-0 h-full backdrop-blur-lg bg-white/60 shadow-lg duration-200 z-9'}`}>
-		<div id='sidebar' className={`${nunito.className} ${'w-0 overflow-y-auto lg:max-h-[calc(100%_-_72px)] max-h-[calc(100%_-_56px)] duration-200'}`}>
+	<div className={`${nunito.className} ${'fixed top-[56px] left-0 h-full backdrop-blur-lg bg-white/60 shadow-lg duration-200 z-20'}`}>
+		<div id='sidebar' className={`${nunito.className} ${'w-0 overflow-y-auto lg:max-h-[calc(100%_-_72px)] max-h-[calc(100%_-_56px)] duration-200 z-11'}`}>
 			{session ?
 				<div className='grid grid-cols-12 items-center w-full'>
 					<div id='account-image' className='col-span-2 rounded-full overflow-hidden'>

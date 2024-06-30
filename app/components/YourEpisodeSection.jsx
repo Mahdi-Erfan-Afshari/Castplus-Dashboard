@@ -20,7 +20,7 @@ const YourEpisodeSection = async ({ data }) => {
 	<div className="container mx-auto lg:mt-[100px] mt-[70px] mb-6">
 		<div className={`${nunito.className} ${""}`}>
 			<section className="grid lg:grid-cols-12 grid-cols-1 gap-8 h-full w-full rtl">
-				<div className="lg:col-span-4 col-span-1 lg:sticky lg:top-40 lg:right-0 mt-[15px] w-full h-fit ltr">
+				<div className="lg:col-span-4 col-span-1 lg:sticky relative lg:top-40 lg:right-0 mt-[15px] w-full h-fit ltr z-10">
 					<div className="relative flex flex-col items-center bg-white border-[1px] w-full pb-40 rounded-xl">
 						<div className="hover:bg-gray-50 absolute top-6 left-6 border-[2px] border-[#dfe1e3] rounded-md p-1 cursor-pointer duration-150">
 							<TbEdit className="text-2xl text-[#444749]"/>
