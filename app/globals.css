@@ -11,7 +11,6 @@
 	src: url('C:\Users\Jon\Desktop\zz\vazir.ttf')  format('truetype');
 }
 
-
 .loader{
     display: flex;
     justify-content: center;
@@ -87,6 +86,32 @@
 
 .ltr {
 	direction: ltr;
+}
+
+.hamburger-button-toggle{
+    height: 0px ;
+    opacity: 0 ;
+    display: none;
+}
+
+.open .hamburger-top{
+	transform: rotate(-45deg) translateY(3px) translate(-3px);
+}
+  
+.open .hamburger-middle{
+	display: none;
+}
+
+.open .hamburger-bottom{
+	transform: rotate(45deg) translateY(-2px) translate(-1px);
+}
+
+.tooltip{
+    display: none;
+}
+
+.add-button:hover .tooltip{
+    display: block;
 }
 
 @keyframes wave {

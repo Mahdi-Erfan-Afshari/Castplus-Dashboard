@@ -28,9 +28,15 @@ module.exports = {
         LightBlue: '#2e56f37a',
         Red: '#f32e2e',
         LightRed: '#f32e2e54',
-        White: '#f8f9ff',
+        SupLightRed: '#ffdddd',
+        White: '#fafafa',
         SupLightBlue: '#f8f9ff',
         Gray: '#808080',
+        "border-gray": "#e6e6e6",
+        "hover-gray": "#ebebeb",
+        "transparent-black-50": "rgb(0 0 0 / 40%)",
+        "transparent-black-10": "rgba(241, 241, 241, 0.723)",
+
       }
     },
   },

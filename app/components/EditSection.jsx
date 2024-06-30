@@ -1,140 +1,255 @@
 'use client'
-import { HiOutlineTrash } from "react-icons/hi2";
-import { nunito } from "../utils/fonts"
-import { CgAdd } from "react-icons/cg";
+import { nunito, vazir } from "../utils/fonts"
 import Link from "next/link";
 import { server } from "@/app/lib/server"
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Loading from '@/app/components/Loading'
+import { FiMoreHorizontal } from "react-icons/fi";
+import { IoCloseOutline, IoAddOutline  } from "react-icons/io5";
+import { PiWarningCircle } from "react-icons/pi";
+import { TbEdit } from "react-icons/tb";
+import { GrStatusGood } from "react-icons/gr";
+import { IoIosArrowRoundBack } from "react-icons/io";
 
 const EditSection = ({ id, data }) => {
 	const [loading, setLoading] = useState(false)
-	const router = useRouter()
+	const [ulMoreSectionIndex, setUlMoreSectionIndex] = useState(null)
+	const [isulMoreSectionIndex, setIsUlMoreSectionIndex] = useState(false)
+	const router = useRouter();
 	const episodes = data[1].episodes;
 	const episode = episodes.filter((episode) => episode.id === id )[0];
 	const sections = episode.sections;
-	const removeSection = (e) => {
-		if (e.target.tagName !== 'path') {
-			e.target.parentElement.parentElement.parentElement.remove();
-		} else {
-			e.target.parentElement.parentElement.parentElement.parentElement.remove();
-		}
+
+	const addSectionModal = () => {
+		const modal = document.querySelector('#add-modal');
+		modal.classList.remove('hidden');
 	}
-	const addSection = async () => {
-		let sectionDetails = document.getElementById('section-details')
-		let parentDiv = document.createElement('div');
-		parentDiv.className = 'section lg:mt-6 mt-3 bg-[#f7f7f794] py-4 ps-6 pe-4 rounded-xl';
+	
+	const setNumberSections = async () => {
+		const res = await fetch(`${server}/api/podcasts`, {
+			cache: "no-store",
+		})
+		const data = await res.json();
+		const episodesData = data[1].episodes;
+		const episodeData = episodesData.filter((episode) => episode.id === id )[0];
+		const sectionsData = episodeData.sections;
 
-		let firstection = document.createElement('div');
-		firstection.className = 'flex justify-between items-center'
+		for (var index = 0; index < sectionsData.length; index++) {
+			sectionsData[index].number = index;
+		}
 
-		parentDiv.appendChild(firstection)
+		const sectionsList = sectionsData;
 
-		let timeStart = document.createElement('div');
-		timeStart.className = 'mt-6'
+		setLoading(true);
+		await fetch(`${server}/api/podcasts/episode/sections`,{
+        	method:'PUT',
+			headers: {
+				"Content-type": "application/json"
+			},
+        	cache:'no-cache',
+        	body:JSON.stringify({
+				'id': data[1].id,
+				'episodeId': episode.id,
+				sectionsList
+			})
+    	})
+		.then((response) => response.json())
+			.then((data) => {
+				setLoading(false)
+			})
+			.catch((error) => {
+				console.error(error);
+			});
 
-		let titleHeading = document.createElement('h1');
-		titleHeading.innerText = 'Title'
-		titleHeading.className = 'text-lg font-bold nunito mb-1'
-		let titleInput = document.createElement('input');
-		titleInput.className = 'section-title outline-none bg-[#f7f7f794] border-2 border-gray-150 rounded-lg text-sm py-2 px-4 lg:w-6/12 w-full vazir';
-		titleInput.setAttribute('type' , 'text');
+		router.refresh();
+	}
 
-		let timeStartHeading = document.createElement('h1');
-		timeStartHeading.innerText = 'Time Start'
-		timeStartHeading.className = 'text-lg mb-1 font-bold nunito'
+	const addSectionData = async () => {
+		const modal = document.querySelector('#add-modal');
+		let sectionId = Math.floor(Math.random() * (10 ** 15)).toString();
+		let sectionTitle = modal.querySelector('#section-title').value;
+		let sectionHour = modal.querySelector('#section-hour').value;
+		let sectionMinute = modal.querySelector('#section-minute').value;
+		let sectionSecond = modal.querySelector('#section-second').value;
+		let sectionDuration = modal.querySelector('#section-duration').value;
+		let sectionSummary = modal.querySelector('#section-summary').value;
+		let sectionTranscript = modal.querySelector('#section-transcript').value;
+		let sectionRefrences = modal.querySelector('#section-refrences').value;
+		let sectionTimeStart = Number(sectionHour * 3600) + Number(sectionMinute * 60) + Number(sectionSecond);
 
-		let TimeStartInputs = document.createElement('div');
-		TimeStartInputs.className = 'flex lg:gap-3 gap-2'
+		const sectionsList = {
+			"id" : sectionId,
+			"number" : sections.length,
+			"timeStart" : sectionTimeStart,
+			"duration" : sectionDuration,
+			"title" : sectionTitle,
+			"summary" : sectionSummary,
+			"transcript" : sectionTranscript,
+			"refrences" : sectionRefrences
+		}
 
-		let TimeStartInput1 = document.createElement('input');
-		TimeStartInput1.className = 'section-hour number-input bg-[#f7f7f794] outline-none border-2 border-gray-150 rounded-lg text-sm py-2 lg:px-4 px-2 lg:w-2/12 w-4/12 vazir'
-		TimeStartInput1.setAttribute('type' , 'number');
-		TimeStartInput1.setAttribute('placeholder' , 'hour');
+		setLoading(true)
+		await fetch(`${server}/api/podcasts/${data[1].id}`,{
+        	method:'POST',
+			headers: {
+				"Content-type": "application/json"
+			},
+        	cache:'no-cache',
+        	body:JSON.stringify({
+				'episodeId': episode.id,
+				sectionsList
+			})
+    	})
+		.then((response) => response.json())
+			.then((data) => {
+				setLoading(false)
+			})
+			.catch((error) => {
+				console.error(error);
+			});
 
-		let TimeStartInput2 = document.createElement('input');
-		TimeStartInput2.className = 'section-minute number-input bg-[#f7f7f794] outline-none border-2 border-gray-150 rounded-lg text-sm py-2 lg:px-4 px-2 lg:w-2/12 w-4/12 vazir'
-		TimeStartInput2.setAttribute('type' , 'number');
-		TimeStartInput2.setAttribute('placeholder' , 'minute');
+		router.refresh();
+	}
+
+
+	const openDeleteModal = (e) => {
+		const modal = document.querySelector('#delete-modal');
+		modal.classList.remove('hidden');
+		const sectionNumber = Number(e.target.parentElement.getAttribute('number'));
+		const sectionNameSpan = modal.getElementsByTagName('span')[0];
+		sectionNameSpan.innerText = sections[sectionNumber].title;
+		modal.setAttribute('number', sectionNumber)
+		closeAllUlMoreSectionMenu();
+	}
+
+	const setDataOfSection = (index) => {
+		const modal = document.querySelector('#modal');
+		let sectionTitle = modal.querySelector('#section-title');
+		let sectionHour = modal.querySelector('#section-hour');
+		let sectionMinute = modal.querySelector('#section-minute');
+		let sectionSecond = modal.querySelector('#section-second');
+		let sectionDuration = modal.querySelector('#section-duration');
+		let sectionSummary = modal.querySelector('#section-summary');
+		let sectionTranscript = modal.querySelector('#section-transcript');
+		let sectionRefrences = modal.querySelector('#section-refrences');
+		const sectionIndex = sections.findIndex((section) => {
+			return section.number == index;
+		})
+		modal.setAttribute("section-id", sections[sectionIndex].id);
+		sectionTitle.value = sections[sectionIndex].title;
+		sectionHour.value = Math.floor(sections[sectionIndex].timeStart / 3600);
+		sectionMinute.value = Math.floor(sections[sectionIndex].timeStart % 3600 / 60);
+		sectionSecond.value = Math.floor(sections[sectionIndex].timeStart % 60);
+		sectionDuration.value = sections[sectionIndex].duration;
+		sectionSummary.value = sections[sectionIndex].summary;
+		sectionTranscript.value = sections[sectionIndex].transcript;
+		sectionRefrences.value = sections[sectionIndex].refrences;
+	}
+
+	const deleteSection = async (e) => {
+		const modal = document.querySelector('#delete-modal');
+		const sectionIndex = modal.getAttribute('number');
+		const sectionsList = {
+			"id": episode.sections[sectionIndex].id,
+			"number": sectionIndex,
+			"timeStart": episode.sections[sectionIndex].timeStart,
+			"title": episode.sections[sectionIndex].title,
+			"summary": episode.sections[sectionIndex].summary,
+			"transcript": episode.sections[sectionIndex].transcript,
+			"refrences": episode.sections[sectionIndex].refrences,
+		}
+
+		setLoading(true)
+		await fetch(`${server}/api/podcasts/${data[1].id}`,{
+        	method:'DELETE',
+			headers: {
+				"Content-type": "application/json"
+			},
+        	cache:'no-cache',
+        	body:JSON.stringify({
+				'episodeId': episode.id,
+				sectionsList
+			})
+    	})
+		.then((response) => response.json())
+			.then((data) => {
+				// setLoading(false)
+			})
+			.catch((error) => {
+				console.error(error);
+			});
+
+		router.refresh();
+
+		await setNumberSections();
 		
-		let TimeStartInput3 = document.createElement('input');
-		TimeStartInput3.className = 'section-second number-input bg-[#f7f7f794] outline-none border-2 border-gray-150 rounded-lg text-sm py-2 lg:px-4 px-2 lg:w-2/12 w-4/12 vazir'
-		TimeStartInput3.setAttribute('type' , 'number');
-		TimeStartInput3.setAttribute('placeholder' , 'second');
-		TimeStartInputs.appendChild(TimeStartInput1)
-		TimeStartInputs.appendChild(TimeStartInput2)
-		TimeStartInputs.appendChild(TimeStartInput3)
-		
-		timeStart.appendChild(timeStartHeading)
-		timeStart.appendChild(TimeStartInputs)
-		
-		let deleteButton = document.createElement('button');
-		deleteButton.className = 'h-fit'
-		let trashIcon = '<svg stroke="currentColor" fill="none" stroke-width="1.5" viewBox="0 0 24 24" aria-hidden="true" class="hover:bg-[#ff1c1c1c] hover:text-Red lg:p-3 p-2 box-content rounded-xl lg:text-2xl text-xl duration-100" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"></path></svg>'
-		deleteButton.addEventListener('click', (event) => removeSection(event))
-		
-		deleteButton.innerHTML = trashIcon
-		firstection.appendChild(titleHeading)
-		firstection.appendChild(deleteButton)
-		parentDiv.appendChild(titleInput)
-		parentDiv.appendChild(timeStart)
+		setTimeout(() => {
+			toggleSectionDeletedModal(episode.sections[sectionIndex].title)
+		}, 1000);
+	}
 
-		let summarySection = document.createElement('div');
-		summarySection.className = 'flex flex-col w-full mt-5'
-		let summaryHeading = document.createElement('h1');
-		summaryHeading.innerText = 'Summary'
-		summaryHeading.className = 'text-xl font-bold nunito'
-		let summaryTextareaParent = document.createElement('div');
-		summaryTextareaParent.className = 'w-full'
-		let summaryTextarea = document.createElement('textarea');
-		summaryTextarea.className = 'section-summary min-h-[150px] w-full bg-[#f7f7f794] resize-none outline-none text-sm border-2 border-gray-150 rounded-lg vazir p-3'
-		summaryTextarea.setAttribute('rows' , '2');
-		summaryTextareaParent.appendChild(summaryTextarea)
-		summarySection.appendChild(summaryHeading)
-		summarySection.appendChild(summaryTextareaParent)
+	const editSection = async () => {
+		const modal = document.querySelector('#modal');
+		let sectionId = modal.getAttribute("section-id");
+		let sectionTitle = modal.querySelector('#section-title').value;
+		let sectionHour = modal.querySelector('#section-hour').value;
+		let sectionMinute = modal.querySelector('#section-minute').value;
+		let sectionSecond = modal.querySelector('#section-second').value;
+		let sectionDuration = modal.querySelector('#section-duration').value;
+		let sectionSummary = modal.querySelector('#section-summary').value;
+		let sectionTranscript = modal.querySelector('#section-transcript').value;
+		let sectionRefrences = modal.querySelector('#section-refrences').value;
+		let sectionTimeStart = Number(sectionHour * 3600) + Number(sectionMinute * 60) + Number(sectionSecond);
 
-		let transcriptSection = document.createElement('div');
-		transcriptSection.className = 'flex flex-col w-full mt-5'
-		let transcriptHeading = document.createElement('h1');
-		transcriptHeading.innerText = 'Transcript'
-		transcriptHeading.className = 'text-xl font-bold nunito'
-		let transcriptTextareaParent = document.createElement('div');
-		transcriptTextareaParent.className = 'w-full'
-		let transcriptTextarea = document.createElement('textarea');
-		transcriptTextarea.className = 'section-transcript min-h-[150px] w-full bg-[#f7f7f794] resize-none outline-none text-sm border-2 border-gray-150 rounded-lg vazir p-3'
-		transcriptTextarea.setAttribute('rows' , '2');
-		transcriptTextareaParent.appendChild(transcriptTextarea)
-		transcriptSection.appendChild(transcriptHeading)
-		transcriptSection.appendChild(transcriptTextareaParent)
+		let sectionIndex = sections.findIndex(section => {
+			return section.id === sectionId;
+		});
 
+		const sectionsList = {
+			"id" : sectionId,
+			"number" : sectionIndex,
+			"timeStart" : sectionTimeStart,
+			"duration" : sectionDuration,
+			"title" : sectionTitle,
+			"summary" : sectionSummary,
+			"transcript" : sectionTranscript,
+			"refrences" : sectionRefrences
+		}
 
-		let refrencesSection = document.createElement('div');
-		refrencesSection.className = 'flex flex-col w-full mt-5'
-		let refrencesHeading = document.createElement('h1');
-		refrencesHeading.innerText = 'Refrences'
-		refrencesHeading.className = 'text-xl font-bold nunito'
-		let refrencesTextareaParent = document.createElement('div');
-		refrencesTextareaParent.className = 'w-full'
-		let refrencesTextarea = document.createElement('textarea');
-		refrencesTextarea.className = 'section-refrences min-h-[150px] w-full bg-[#f7f7f794] resize-none outline-none text-sm border-2 border-gray-150 rounded-lg vazir p-3'
-		refrencesTextarea.setAttribute('rows' , '2');
-		refrencesTextareaParent.appendChild(refrencesTextarea)
-		refrencesSection.appendChild(refrencesHeading)
-		refrencesSection.appendChild(refrencesTextareaParent)
-		
-		parentDiv.appendChild(summarySection)
-		parentDiv.appendChild(transcriptSection)
-		parentDiv.appendChild(refrencesSection)
+		setLoading(true)
+		await fetch(`${server}/api/podcasts/${data[1].id}`,{
+        	method:'PUT',
+			headers: {
+				"Content-type": "application/json"
+			},
+        	cache:'no-cache',
+        	body:JSON.stringify({
+				'episodeId': episode.id,
+				sectionsList
+			})
+    	})
+		.then((response) => response.json())
+			.then((data) => {
+				setLoading(false)
+			})
+			.catch((error) => {
+				console.error(error);
+			});
 
-		sectionDetails.appendChild(parentDiv)
+		router.refresh();
+		modal.removeAttribute('section-id');
+
+		setTimeout(() => {
+			toggleSectionEditedModal();
+		}, 1000);
 	}
 
 	const saveSections = async () => {
 		const sections = document.querySelectorAll('.section');
 		let title = document.querySelector('.episode-title')
 		let description = document.querySelector('.episode-description')
-		const sectionsList = {
+		const episodeData = {
 			"id": episode.id,
 			"title": title.value,
 			"published_date": episode.published_date,
@@ -145,35 +260,15 @@ const EditSection = ({ id, data }) => {
 			"type": episode.type,
 			"duration": episode.duration,
 			"count" : sections.length,
-			"sections" : []
+			"sections" : episode.sections
 		};
-		var i = 0;
-		let sectionHour = document.querySelectorAll('.section-hour');
-		let sectionMinute = document.querySelectorAll('.section-minute');
-		let sectionSecond = document.querySelectorAll('.section-second');
-		let sectionTitle = document.querySelectorAll('.section-title');
-		let sectionSummary = document.querySelectorAll('.section-summary');
-		let sectionTranscript = document.querySelectorAll('.section-transcript');
-		let sectionRefrences = document.querySelectorAll('.section-refrences');
-		[...sections].map(() => {
-			let sectionTimeStart = Number((sectionHour[i].value * 3600)) + Number((sectionMinute[i].value * 60)) + Number((sectionSecond[i].value));
-			sectionsList["sections"].push({
-				"number" : i,
-				"timeStart" : sectionTimeStart,
-				"title" : sectionTitle[i].value,
-				"summary" : sectionSummary[i].value,
-				"transcript" : sectionTranscript[i].value,
-				"refrences" : sectionRefrences[i].value
-			},)
-			i++
-		})
 		setLoading(true)
 		await fetch(`${server}/api/podcasts`,{
-        	method:'POST',
+        	method:'PUT',
         	cache:'no-cache',
         	body:JSON.stringify({
 				'id': data[1].id,
-				sectionsList
+				episodeData
 			})
     	})
 		.then((response) => response.json())
@@ -186,73 +281,500 @@ const EditSection = ({ id, data }) => {
 		});
 		router.refresh()
 		router.push('/');
+	}
+
+	const editEpisodeTitle = async () => {
+		const newTitle = document.querySelector('#edit-title-input').value;
+
+		setLoading(true)
+		await fetch(`${server}/api/podcasts/episode/title`,{
+        	method:'PUT',
+        	cache:'no-cache',
+        	body:JSON.stringify({
+				'id': data[1].id,
+				'episodeId': episode.id,
+				newTitle
+			})
+    	})
+		.then((response) => response.json())
+			.then((data) => {
+				setLoading(false)
+				getSearchResults(data);
+			})
+			.catch((error) => {
+				console.error(error);
+		});
 		router.refresh()
+	}
+
+	const editEpisodeDescription = async () => {
+		const newDescription = document.querySelector('#edit-description-input').value;
+
+		setLoading(true)
+		await fetch(`${server}/api/podcasts/episode/description`,{
+        	method:'PUT',
+        	cache:'no-cache',
+        	body:JSON.stringify({
+				'id': data[1].id,
+				'episodeId': episode.id,
+				newDescription
+			})
+    	})
+		.then((response) => response.json())
+			.then((data) => {
+				setLoading(false)
+				getSearchResults(data);
+			})
+			.catch((error) => {
+				console.error(error);
+		});
+		router.refresh()
+	}
+
+	const closeAllUlMoreSectionMenu = (isThereMenu) => {
+		const ulMoreSections = document.querySelectorAll('.section-more');
+		if(!isThereMenu) {
+			ulMoreSections.forEach(ulMoreSection => {
+				ulMoreSection.classList.add('hidden');
+			});
+		}
+	}
+	
+	const documentClick = (e) => {
+		if (e.target.tagName == 'circle') {
+			closeAllUlMoreSectionMenu(true);
+		} else if (e.target.tagName == 'svg'){
+			closeAllUlMoreSectionMenu(true);
+		} else if (e.target.tagName == 'LI') {
+			closeAllUlMoreSectionMenu(true);
+		} else {
+			if (e.target.matches('.section-more') || e.target.matches('.section-more-button')) {
+				closeAllUlMoreSectionMenu(true);
+			} else {
+				closeAllUlMoreSectionMenu(false);
+			}
+		}
+	}
+
+	const sectionShowMore = (e) => {
+		const ulMoreSections = document.querySelectorAll('.section-more');
+		if (e.target.tagName == 'circle') {
+			let parentDiv = e.target.parentElement.parentElement.parentElement;
+			let ulMoreSection = parentDiv.getElementsByTagName('ul')[0];
+			let index = [...ulMoreSections].findIndex((ulSection) => {
+				return ulSection.getAttribute('number') === ulMoreSection.getAttribute('number');
+			})
+
+			for (var i = 0; i < ulMoreSections.length; i++) {
+				if( i != index) {
+					ulMoreSections[i].classList.add('hidden');
+				}
+			}
+
+			ulMoreSection.classList.toggle('hidden');
+
+			if (!isulMoreSectionIndex) {
+				if (!ulMoreSectionIndex === index) {
+					ulMoreSections[ulMoreSectionIndex].classList.add('hidden');
+				}
+				setUlMoreSectionIndex(index)
+				setIsUlMoreSectionIndex(true)
+			} 
+
+			if(isulMoreSectionIndex) {
+				if (!ulMoreSectionIndex === index) {
+					ulMoreSections[ulMoreSectionIndex].classList.add('hidden');
+					setIsUlMoreSectionIndex(false)
+				}
+			}
+		} else if (e.target.tagName == 'svg'){
+			let parentDiv = e.target.parentElement.parentElement;
+			let ulMoreSection = parentDiv.getElementsByTagName('ul')[0];
+			let index = [...ulMoreSections].findIndex((ulSection) => {
+				return ulSection.getAttribute('number') === ulMoreSection.getAttribute('number');
+			})
+
+			for (var i = 0; i < ulMoreSections.length; i++) {
+				if( i != index) {
+					ulMoreSections[i].classList.add('hidden');
+				}
+			}
+
+			ulMoreSection.classList.toggle('hidden');
+
+			if (!isulMoreSectionIndex) {
+				if (!ulMoreSectionIndex === index) {
+					ulMoreSections[ulMoreSectionIndex].classList.add('hidden');
+				}
+				setUlMoreSectionIndex(index)
+				setIsUlMoreSectionIndex(true)
+			} 
+
+			if(isulMoreSectionIndex) {
+				if (!ulMoreSectionIndex === index) {
+					ulMoreSections[ulMoreSectionIndex].classList.add('hidden');
+					setIsUlMoreSectionIndex(false)
+				}
+			}
+		} else {
+			let parentDiv = e.target.parentElement;
+			let ulMoreSection = parentDiv.getElementsByTagName('ul')[0];
+			let index = [...ulMoreSections].findIndex((ulSection) => {
+				return ulSection.getAttribute('number') === ulMoreSection.getAttribute('number');
+			})
+
+			for (var i = 0; i < ulMoreSections.length; i++) {
+				if( i != index) {
+					ulMoreSections[i].classList.add('hidden');
+				}
+			}
+
+			ulMoreSection.classList.toggle('hidden');
+
+			if (!isulMoreSectionIndex) {
+				if (!ulMoreSectionIndex === index) {
+					ulMoreSections[ulMoreSectionIndex].classList.add('hidden');
+				}
+				setUlMoreSectionIndex(index)
+				setIsUlMoreSectionIndex(true)
+			} 
+
+			if(isulMoreSectionIndex) {
+				if (!ulMoreSectionIndex === index) {
+					ulMoreSections[ulMoreSectionIndex].classList.add('hidden');
+					setIsUlMoreSectionIndex(false)
+				}
+			}
+		}
+	}
+
+	const openModal = (e) => {
+		const modal = document.querySelector('#modal');
+		modal.classList.remove('hidden');
+		const sectionNumber = e.target.parentElement.getAttribute('number')
+		setDataOfSection(sectionNumber);
+		closeAllUlMoreSectionMenu()
+	}
+
+	const closeModal = () => {
+		const modal = document.querySelector('.modal');
+		modal.classList.add('hidden');
+	}
+
+	const closeAddModal = () => {
+		const modal = document.querySelector('#add-modal');
+		modal.classList.add('hidden');
+		let inputsValue = document.querySelectorAll('.value');
+		inputsValue.forEach(inputValue => {
+			inputValue.value = ""
+		});
+	}
+
+	const closeDeleteModal = () => {
+		const modal = document.querySelector('#delete-modal');
+		modal.classList.add('hidden');
+	}
+
+	const toggleSectionDeletedModal = (title) => {
+		const deletedModal = document.querySelector('#section-deleted-modal');
+		deletedModal.classList.remove('hidden');
+		const modalNameSpan = deletedModal.getElementsByTagName('span')[0];
+		modalNameSpan.innerText = title;
+		setTimeout(() => {
+			deletedModal.classList.add('hidden');
+		}, 3000);
+	}
+	const toggleSectionEditedModal = () => {
+		const deletedModal = document.querySelector('#section-edited-modal');
+		deletedModal.classList.remove('hidden');
+		setTimeout(() => {
+			deletedModal.classList.add('hidden');
+		}, 3000);
+	}
+	
+	const openTitleModal = (e) => {
+		const modal = document.querySelector('#edit-title-modal');
+		const titleInput = document.querySelector('#edit-title-input');
+		modal.classList.remove('hidden');
+		if (e.target.tagName == 'path') {
+			titleInput.value = e.target.parentElement.parentElement.parentElement.innerText;
+		} else if (e.target.tagName == 'svg') {
+			titleInput.value = e.target.parentElement.parentElement.innerText;
+		} else {
+			titleInput.value = e.target.parentElement.innerText;
+		}
+	}
+
+	const closeTitleModal = (e) => {
+		const modal = document.querySelector('#edit-title-modal');
+		modal.classList.add('hidden');
+	}
+
+	const openDescriptionModal = (e) => {
+		const modal = document.querySelector('#edit-description-modal');
+		const descriptionInput = document.querySelector('#edit-description-input');
+		modal.classList.remove('hidden');
+		if (e.target.tagName == 'path') {
+			descriptionInput.value = e.target.parentElement.parentElement.parentElement.innerText;
+		} else if (e.target.tagName == 'svg') {
+			descriptionInput.value = e.target.parentElement.parentElement.innerText;
+		} else {
+			descriptionInput.value = e.target.parentElement.innerText;
+		}
+	}
+
+	const closeDescriptionModal = (e) => {
+		const modal = document.querySelector('#edit-description-modal');
+		modal.classList.add('hidden');
+	}
+
+	const documentClickCloseModal = (e) => {
+		const editSectionModal = document.querySelector('#modal');
+		const addSectionModal = document.querySelector('#add-modal');
+		const deleteSectionModal = document.querySelector('#delete-modal');
+		const editDescriptionModal = document.querySelector('#edit-description-modal');
+		const editTitleModal = document.querySelector('#edit-title-modal');
+		const editSectionModalFirstChild = editSectionModal.firstElementChild;
+		const addSectionModalFirstChild = addSectionModal.firstElementChild;
+		const deleteSectionModalFirstChild = deleteSectionModal.firstElementChild;
+		const editDescriptionModalFirstChild = editDescriptionModal.firstElementChild;
+		const editTitleModalFirstChild = editTitleModal.firstElementChild;
+		
+		if (e.target.contains(editSectionModalFirstChild) && e.target !== editSectionModalFirstChild) {
+			editSectionModal.classList.add('hidden');
+		}
+
+		if (e.target.contains(addSectionModalFirstChild) && e.target !== addSectionModalFirstChild) {
+			addSectionModal.classList.add('hidden');
+		}
+
+		if (e.target.contains(deleteSectionModalFirstChild) && e.target !== deleteSectionModalFirstChild) {
+			deleteSectionModal.classList.add('hidden');
+		}
+
+		if (e.target.contains(editDescriptionModalFirstChild) && e.target !== editDescriptionModalFirstChild) {
+			editDescriptionModal.classList.add('hidden');
+		}
+
+		if (e.target.contains(editTitleModalFirstChild) && e.target !== editTitleModalFirstChild) {
+			editTitleModal.classList.add('hidden');
+		}
 	}
 
 	return (
 		<>
-		{loading ? <Loading /> : <div className={`${nunito.className} ${"container mx-auto flex justify-center w-full lg:mt-[100px] mt-[70px]"}`}>
+		{loading ? <Loading /> : <div className={`${nunito.className} ${"container mx-auto flex justify-center w-full lg:mt-[100px] mt-[70px]"}`} onClick={documentClick}>
 		 <div id="right-section" className="h-full w-full">
 			<form action={saveSections}>
 				<div className="flex flex-col gap-y-4 lg:p-6">
-					<div className="flex flex-col w-full bg-white lg:px-6 px-4 py-3 rounded-xl">
-						<h1 className="text-xl font-bold nunito">Title</h1>
-						<div className="mt-4">
-							<input className="episode-title outline-none border-2 border-gray-150 rounded-lg text-sm py-2 px-4 lg:w-6/12 w-full vazir" type="text" defaultValue={episode.title} />
+					<div className="flex flex-col w-full bg-white border-[1px] border-border-gray lg:px-6 px-4 py-6 rounded-xl">
+						<div className="">
+							<h1 className="text-xl font-bold nunito">Title</h1>
+							<div className="flex justify-between items-center border-b-2 border-border-gray px-3">
+								<p className={`${vazir.className} ${"episode-title outline-none rounded-lg text-sm pb-2 pt-0 lg:w-6/12 w-full vazir truncate"}`} type="text">{episode.title}</p>
+								<div className="hover:bg-hover-gray hover:text-gray-600 text-gray-400 p-1 rounded-md box-contect cursor-pointer mb-1" onClick={openTitleModal}><TbEdit className="text-xl"/></div>
+							</div>
+						</div>
+						<div className="mt-8">
+							<h1 className="text-xl font-bold nunito">Description</h1>
+							<div className="flex justify-between items-center border-b-2 border-border-gray px-3">
+								<p className={`${vazir.className} ${"episode-description w-full outline-none text-sm rounded-lg vazir pb-2 pt-0 truncate"}`}>{episode.description}</p>
+								<div className="hover:bg-hover-gray hover:text-gray-600 text-gray-400 p-1 rounded-md box-contect cursor-pointer mb-1" onClick={openDescriptionModal}><TbEdit className="text-xl"/></div>
+							</div>
 						</div>
 					</div>
-					<div className="flex flex-col w-full bg-white lg:px-6 px-4 py-3 rounded-xl">
-						<h1 className="text-xl font-bold nunito">Description</h1>
-						<div className="mt-4">
-							<textarea className="episode-description min-h-[80px] w-full resize-none outline-none text-sm border-2 border-gray-150 rounded-lg vazir p-3" rows="2" defaultValue={episode.description}></textarea>
-						</div>
-					</div>
-					<div className="flex flex-col w-full bg-white lg:px-6 px-4 lg:py-6 py-3 rounded-xl">
-						<div id="section-details" className="flex flex-col w-full bg-white lg:px-6 lg:py-6 py-3 rounded-xl">
+					<div className="flex flex-col w-full bg-White rounded-xl border-[1px] border-border-gray-400">
+						<div className="bg-White lg:px-6 px-4 lg:py-6 py-3 border-b-[1px] border-border-gray rounded-t-xl">
 							<h1 className="text-xl font-bold nunito">Sections</h1>
+						</div>
+						<div id="section-details" className="flex flex-col w-full bg-white lg:px-6 py-3 rounded-b-xl">
 							{
 								sections.map((section) => (
-									<div className="section lg:mt-6 mt-3 bg-[#f7f7f794] py-4 px-6 rounded-xl">
+									<div className="section grid grid-cols-12 lg:space-x-6 lg:gap-12 gap-1 border-b-[1px] border-border-gray lg:py-6 ps-4 pe-6 py-4">
+										<div className={`${vazir.className} ${"lg:col-span-10 col-span-11"}`}>
+											<div className="grid grid-cols-12 ">
+												<div className="flex items-center justify-center col-span-1">
+													<h1 className="lg:col-span-1 lg:text-xl text-lg text-gray-600">{+section.number + 1}</h1>
+												</div>
+												<div className="col-span-11 lg:ms-0 ms-4">
+													<h1 className="text-sm sm:text-md font-semibold">{section.title}</h1>
+													<p className="text-gray-600 text-xs sm:text-sm pe-4 truncate">{section.summary}</p>
+													<p className="flex lg:hidden text-sm text-gray-600">duration: <span className="ms-1">{section.duration}</span>s</p>
+												</div>
+											</div>
+										</div>
+										<div className="hidden lg:flex justify-center items-center xl:col-span-1 lg:col-span-2 col-span-1">
+											<p className="flex text-gray-600 text-md">duration: <span className="ms-1">{section.duration}</span>s</p>
+										</div>
+										<div className="section-more-body flex justify-center items-center col-span-1 relative">
+											<div className="ul-more-section-button section-more-button hover:bg-hover-gray p-2 rounded-full duration-150 cursor-pointer z-1 border-[1px] border-border-gray" onClick={sectionShowMore}>
+												<FiMoreHorizontal />
+											</div>
+											<ul className="section-more-menu section-more hidden absolute top-12 right-8 bg-white min-w-[200px] border-[1px] border-border-gray p-2 shadow-md rounded-xl z-10" number={section.number}>
+												<li className="hover:bg-hover-gray py-2 px-3 rounded-lg duration-150 cursor-pointer" onClick={openModal}>Edit</li>
+												<li className="hover:bg-SupLightRed text-red-600 py-2 px-3 rounded-lg duration-150 cursor-pointer" onClick={openDeleteModal}>Delete</li>
+											</ul>
+										</div>
+									</div>
+								))
+							}
+							<div id="modal" className="hidden modal fixed top-0 left-0 flex justify-center items-center w-full h-full bg-transparent-black-50 ms-0 z-30" onClick={documentClickCloseModal}>
+								<div className="flex flex-col justify-center items-end section-modal bg-white px-5 py-3 m-5 max-w-8xl mt-[72px] max-h-[80vh] rounded-2xl">
+									<button className="h-fit" type="button" onClick={closeModal}><IoCloseOutline className="hover:bg-hover-gray hover:text-gray-700 text-gray-400 p-1 box-content rounded-lg lg:text-2xl text-xl duration-100" /></button>
+									<div className="max-h-[60vh] overflow-y-scroll no-scrollbar">
 										<div className="flex justify-between items-center">
 											<h1 className="text-lg font-bold nunito">Title</h1>
-											<button className="h-fit" onClick={(e) => removeSection(e)} ><HiOutlineTrash className="hover:bg-[#ff1c1c1c] hover:text-Red lg:p-3 p-2 box-content rounded-xl lg:text-2xl text-xl duration-100" /></button>
 										</div>
-										<input className="section-title outline-none bg-[#f7f7f794] border-2 border-gray-150 rounded-lg text-sm py-2 px-4 lg:w-6/12 w-full vazir" type="text" defaultValue={section.title} />
+										<input id="section-title" className="value section-title outline-none bg-[#f7f7f794] border-2 border-gray-150 rounded-lg text-sm py-2 px-4 lg:w-6/12 w-full vazir" type="text" />
 										<div className="mt-6">
 											<h1 className="text-lg mb-1 font-bold nunito">Time Start</h1>
 											<div className="flex lg:gap-3 gap-2">
-												<input className="section-hour number-input bg-[#f7f7f794] outline-none border-2 border-gray-150 rounded-lg text-sm py-2 lg:px-4 px-3 lg:w-2/12 w-4/12 vazir" type="number" placeholder="hour" defaultValue={Math.floor(Math.floor(section.timeStart / 3600)) } />
-												<input className="section-minute number-input bg-[#f7f7f794] outline-none border-2 border-gray-150 rounded-lg text-sm py-2 lg:px-4 px-3 lg:w-2/12 w-4/12 vazir" type="number" placeholder="minute" defaultValue={Math.floor(section.timeStart % 3600 / 60)} />
-												<input className="section-second section-hournumber-input bg-[#f7f7f794] outline-none border-2 border-gray-150 rounded-lg text-sm py-2 lg:px-4 px-3 lg:w-2/12 w-4/12 vazir" type="number" placeholder="second" defaultValue={Math.floor(section.timeStart % 60)} />
+												<input id="section-hour" className="value section-hour number-input bg-[#f7f7f794] outline-none border-2 border-gray-150 rounded-lg text-sm py-2 lg:px-4 px-3 lg:w-2/12 w-4/12 vazir" type="number" placeholder="hour" />
+												<input id="section-minute" className="value section-minute number-input bg-[#f7f7f794] outline-none border-2 border-gray-150 rounded-lg text-sm py-2 lg:px-4 px-3 lg:w-2/12 w-4/12 vazir" type="number" placeholder="minute" />
+												<input id="section-second" className="value section-second section-hournumber-input bg-[#f7f7f794] outline-none border-2 border-gray-150 rounded-lg text-sm py-2 lg:px-4 px-3 lg:w-2/12 w-4/12 vazir" type="number" placeholder="second" />
+												<input id="section-duration" className="value section-duration section-hournumber-input bg-[#f7f7f794] outline-none border-2 border-gray-150 rounded-lg text-sm py-2 lg:px-4 px-3 lg:w-2/12 w-4/12 vazir" type="number" placeholder="duration" />
 											</div>
 										</div>
 										<div className="flex flex-col w-full mt-5">
 											<h1 className="text-xl font-bold nunito">Summary</h1>
 											<div className="w-full">
-												<textarea className="section-summary min-h-[150px] w-full bg-[#f7f7f794] resize-none outline-none text-sm border-2 border-gray-150 rounded-lg vazir p-3" rows="2" defaultValue={section.summary}></textarea>
+												<textarea id="section-summary" className="value section-summary min-h-[150px] w-full bg-[#f7f7f794] resize-none outline-none text-sm border-2 border-gray-150 rounded-lg vazir p-3" rows="2" ></textarea>
 											</div>
 										</div>
 										<div className="flex flex-col w-full mt-5">
 											<h1 className="text-xl font-bold nunito">Transcript</h1>
 											<div className="w-full">
-												<textarea className="section-transcript min-h-[150px] w-full bg-[#f7f7f794] resize-none outline-none text-sm border-2 border-gray-150 rounded-lg vazir p-3" rows="2" defaultValue={section.transcript}></textarea>
+												<textarea id="section-transcript" className="value section-transcript min-h-[150px] w-full bg-[#f7f7f794] resize-none outline-none text-sm border-2 border-gray-150 rounded-lg vazir p-3" rows="2" ></textarea>
 											</div>
 										</div>
 										<div className="flex flex-col w-full mt-5">
 											<h1 className="text-xl font-bold nunito">Refrences</h1>
 											<div className="w-full">
-												<textarea className="section-refrences min-h-[150px] w-full bg-[#f7f7f794] resize-none outline-none text-sm border-2 border-gray-150 rounded-lg vazir p-3" rows="2" defaultValue={section.refrences}></textarea>
+												<textarea id="section-refrences" className="value section-refrences min-h-[150px] w-full bg-[#f7f7f794] resize-none outline-none text-sm border-2 border-gray-150 rounded-lg vazir p-3" rows="2" ></textarea>
 											</div>
 										</div>
 									</div>
-								))
-							}
+									<div className="flex w-full justify-end pt-3 gap-3">
+										<button className="hover:text-gray-700 bg-gray-100 text-gray-500 border-[1px] border-gray-300 px-5 py-1 rounded-lg duration-100" type="button" onClick={closeModal}>Cancel</button>
+										<button className="bg-Blue text-white px-6 py-1 rounded-lg" type="button" onClick={editSection}>Save</button>
+									</div>
+								</div>
+							</div>
+							<div id="add-modal" className="hidden modal fixed top-0 left-0 flex justify-center items-center w-full h-full bg-transparent-black-50 ms-0 z-30" onClick={documentClickCloseModal}>
+								<div className="flex flex-col justify-center items-end section-modal bg-white px-5 py-3 m-5 max-w-8xl mt-[72px] max-h-[80vh] rounded-2xl">
+									<button className="h-fit" type="button" onClick={closeAddModal}><IoCloseOutline className="hover:bg-hover-gray hover:text-gray-700 text-gray-400 p-1 box-content rounded-lg lg:text-2xl text-xl duration-100" /></button>
+									<div className="max-h-[60vh] overflow-y-scroll no-scrollbar">
+										<div className="flex justify-between items-center">
+											<h1 className="text-lg font-bold nunito">Title</h1>
+										</div>
+										<input id="section-title" className="value section-title outline-none bg-[#f7f7f794] border-2 border-gray-150 rounded-lg text-sm py-2 px-4 lg:w-6/12 w-full vazir" type="text" />
+										<div className="mt-6">
+											<h1 className="text-lg mb-1 font-bold nunito">Time Start</h1>
+											<div className="flex lg:gap-3 gap-2">
+												<input id="section-hour" className="value section-hour number-input bg-[#f7f7f794] outline-none border-2 border-gray-150 rounded-lg text-sm py-2 lg:px-4 px-3 lg:w-2/12 w-4/12 vazir" type="number" placeholder="hour" />
+												<input id="section-minute" className="value section-minute number-input bg-[#f7f7f794] outline-none border-2 border-gray-150 rounded-lg text-sm py-2 lg:px-4 px-3 lg:w-2/12 w-4/12 vazir" type="number" placeholder="minute" />
+												<input id="section-second" className="value section-second section-hournumber-input bg-[#f7f7f794] outline-none border-2 border-gray-150 rounded-lg text-sm py-2 lg:px-4 px-3 lg:w-2/12 w-4/12 vazir" type="number" placeholder="second" />
+												<input id="section-duration" className="value section-duration section-hournumber-input bg-[#f7f7f794] outline-none border-2 border-gray-150 rounded-lg text-sm py-2 lg:px-4 px-3 lg:w-2/12 w-4/12 vazir" type="number" placeholder="duration" />
+											</div>
+										</div>
+										<div className="flex flex-col w-full mt-5">
+											<h1 className="text-xl font-bold nunito">Summary</h1>
+											<div className="w-full">
+												<textarea id="section-summary" className="value section-summary min-h-[150px] w-full bg-[#f7f7f794] resize-none outline-none text-sm border-2 border-gray-150 rounded-lg vazir p-3" rows="2" ></textarea>
+											</div>
+										</div>
+										<div className="flex flex-col w-full mt-5">
+											<h1 className="text-xl font-bold nunito">Transcript</h1>
+											<div className="w-full">
+												<textarea id="section-transcript" className="value section-transcript min-h-[150px] w-full bg-[#f7f7f794] resize-none outline-none text-sm border-2 border-gray-150 rounded-lg vazir p-3" rows="2" ></textarea>
+											</div>
+										</div>
+										<div className="flex flex-col w-full mt-5">
+											<h1 className="text-xl font-bold nunito">Refrences</h1>
+											<div className="w-full">
+												<textarea id="section-refrences" className="value section-refrences min-h-[150px] w-full bg-[#f7f7f794] resize-none outline-none text-sm border-2 border-gray-150 rounded-lg vazir p-3" rows="2" ></textarea>
+											</div>
+										</div>
+									</div>
+									<div className="flex w-full justify-end pt-3 gap-3">
+										<button className="hover:text-gray-700 bg-gray-100 text-gray-500 border-[1px] border-gray-300 px-5 py-1 rounded-lg duration-100" type="button" onClick={closeAddModal}>Cancel</button>
+										<button className="bg-Blue text-white px-6 py-1 rounded-lg" type="button" onClick={addSectionData}>Save</button>
+									</div>
+								</div>
+							</div>
+							<div id="delete-modal" className="hidden modal fixed top-0 left-0 flex justify-center items-center w-full h-full bg-transparent-black-50 ms-0 z-30" onClick={documentClickCloseModal}>
+								<div className="flex flex-col justify-center items-end section-modal bg-white px-5 py-3 m-5 max-w-8xl mt-[72px] max-h-[80vh] rounded-2xl">
+									<button className="h-fit" type="button" onClick={closeDeleteModal}><IoCloseOutline className="hover:bg-hover-gray hover:text-gray-700 text-gray-400 p-1 box-content rounded-lg lg:text-2xl text-xl duration-100" /></button>
+									<div className="max-h-[60vh] overflow-y-scroll no-scrollbar">
+										<div>
+											<p className="text-lg text-gray-600">Do you want to delete section "<span className={`${vazir.className} ${"text-black"}`}></span>"?</p>
+											<p className=" text-gray-600">You will no longer be able to return it.</p>
+										</div>
+									</div>
+									<div className="flex w-full pt-3 gap-3">
+										<button className="hover:bg-gray-100 hover:text-gray-700  text-gray-500 px-5 py-2 w-1/2 rounded-md duration-100" type="button" onClick={closeDeleteModal}>Cancel</button>
+										<button className="hover:bg-red-100 hover:text-red-600 text-red-500 px-5 py-2 w-1/2 rounded-md duration-100" type="button" onClick={deleteSection}>Delete</button>
+									</div>
+								</div>
+							</div>
+							<div id="section-deleted-modal" className="hidden section-deleted-modal modal fixed top-0 left-0 flex justify-center w-full">
+								<div className="flex flex-col justify-center items-end section-modal bg-transparent-black-10 backdrop-blur-sm px-5 py-2 m-5 max-w-8xl mt-[72px] max-h-[80vh] shadow-md rounded-full">
+									<div className="flex items-center space-x-2">
+										<PiWarningCircle className="text-gray-600 text-lg" />
+										<p className="text-lg text-gray-600">Section "<span className={`${vazir.className} ${"text-black"}`}></span>" was deleted.</p>
+									</div>
+								</div>
+							</div>
+							<div id="section-edited-modal" className="hidden section-deleted-modal modal fixed top-0 left-0 flex justify-center w-full">
+								<div className="flex flex-col justify-center items-end section-modal bg-transparent-black-10 backdrop-blur-sm px-5 py-2 m-5 max-w-8xl mt-[72px] max-h-[80vh] shadow-md rounded-full">
+									<div className="flex items-center space-x-2 text-gray-600">
+										<GrStatusGood className="text-gray-600 text-lg" />
+										<p className="text-lg text-gray-600">Changes applied.</p>
+									</div>
+								</div>
+							</div>
+							<div id="edit-title-modal" className="hidden modal fixed top-0 left-0 flex justify-center items-center w-full h-full bg-transparent-black-50 ms-0 z-30" onClick={documentClickCloseModal}>
+								<div className="flex flex-col justify-center items-end section-modal bg-white px-5 py-3 m-5 max-w-8xl mt-[72px] max-h-[80vh] lg:w-5/12 w-full rounded-2xl">
+									<button className="h-fit" type="button" onClick={closeTitleModal}><IoCloseOutline className="hover:bg-hover-gray hover:text-gray-700 text-gray-400 p-1 box-content rounded-lg lg:text-2xl text-xl duration-100" /></button>
+									<div className="felx w-full max-h-[60vh] overflow-y-scroll no-scrollbar">
+										<div className="flex justify-between items-center">
+											<h1 className="text-lg font-bold nunito">Title</h1>
+										</div>
+										<input id="edit-title-input" className="outline-none bg-[#f7f7f794] border-2 border-gray-150 rounded-lg text-sm py-2 px-4 w-full vazir" type="text" />
+									</div>
+									<div className="flex w-full justify-end pt-3 gap-3">
+										<button className="hover:text-gray-700 bg-gray-100 text-gray-500 border-[1px] border-gray-300 px-5 py-1 rounded-lg duration-100" type="button" onClick={closeTitleModal}>Cancel</button>
+										<button className="bg-Blue text-white px-6 py-1 rounded-lg" type="button" onClick={editEpisodeTitle}>Save</button>
+									</div>
+								</div>
+							</div>
+							<div id="edit-description-modal" className="hidden modal fixed top-0 left-0 flex justify-center items-center w-full h-full bg-transparent-black-50 ms-0 z-30" onClick={documentClickCloseModal}>
+								<div className="flex flex-col justify-center items-end section-modal bg-white px-5 py-3 m-5 max-w-8xl mt-[72px] max-h-[80vh] lg:w-5/12 w-full rounded-2xl">
+									<button className="h-fit" type="button" onClick={closeDescriptionModal}><IoCloseOutline className="hover:bg-hover-gray hover:text-gray-700 text-gray-400 p-1 box-content rounded-lg lg:text-2xl text-xl duration-100" /></button>
+									<div className="felx w-full max-h-[60vh] overflow-y-scroll no-scrollbar">
+									<h1 className="text-xl font-bold nunito">Description</h1>
+										<div className="w-full">
+											<textarea id="edit-description-input" className="min-h-[150px] w-full bg-[#f7f7f794] resize-none outline-none text-sm border-2 border-gray-150 rounded-lg vazir p-3" rows="2" ></textarea>
+										</div>
+									</div>
+									<div className="flex w-full justify-end pt-3 gap-3">
+										<button className="hover:text-gray-700 bg-gray-100 text-gray-500 border-[1px] border-gray-300 px-5 py-1 rounded-lg duration-100" type="button" onClick={closeDescriptionModal}>Cancel</button>
+										<button className="bg-Blue text-white px-6 py-1 rounded-lg" type="button" onClick={editEpisodeDescription}>Save</button>
+									</div>
+								</div>
+							</div>
+							<div className="relative flex flex-col justify-center items-center text-gray-300 w-full px-4 py-2 rounded-lg ">
+								<div className="flex justify-center add-button ">
+									<IoAddOutline className="hover:bg-gray-100 hover:text-gray-400 hover:border-gray-400 border-[2px] border-border-gray text-4xl rounded-full duration-100 cursor-pointer mt-3" onClick={addSectionModal} />
+									<span className="tooltip absolute top-[-24px] rounded-md px-2 py-[5px] bg-gray-500 text-white z-2">click to add section</span>
+									<span className="tooltip w-1 h-4 absolute top-[0px] rotate-45 rounded px-2 py-1 bg-gray-500 z-1"></span>
+								</div>
+							</div>
 						</div>
-						<div className="flex items-center gap-1 bg-Blue text-white px-4 py-2 rounded-lg w-fit ms-6 mt-5 cursor-pointer" onClick={addSection}> <CgAdd className="text-xl" /> Add</div>
 					</div>
 					<div className="flex w-full justify-end px-6 py-3 gap-3">
-						<Link href='/'><button className="bg-gray-400 text-white px-4 py-2 rounded-lg">Cancel</button></Link>
-						<button className="bg-Blue text-white px-4 py-2 rounded-lg" type="submit">Save</button>
+						<Link href='/'><button className="flex items-center justify-between hover:text-gray-700 bg-gray-100 text-gray-500 border-[1px] border-gray-300 px-6 py-2 rounded-lg duration-100"><IoIosArrowRoundBack className="text-2xl" /> Back</button></Link>
+						{/* <button className="bg-Blue text-white px-6 py-1 rounded-lg" type="submit">Save</button> */}
 					</div>
 				</div>
 			</form>
