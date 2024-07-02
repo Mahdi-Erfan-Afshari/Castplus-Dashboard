@@ -38,7 +38,7 @@ const Sidebar = () => {
 
 			<div className='flex flex-col justify-between px-2 my-6 space-y-2'>
 				<div className='flex flex-col space-y-2'>
-					<Link href='' className='sidebar-button hover:bg-[#e6f2ff] hover:text-Blue bg-[#c7e2ff]/60 backdrop-blur-lg text-Blue rounded-lg overflow-hidden duration-100'>
+					<Link href='/' className='sidebar-button hover:bg-[#e6f2ff] hover:text-Blue bg-[#c7e2ff]/60 backdrop-blur-lg text-Blue rounded-lg overflow-hidden duration-100'>
 						<div className='sidebar-button'>
 							<div className='sidebar-button sidebar-button-toggle flex items-center space-x-3 px-6 py-2' onClick={changeActiveButton}>
 								<MdOutlinePodcasts className='text-xl sidebar-button-icon' />
