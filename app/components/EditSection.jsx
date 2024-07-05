@@ -4,6 +4,7 @@ import Link from "next/link";
 import { server } from "@/app/lib/server"
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { v4 as uuidv4 } from 'uuid';
 import { signIn, useSession } from "next-auth/react";
 import Loading from '@/app/components/Loading'
 import { FiMoreHorizontal } from "react-icons/fi";
@@ -69,7 +70,8 @@ const EditSection = ({ id, data }) => {
 
 	const addSectionData = async () => {
 		const modal = document.querySelector('#add-modal');
-		let sectionId = Math.floor(Math.random() * (10 ** 15)).toString();
+		// let sectionId = Math.floor(Math.random() * (10 ** 15)).toString();
+		let sectionId = uuidv4();
 		let sectionTitle = modal.querySelector('#section-title').value;
 		let sectionHour = modal.querySelector('#section-hour').value;
 		let sectionMinute = modal.querySelector('#section-minute').value;

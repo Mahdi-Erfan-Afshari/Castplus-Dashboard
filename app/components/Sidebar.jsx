@@ -25,15 +25,20 @@ const Sidebar = () => {
 	<div className={`${nunito.className} ${'fixed top-[56px] left-0 h-full backdrop-blur-lg bg-white/60 shadow-lg duration-200 z-20'}`}>
 		<div id='sidebar' className={`${nunito.className} ${'w-0 overflow-y-auto lg:max-h-[calc(100%_-_72px)] max-h-[calc(100%_-_56px)] duration-200 z-11'}`}>
 			{session ?
-				<div className='grid grid-cols-12 items-center w-full p-3 mt-4'>
-					<div id='account-image' className='col-span-2 rounded-full w-[40px] h-[40px] overflow-hidden'>
-						<Image className='w-full h-full object-cover' src={session.user.image} width={100} height={100} alt='User Image'/>
+				<>
+					<div className='grid grid-cols-12 items-center w-full p-3 mt-4'>
+						<div id='account-image' className='col-span-2 rounded-full w-[40px] h-[40px] overflow-hidden'>
+							<Image className='w-full h-full object-cover' src={session.user.image} width={100} height={100} alt='User Image'/>
+						</div>
+						<div id='account-info' className='col-span-9 leading-5 max-w-[210px] ms-2'>
+							<h1 className='text-black text-sm font-bold truncate'>{session.user.name}</h1>
+							<p className='text-Gray text-[14px] truncate'>{session.user.email}</p>
+						</div>
 					</div>
-					<div id='account-info' className='col-span-9 leading-5 max-w-[210px] ms-2'>
-						<h1 className='text-black text-sm font-bold truncate'>{session.user.name}</h1>
-						<p className='text-Gray text-[14px] truncate'>{session.user.email}</p>
+					<div className='flex justify-center mb-4 mt-2 mx-3'>
+						<span className='w-full h-[.5px] bg-[rgba(0,0,0,.12)]'></span>
 					</div>
-				</div>
+				</>
 			: ''}
 
 			<div className='flex flex-col justify-between px-2 my-6 space-y-2'>
