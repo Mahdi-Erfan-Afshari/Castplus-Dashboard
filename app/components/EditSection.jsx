@@ -81,7 +81,7 @@ const EditSection = ({ id, data }) => {
 		let sectionTranscript = modal.querySelector('#section-transcript').value;
 		let sectionRefrences = modal.querySelector('#section-refrences').value;
 		let sectionTimeStart = Number(sectionHour * 3600) + Number(sectionMinute * 60) + Number(sectionSecond);
-
+		
 		const sectionsList = {
 			"id" : sectionId,
 			"number" : sections.length,
@@ -93,27 +93,178 @@ const EditSection = ({ id, data }) => {
 			"refrences" : sectionRefrences
 		}
 
-		setLoading(true)
-		await fetch(`${server}/api/podcasts/${data[1].id}`,{
-        	method:'POST',
-			headers: {
-				"Content-type": "application/json"
-			},
-        	cache:'no-cache',
-        	body:JSON.stringify({
-				'episodeId': episode.id,
-				sectionsList
-			})
-    	})
-		.then((response) => response.json())
-			.then((data) => {
-				setLoading(false)
-			})
-			.catch((error) => {
-				console.error(error);
-			});
+		if (sectionTitle.length !== 0 && sectionHour.length !== 0 && sectionMinute.length !== 0 && sectionSecond.length !== 0 && sectionDuration.length !== 0) {
+			modal.querySelector('#add-section-complete-error').classList.add('hidden');
+			if (Number(sectionHour) > 0 && Number(sectionMinute) > 0 && Number(sectionSecond) > 0 && Number(sectionDuration) > 0) {
+				setLoading(true)
+				await fetch(`${server}/api/podcasts/${data[1].id}`,{
+        			method:'POST',
+					headers: {
+						"Content-type": "application/json"
+					},
+        			cache:'no-cache',
+        			body:JSON.stringify({
+						'episodeId': episode.id,
+						sectionsList
+					})
+    			})
+				.then((response) => response.json())
+					.then((data) => {
+						setLoading(false)
+					})
+					.catch((error) => {
+						console.error(error);
+					});
+				
+				router.refresh();
+			} else {
+				modal.querySelector('#add-section-negative-error').classList.remove('hidden');
+				modal.querySelector('#add-section-negative-error').scrollIntoView({ behavior: "smooth", block: "end", inline: "nearest" });
+				if (Number(sectionHour) < 0) {
+					modal.querySelector('#section-hour').classList.add('border-red-500');
+					modal.querySelector('#section-hour').classList.add('text-red-500');
+					modal.querySelector('#section-hour').classList.add('placeholder:text-red-500');
+					modal.querySelector('#section-hour').classList.remove('border-gray-150');
+				} else {
+					modal.querySelector('#section-hour').classList.remove('border-red-500');
+					modal.querySelector('#section-hour').classList.remove('text-red-500');
+					modal.querySelector('#section-hour').classList.remove('placeholder:text-red-500');
+					modal.querySelector('#section-hour').classList.add('border-gray-150');
+				}
+	
+				if (Number(sectionMinute) < 0) {
+					modal.querySelector('#section-minute').classList.add('border-red-500');
+					modal.querySelector('#section-minute').classList.add('text-red-500');
+					modal.querySelector('#section-minute').classList.add('placeholder:text-red-500');
+					modal.querySelector('#section-minute').classList.remove('border-gray-150');
+				} else {
+					modal.querySelector('#section-minute').classList.remove('border-red-500');
+					modal.querySelector('#section-minute').classList.remove('text-red-500');
+					modal.querySelector('#section-minute').classList.remove('placeholder:text-red-500');
+					modal.querySelector('#section-minute').classList.add('border-gray-150');
+				}
+				
+				if (Number(sectionSecond) < 0) {
+					modal.querySelector('#section-second').classList.add('border-red-500');
+					modal.querySelector('#section-second').classList.add('text-red-500');
+					modal.querySelector('#section-second').classList.add('placeholder:text-red-500');
+					modal.querySelector('#section-second').classList.remove('border-gray-150');
+				} else {
+					modal.querySelector('#section-second').classList.remove('border-red-500');
+					modal.querySelector('#section-second').classList.remove('text-red-500');
+					modal.querySelector('#section-second').classList.remove('placeholder:text-red-500');
+					modal.querySelector('#section-second').classList.add('border-gray-150');
+				}
 
-		router.refresh();
+				if (Number(sectionDuration) < 0) {
+					modal.querySelector('#section-duration').classList.add('border-red-500');
+					modal.querySelector('#section-duration').classList.add('text-red-500');
+					modal.querySelector('#section-duration').classList.add('placeholder:text-red-500');
+					modal.querySelector('#section-duration').classList.remove('border-gray-150');
+				} else {
+					modal.querySelector('#section-duration').classList.remove('border-red-500');
+					modal.querySelector('#section-duration').classList.remove('text-red-500');
+					modal.querySelector('#section-duration').classList.remove('placeholder:text-red-500');
+					modal.querySelector('#section-duration').classList.add('border-gray-150');
+				}
+			}
+		} else {
+			modal.querySelector('#add-section-negative-error').classList.add('hidden');
+			modal.querySelector('#add-section-complete-error').classList.remove('hidden');
+			modal.querySelector('#add-section-complete-error').scrollIntoView({ behavior: "smooth", block: "end", inline: "nearest" });
+			if (sectionTitle.length === 0) {
+				modal.querySelector('#section-title').classList.add('border-red-500');
+				modal.querySelector('#section-title').classList.add('text-red-500');
+				modal.querySelector('#section-title').classList.add('placeholder:text-red-500');
+				modal.querySelector('#section-title').classList.remove('border-gray-150');
+			} else {
+				modal.querySelector('#section-title').classList.remove('border-red-500');
+				modal.querySelector('#section-title').classList.remove('text-red-500');
+				modal.querySelector('#section-title').classList.remove('placeholder:text-red-500');
+				modal.querySelector('#section-title').classList.add('border-gray-150');
+			}
+
+			if (sectionHour.length === 0) {
+				modal.querySelector('#section-hour').classList.add('border-red-500');
+				modal.querySelector('#section-hour').classList.add('text-red-500');
+				modal.querySelector('#section-hour').classList.add('placeholder:text-red-500');
+				modal.querySelector('#section-hour').classList.remove('border-gray-150');
+			} else {
+				modal.querySelector('#section-hour').classList.remove('border-red-500');
+				modal.querySelector('#section-hour').classList.remove('text-red-500');
+				modal.querySelector('#section-hour').classList.remove('placeholder:text-red-500');
+				modal.querySelector('#section-hour').classList.add('border-gray-150');
+			}
+
+			if (sectionMinute.length === 0) {
+				modal.querySelector('#section-minute').classList.add('border-red-500');
+				modal.querySelector('#section-minute').classList.add('text-red-500');
+				modal.querySelector('#section-minute').classList.add('placeholder:text-red-500');
+				modal.querySelector('#section-minute').classList.remove('border-gray-150');
+			} else {
+				modal.querySelector('#section-minute').classList.remove('border-red-500');
+				modal.querySelector('#section-minute').classList.remove('text-red-500');
+				modal.querySelector('#section-minute').classList.remove('placeholder:text-red-500');
+				modal.querySelector('#section-minute').classList.add('border-gray-150');
+			}
+			
+			if (sectionSecond.length === 0) {
+				modal.querySelector('#section-second').classList.add('border-red-500');
+				modal.querySelector('#section-second').classList.add('text-red-500');
+				modal.querySelector('#section-second').classList.add('placeholder:text-red-500');
+				modal.querySelector('#section-second').classList.remove('border-gray-150');
+			} else {
+				modal.querySelector('#section-second').classList.remove('border-red-500');
+				modal.querySelector('#section-second').classList.remove('text-red-500');
+				modal.querySelector('#section-second').classList.remove('placeholder:text-red-500');
+				modal.querySelector('#section-second').classList.add('border-gray-150');
+			}
+
+			if (sectionDuration.length === 0) {
+				modal.querySelector('#section-duration').classList.add('border-red-500');
+				modal.querySelector('#section-duration').classList.add('text-red-500');
+				modal.querySelector('#section-duration').classList.add('placeholder:text-red-500');
+				modal.querySelector('#section-duration').classList.remove('border-gray-150');
+			} else {
+				modal.querySelector('#section-duration').classList.remove('border-red-500');
+				modal.querySelector('#section-duration').classList.remove('text-red-500');
+				modal.querySelector('#section-duration').classList.remove('placeholder:text-red-500');
+				modal.querySelector('#section-duration').classList.add('border-gray-150');
+			}
+		}
+		
+		// const sectionsList = {
+		// 	"id" : sectionId,
+		// 	"number" : sections.length,
+		// 	"timeStart" : sectionTimeStart,
+		// 	"duration" : sectionDuration,
+		// 	"title" : sectionTitle,
+		// 	"summary" : sectionSummary,
+		// 	"transcript" : sectionTranscript,
+		// 	"refrences" : sectionRefrences
+		// }
+
+		// setLoading(true)
+		// await fetch(`${server}/api/podcasts/${data[1].id}`,{
+        // 	method:'POST',
+		// 	headers: {
+		// 		"Content-type": "application/json"
+		// 	},
+        // 	cache:'no-cache',
+        // 	body:JSON.stringify({
+		// 		'episodeId': episode.id,
+		// 		sectionsList
+		// 	})
+    	// })
+		// .then((response) => response.json())
+		// 	.then((data) => {
+		// 		setLoading(false)
+		// 	})
+		// 	.catch((error) => {
+		// 		console.error(error);
+		// 	});
+
+		// router.refresh();
 	}
 
 	const openDeleteModal = (e) => {
@@ -220,70 +371,177 @@ const EditSection = ({ id, data }) => {
 			"refrences" : sectionRefrences
 		}
 
-		setLoading(true)
-		await fetch(`${server}/api/podcasts/${data[1].id}`,{
-        	method:'PUT',
-			headers: {
-				"Content-type": "application/json"
-			},
-        	cache:'no-cache',
-        	body:JSON.stringify({
-				'episodeId': episode.id,
-				sectionsList
-			})
-    	})
-		.then((response) => response.json())
-			.then((data) => {
-				setLoading(false)
-			})
-			.catch((error) => {
-				console.error(error);
-			});
+		if (sectionTitle.length !== 0 && sectionHour.length !== 0 && sectionMinute.length !== 0 && sectionSecond.length !== 0 && sectionDuration.length !== 0) {
+			modal.querySelector('#edit-section-complete-error').classList.add('hidden');
+			if (Number(sectionHour) > 0 && Number(sectionMinute) > 0 && Number(sectionSecond) > 0 && Number(sectionDuration) > 0) {
+				setLoading(true)
+				await fetch(`${server}/api/podcasts/${data[1].id}`,{
+					method:'PUT',
+					headers: {
+						"Content-type": "application/json"
+					},
+					cache:'no-cache',
+					body:JSON.stringify({
+						'episodeId': episode.id,
+						sectionsList
+					})
+				})
+				.then((response) => response.json())
+					.then((data) => {
+						setLoading(false)
+					})
+					.catch((error) => {
+						console.error(error);
+					});
+		
+				router.refresh();
+				modal.removeAttribute('section-id');
+		
+				setTimeout(() => {
+					toggleSectionEditedModal();
+				}, 1000);
+			} else {
+				modal.querySelector('#edit-section-negative-error').classList.remove('hidden');
+				modal.querySelector('#edit-section-negative-error').scrollIntoView({ behavior: "smooth", block: "end", inline: "nearest" });
+				if (Number(sectionHour) < 0) {
+					modal.querySelector('#section-hour').classList.add('border-red-500');
+					modal.querySelector('#section-hour').classList.add('text-red-500');
+					modal.querySelector('#section-hour').classList.add('placeholder:text-red-500');
+					modal.querySelector('#section-hour').classList.remove('border-gray-150');
+				} else {
+					modal.querySelector('#section-hour').classList.remove('border-red-500');
+					modal.querySelector('#section-hour').classList.remove('text-red-500');
+					modal.querySelector('#section-hour').classList.remove('placeholder:text-red-500');
+					modal.querySelector('#section-hour').classList.add('border-gray-150');
+				}
+	
+				if (Number(sectionMinute) < 0) {
+					modal.querySelector('#section-minute').classList.add('border-red-500');
+					modal.querySelector('#section-minute').classList.add('text-red-500');
+					modal.querySelector('#section-minute').classList.add('placeholder:text-red-500');
+					modal.querySelector('#section-minute').classList.remove('border-gray-150');
+				} else {
+					modal.querySelector('#section-minute').classList.remove('border-red-500');
+					modal.querySelector('#section-minute').classList.remove('text-red-500');
+					modal.querySelector('#section-minute').classList.remove('placeholder:text-red-500');
+					modal.querySelector('#section-minute').classList.add('border-gray-150');
+				}
+				
+				if (Number(sectionSecond) < 0) {
+					modal.querySelector('#section-second').classList.add('border-red-500');
+					modal.querySelector('#section-second').classList.add('text-red-500');
+					modal.querySelector('#section-second').classList.add('placeholder:text-red-500');
+					modal.querySelector('#section-second').classList.remove('border-gray-150');
+				} else {
+					modal.querySelector('#section-second').classList.remove('border-red-500');
+					modal.querySelector('#section-second').classList.remove('text-red-500');
+					modal.querySelector('#section-second').classList.remove('placeholder:text-red-500');
+					modal.querySelector('#section-second').classList.add('border-gray-150');
+				}
 
-		router.refresh();
-		modal.removeAttribute('section-id');
+				if (Number(sectionDuration) < 0) {
+					modal.querySelector('#section-duration').classList.add('border-red-500');
+					modal.querySelector('#section-duration').classList.add('text-red-500');
+					modal.querySelector('#section-duration').classList.add('placeholder:text-red-500');
+					modal.querySelector('#section-duration').classList.remove('border-gray-150');
+				} else {
+					modal.querySelector('#section-duration').classList.remove('border-red-500');
+					modal.querySelector('#section-duration').classList.remove('text-red-500');
+					modal.querySelector('#section-duration').classList.remove('placeholder:text-red-500');
+					modal.querySelector('#section-duration').classList.add('border-gray-150');
+				}
+			}
+		} else {
+			modal.querySelector('#edit-section-negative-error').classList.add('hidden');
+			modal.querySelector('#edit-section-complete-error').classList.remove('hidden');
+			modal.querySelector('#edit-section-complete-error').scrollIntoView({ behavior: "smooth", block: "end", inline: "nearest" });
+			if (sectionTitle.length === 0) {
+				modal.querySelector('#section-title').classList.add('border-red-500');
+				modal.querySelector('#section-title').classList.add('text-red-500');
+				modal.querySelector('#section-title').classList.add('placeholder:text-red-500');
+				modal.querySelector('#section-title').classList.remove('border-gray-150');
+			} else {
+				modal.querySelector('#section-title').classList.remove('border-red-500');
+				modal.querySelector('#section-title').classList.remove('text-red-500');
+				modal.querySelector('#section-title').classList.remove('placeholder:text-red-500');
+				modal.querySelector('#section-title').classList.add('border-gray-150');
+			}
 
-		setTimeout(() => {
-			toggleSectionEditedModal();
-		}, 1000);
-	}
+			if (sectionHour.length === 0) {
+				modal.querySelector('#section-hour').classList.add('border-red-500');
+				modal.querySelector('#section-hour').classList.add('text-red-500');
+				modal.querySelector('#section-hour').classList.add('placeholder:text-red-500');
+				modal.querySelector('#section-hour').classList.remove('border-gray-150');
+			} else {
+				modal.querySelector('#section-hour').classList.remove('border-red-500');
+				modal.querySelector('#section-hour').classList.remove('text-red-500');
+				modal.querySelector('#section-hour').classList.remove('placeholder:text-red-500');
+				modal.querySelector('#section-hour').classList.add('border-gray-150');
+			}
 
-	const saveSections = async () => {
-		const sections = document.querySelectorAll('.section');
-		let title = document.querySelector('.episode-title')
-		let description = document.querySelector('.episode-description')
-		const episodeData = {
-			"id": episode.id,
-			"title": title.value,
-			"published_date": episode.published_date,
-			"published_time": episode.published_time,
-			"thumbnail": episode.thumbnail,
-			"description": description.value,
-			"url": episode.url,
-			"type": episode.type,
-			"duration": episode.duration,
-			"count" : sections.length,
-			"sections" : episode.sections
-		};
-		setLoading(true)
-		await fetch(`${server}/api/podcasts`,{
-        	method:'PUT',
-        	cache:'no-cache',
-        	body:JSON.stringify({
-				'id': data[1].id,
-				episodeData
-			})
-    	})
-		.then((response) => response.json())
-			.then((data) => {
-				setLoading(false)
-				getSearchResults(data);
-			})
-			.catch((error) => {
-				console.error(error);
-		});
-		router.refresh()
-		router.push('/');
+			if (sectionMinute.length === 0) {
+				modal.querySelector('#section-minute').classList.add('border-red-500');
+				modal.querySelector('#section-minute').classList.add('text-red-500');
+				modal.querySelector('#section-minute').classList.add('placeholder:text-red-500');
+				modal.querySelector('#section-minute').classList.remove('border-gray-150');
+			} else {
+				modal.querySelector('#section-minute').classList.remove('border-red-500');
+				modal.querySelector('#section-minute').classList.remove('text-red-500');
+				modal.querySelector('#section-minute').classList.remove('placeholder:text-red-500');
+				modal.querySelector('#section-minute').classList.add('border-gray-150');
+			}
+			
+			if (sectionSecond.length === 0) {
+				modal.querySelector('#section-second').classList.add('border-red-500');
+				modal.querySelector('#section-second').classList.add('text-red-500');
+				modal.querySelector('#section-second').classList.add('placeholder:text-red-500');
+				modal.querySelector('#section-second').classList.remove('border-gray-150');
+			} else {
+				modal.querySelector('#section-second').classList.remove('border-red-500');
+				modal.querySelector('#section-second').classList.remove('text-red-500');
+				modal.querySelector('#section-second').classList.remove('placeholder:text-red-500');
+				modal.querySelector('#section-second').classList.add('border-gray-150');
+			}
+
+			if (sectionDuration.length === 0) {
+				modal.querySelector('#section-duration').classList.add('border-red-500');
+				modal.querySelector('#section-duration').classList.add('text-red-500');
+				modal.querySelector('#section-duration').classList.add('placeholder:text-red-500');
+				modal.querySelector('#section-duration').classList.remove('border-gray-150');
+			} else {
+				modal.querySelector('#section-duration').classList.remove('border-red-500');
+				modal.querySelector('#section-duration').classList.remove('text-red-500');
+				modal.querySelector('#section-duration').classList.remove('placeholder:text-red-500');
+				modal.querySelector('#section-duration').classList.add('border-gray-150');
+			}
+		}
+
+		// setLoading(true)
+		// await fetch(`${server}/api/podcasts/${data[1].id}`,{
+        // 	method:'PUT',
+		// 	headers: {
+		// 		"Content-type": "application/json"
+		// 	},
+        // 	cache:'no-cache',
+        // 	body:JSON.stringify({
+		// 		'episodeId': episode.id,
+		// 		sectionsList
+		// 	})
+    	// })
+		// .then((response) => response.json())
+		// 	.then((data) => {
+		// 		setLoading(false)
+		// 	})
+		// 	.catch((error) => {
+		// 		console.error(error);
+		// 	});
+
+		// router.refresh();
+		// modal.removeAttribute('section-id');
+
+		// setTimeout(() => {
+		// 	toggleSectionEditedModal();
+		// }, 1000);
 	}
 
 	const editEpisodeTitle = async () => {
@@ -572,246 +830,260 @@ const EditSection = ({ id, data }) => {
 				{ (session.user.email === "mahdiafshar2413@gmail.com" || session.user.email === "mr.rahimi.live@gmail.com") ? <div>
 					<div className={`${nunito.className} ${"container mx-auto flex justify-center w-full lg:mt-[100px] mt-[70px]"}`} onClick={documentClick}>
 						<div id="right-section" className="h-full w-full">
-							<form action={saveSections}>
-								<div className="flex flex-col gap-y-4 lg:p-6">
-									<div className="flex flex-col w-full bg-white border-[1px] border-border-gray lg:px-6 px-4 py-6 rounded-xl">
-										<div className="">
-											<h1 className="text-xl font-bold nunito">Title</h1>
-											<div className="flex justify-between items-center border-b-2 border-border-gray px-3">
-												<p className={`${vazir.className} ${"episode-title outline-none rounded-lg text-sm pb-2 pt-0 lg:w-6/12 w-full vazir truncate"}`} type="text">{episode.title}</p>
-												<div className="hover:bg-hover-gray hover:text-gray-600 text-gray-400 p-1 rounded-md box-contect cursor-pointer mb-1" onClick={openTitleModal}><TbEdit className="text-xl"/></div>
-											</div>
-										</div>
-										<div className="mt-8">
-											<h1 className="text-xl font-bold nunito">Description</h1>
-											<div className="flex justify-between items-center border-b-2 border-border-gray px-3">
-												<p className={`${vazir.className} ${"episode-description w-full outline-none text-sm rounded-lg vazir pb-2 pt-0 truncate"}`}>{episode.description}</p>
-												<div className="hover:bg-hover-gray hover:text-gray-600 text-gray-400 p-1 rounded-md box-contect cursor-pointer mb-1" onClick={openDescriptionModal}><TbEdit className="text-xl"/></div>
-											</div>
+							<div className="flex flex-col gap-y-4 lg:p-6">
+								<div className="flex flex-col w-full bg-white border-[1px] border-border-gray lg:px-6 px-4 py-6 rounded-xl">
+									<div className="">
+										<h1 className="text-xl font-bold nunito">Title</h1>
+										<div className="flex justify-between items-center border-b-2 border-border-gray px-3">
+											<p className={`${vazir.className} ${"episode-title outline-none rounded-lg text-sm pb-2 pt-0 lg:w-6/12 w-full vazir truncate"}`} type="text">{episode.title}</p>
+											<div className="hover:bg-hover-gray hover:text-gray-600 text-gray-400 p-1 rounded-md box-contect cursor-pointer mb-1" onClick={openTitleModal}><TbEdit className="text-xl"/></div>
 										</div>
 									</div>
-									<div className="flex flex-col w-full bg-White rounded-xl border-[1px] border-border-gray-400">
-										<div className="bg-White lg:px-6 px-4 lg:py-6 py-3 border-b-[1px] border-border-gray rounded-t-xl">
-											<h1 className="text-xl font-bold nunito">Sections</h1>
+									<div className="mt-8">
+										<h1 className="text-xl font-bold nunito">Description</h1>
+										<div className="flex justify-between items-center border-b-2 border-border-gray px-3">
+											<p className={`${vazir.className} ${"episode-description w-full outline-none text-sm rounded-lg vazir pb-2 pt-0 truncate"}`}>{episode.description}</p>
+											<div className="hover:bg-hover-gray hover:text-gray-600 text-gray-400 p-1 rounded-md box-contect cursor-pointer mb-1" onClick={openDescriptionModal}><TbEdit className="text-xl"/></div>
 										</div>
-										<div id="section-details" className="flex flex-col w-full bg-white lg:px-6 py-3 rounded-b-xl">
-											{
-												sections.map((section) => (
-													<div className="section grid grid-cols-12 lg:space-x-6 lg:gap-12 gap-1 border-b-[1px] border-border-gray lg:py-6 ps-4 pe-6 py-4">
-														<div className={`${vazir.className} ${"lg:col-span-10 col-span-11"}`}>
-															<div className="grid grid-cols-12 ">
-																<div className="flex items-center justify-center col-span-1">
-																	<h1 className="lg:col-span-1 lg:text-xl text-lg text-gray-600">{+section.number + 1}</h1>
-																</div>
-																<div className="col-span-11 lg:ms-0 ms-4">
-																	<h1 className="text-sm sm:text-md font-semibold">{section.title}</h1>
-																	<p className="text-gray-600 text-xs sm:text-sm pe-4 truncate">{section.summary}</p>
-																	<p className="flex lg:hidden text-sm text-gray-600">duration: <span className="ms-1">{Math.round(section.duration / 3600)}</span> : <span> {Math.round(section.duration % 3600 / 60 )} </span>  : <span>{Math.round(section.duration % 60 )}</span></p>
-																</div>
-															</div>
-														</div>
-														<div className="hidden lg:flex justify-center items-center xl:col-span-1 lg:col-span-2 col-span-1">
-															<p className="flex text-gray-600 text-md">duration: <span className="ms-1">{Math.round(section.duration / 3600)}</span> : <span> {Math.round(section.duration % 3600 / 60 )} </span>  : <span>{Math.round(section.duration % 60 )}</span></p>
-														</div>
-														<div className="section-more-body flex justify-center items-center col-span-1 relative">
-															<div className="ul-more-section-button section-more-button hover:bg-hover-gray p-2 rounded-full duration-150 cursor-pointer z-1 border-[1px] border-border-gray" onClick={sectionShowMore}>
-																<FiMoreHorizontal />
-															</div>
-															<ul className="section-more-menu section-more hidden absolute top-12 right-8 bg-white min-w-[200px] border-[1px] border-border-gray p-2 shadow-md rounded-xl z-10" number={section.number}>
-																<li className="hover:bg-hover-gray py-2 px-3 rounded-lg duration-150 cursor-pointer" onClick={openModal}>Edit</li>
-																<li className="hover:bg-SupLightRed text-red-600 py-2 px-3 rounded-lg duration-150 cursor-pointer" onClick={openDeleteModal}>Delete</li>
-															</ul>
-														</div>
-													</div>
-												))
-											}
-											<div id="modal" className="hidden modal fixed top-0 left-0 flex justify-center items-center w-full h-full bg-transparent-black-50 ms-0 z-30" onClick={documentClickCloseModal}>
-												<div className="flex flex-col justify-center items-end section-modal bg-white px-5 py-3 m-5 max-w-8xl mt-[72px] max-h-[80vh] rounded-2xl">
-													<button className="h-fit" type="button" onClick={closeModal}><IoCloseOutline className="hover:bg-hover-gray hover:text-gray-700 text-gray-400 p-1 box-content rounded-lg lg:text-2xl text-xl duration-100" /></button>
-													<div className="max-h-[60vh] overflow-y-scroll no-scrollbar">
-														<div className="flex justify-between items-center">
-															<h1 className="text-lg font-bold nunito">Title</h1>
-														</div>
-														<input id="section-title" className="value section-title outline-none bg-[#f7f7f794] border-2 border-gray-150 rounded-lg text-sm py-2 px-4 w-full vazir" type="text" />
-														<div className="mt-6">
-															<h1 className="text-lg mb-1 font-bold nunito">Time Start</h1>
-															<div className="flex flex-col gap-4">
-																<div className="flex items-end">
-																	<div className="flex flex-col justify-center lg:w-2/12 w-4/12 ">
-																		<p className="text-xs ms-1">Hours</p>
-																		<input id="section-hour" className="value section-hour number-input bg-[#f7f7f794] outline-none border-2 border-gray-150 rounded-lg text-sm py-2 lg:px-4 px-3 w-full vazir" type="number" placeholder="hour" />
-																	</div> <span className="text-xl mx-2 pb-2">:</span>
-																	<div className="flex flex-col lg:w-2/12 w-4/12 ">
-																		<p className="text-xs ms-1">Minutes</p>
-																		<input id="section-minute" className="value section-minute number-input bg-[#f7f7f794] outline-none border-2 border-gray-150 rounded-lg text-sm py-2 lg:px-4 px-3 w-full vazir" type="number" placeholder="minute" />
-																	</div> <span className="text-xl mx-2 pb-2">:</span>
-																	<div className="flex flex-col lg:w-2/12 w-4/12 ">
-																		<p className="text-xs ms-1">Seconds</p>
-																		<input id="section-second" className="value section-second section-hour number-input bg-[#f7f7f794] outline-none border-2 border-gray-150 rounded-lg text-sm py-2 lg:px-4 px-3 w-full vazir" type="number" placeholder="second" />
-																	</div>
-																</div>
-																<div className="flex flex-col">
-																	<p className="text-xs ms-1">Duration</p>
-																	<input id="section-duration" className="value section-duration section-hour number-input bg-[#f7f7f794] outline-none border-2 border-gray-150 rounded-lg text-sm py-2 lg:px-4 px-3 lg:w-2/12 w-4/12 vazir" type="number" placeholder="duration" />
-																</div>
-															</div>
-														</div>
-														<div className="flex flex-col w-full mt-5">
-															<h1 className="text-xl font-bold nunito">Summary</h1>
-															<div className="w-full">
-																<textarea id="section-summary" className="value section-summary min-h-[150px] w-full bg-[#f7f7f794] resize-none outline-none text-sm border-2 border-gray-150 rounded-lg vazir p-3" rows="2" ></textarea>
-															</div>
-														</div>
-														<div className="flex flex-col w-full mt-5">
-															<h1 className="text-xl font-bold nunito">Transcript</h1>
-															<div className="w-full">
-																<textarea id="section-transcript" className="value section-transcript min-h-[150px] w-full bg-[#f7f7f794] resize-none outline-none text-sm border-2 border-gray-150 rounded-lg vazir p-3" rows="2" ></textarea>
-															</div>
-														</div>
-														<div className="flex flex-col w-full mt-5">
-															<h1 className="text-xl font-bold nunito">Refrences</h1>
-															<div className="w-full">
-																<textarea id="section-refrences" className="value section-refrences min-h-[150px] w-full bg-[#f7f7f794] resize-none outline-none text-sm border-2 border-gray-150 rounded-lg vazir p-3" rows="2" ></textarea>
-															</div>
-														</div>
-													</div>
-													<div className="flex w-full justify-end pt-3 gap-3">
-														<button className="hover:text-gray-700 bg-gray-100 text-gray-500 border-[1px] border-gray-300 px-5 py-1 rounded-lg duration-100" type="button" onClick={closeModal}>Cancel</button>
-														<button className="bg-Blue text-white px-6 py-1 rounded-lg" type="button" onClick={editSection}>Save</button>
-													</div>
-												</div>
-											</div>
-											<div id="add-modal" className="hidden modal fixed top-0 left-0 flex justify-center items-center w-full h-full bg-transparent-black-50 ms-0 z-30" onClick={documentClickCloseModal}>
-												<div className="flex flex-col justify-center items-end section-modal bg-white px-5 py-3 m-5 max-w-8xl mt-[72px] max-h-[80vh] rounded-2xl">
-													<button className="h-fit" type="button" onClick={closeAddModal}><IoCloseOutline className="hover:bg-hover-gray hover:text-gray-700 text-gray-400 p-1 box-content rounded-lg lg:text-2xl text-xl duration-100" /></button>
-													<div className="max-h-[60vh] overflow-y-scroll no-scrollbar">
-														<div className="flex justify-between items-center">
-															<h1 className="text-lg font-bold nunito">Title</h1>
-														</div>
-														<input id="section-title" className="value section-title outline-none bg-[#f7f7f794] border-2 border-gray-150 rounded-lg text-sm py-2 px-4 lg:w-6/12 w-full vazir" type="text" />
-														<div className="mt-6">
-															<h1 className="text-lg mb-1 font-bold nunito">Time Start</h1>
-															<div className="flex flex-col gap-4">
-																<div className="flex items-end">
-																	<div className="flex flex-col justify-center lg:w-2/12 w-4/12 ">
-																		<p className="text-xs ms-1">Hours</p>
-																		<input id="section-hour" className="value section-hour number-input bg-[#f7f7f794] outline-none border-2 border-gray-150 rounded-lg text-sm py-2 lg:px-4 px-3 w-full vazir" type="number" placeholder="hour" />
-																	</div> <span className="text-xl mx-2 pb-2">:</span>
-																	<div className="flex flex-col lg:w-2/12 w-4/12 ">
-																		<p className="text-xs ms-1">Minutes</p>
-																		<input id="section-minute" className="value section-minute number-input bg-[#f7f7f794] outline-none border-2 border-gray-150 rounded-lg text-sm py-2 lg:px-4 px-3 w-full vazir" type="number" placeholder="minute" />
-																	</div> <span className="text-xl mx-2 pb-2">:</span>
-																	<div className="flex flex-col lg:w-2/12 w-4/12 ">
-																		<p className="text-xs ms-1">Seconds</p>
-																		<input id="section-second" className="value section-second section-hour number-input bg-[#f7f7f794] outline-none border-2 border-gray-150 rounded-lg text-sm py-2 lg:px-4 px-3 w-full vazir" type="number" placeholder="second" />
-																	</div>
-																</div>
-																<div className="flex flex-col">
-																	<p className="text-xs ms-1">Duration</p>
-																	<input id="section-duration" className="value section-duration section-hour number-input bg-[#f7f7f794] outline-none border-2 border-gray-150 rounded-lg text-sm py-2 lg:px-4 px-3 lg:w-2/12 w-4/12 vazir" type="number" placeholder="duration" />
-																</div>
-															</div>
-														</div>
-														<div className="flex flex-col w-full mt-5">
-															<h1 className="text-xl font-bold nunito">Summary</h1>
-															<div className="w-full">
-																<textarea id="section-summary" className="value section-summary min-h-[150px] w-full bg-[#f7f7f794] resize-none outline-none text-sm border-2 border-gray-150 rounded-lg vazir p-3" rows="2" ></textarea>
-															</div>
-														</div>
-														<div className="flex flex-col w-full mt-5">
-															<h1 className="text-xl font-bold nunito">Transcript</h1>
-															<div className="w-full">
-																<textarea id="section-transcript" className="value section-transcript min-h-[150px] w-full bg-[#f7f7f794] resize-none outline-none text-sm border-2 border-gray-150 rounded-lg vazir p-3" rows="2" ></textarea>
-															</div>
-														</div>
-														<div className="flex flex-col w-full mt-5">
-															<h1 className="text-xl font-bold nunito">Refrences</h1>
-															<div className="w-full">
-																<textarea id="section-refrences" className="value section-refrences min-h-[150px] w-full bg-[#f7f7f794] resize-none outline-none text-sm border-2 border-gray-150 rounded-lg vazir p-3" rows="2" ></textarea>
-															</div>
-														</div>
-													</div>
-													<div className="flex w-full justify-end pt-3 gap-3">
-														<button className="hover:text-gray-700 bg-gray-100 text-gray-500 border-[1px] border-gray-300 px-5 py-1 rounded-lg duration-100" type="button" onClick={closeAddModal}>Cancel</button>
-														<button className="bg-Blue text-white px-6 py-1 rounded-lg" type="button" onClick={addSectionData}>Save</button>
-													</div>
-												</div>
-											</div>
-											<div id="delete-modal" className="hidden modal fixed top-0 left-0 flex justify-center items-center w-full h-full bg-transparent-black-50 ms-0 z-30" onClick={documentClickCloseModal}>
-												<div className="flex flex-col justify-center items-end section-modal bg-white px-5 py-3 m-5 max-w-8xl mt-[72px] max-h-[80vh] rounded-2xl">
-													<button className="h-fit" type="button" onClick={closeDeleteModal}><IoCloseOutline className="hover:bg-hover-gray hover:text-gray-700 text-gray-400 p-1 box-content rounded-lg lg:text-2xl text-xl duration-100" /></button>
-													<div className="max-h-[60vh] overflow-y-scroll no-scrollbar">
-														<div>
-															<p className="text-lg text-gray-600">Do you want to delete section "<span className={`${vazir.className} ${"text-black"}`}></span>"?</p>
-															<p className=" text-gray-600">You will no longer be able to return it.</p>
-														</div>
-													</div>
-													<div className="flex w-full pt-3 gap-3">
-														<button className="hover:bg-gray-100 hover:text-gray-700  text-gray-500 px-5 py-2 w-1/2 rounded-md duration-100" type="button" onClick={closeDeleteModal}>Cancel</button>
-														<button className="hover:bg-red-100 hover:text-red-600 text-red-500 px-5 py-2 w-1/2 rounded-md duration-100" type="button" onClick={deleteSection}>Delete</button>
-													</div>
-												</div>
-											</div>
-											<div id="section-deleted-modal" className="hidden section-deleted-modal modal fixed top-0 left-0 flex justify-center w-full">
-												<div className="flex flex-col justify-center items-end section-modal bg-transparent-black-10 backdrop-blur-sm px-5 py-2 m-5 max-w-8xl mt-[72px] max-h-[80vh] shadow-md rounded-full">
-													<div className="flex items-center space-x-2">
-														<PiWarningCircle className="text-gray-600 text-lg" />
-														<p className="text-lg text-gray-600">Section "<span className={`${vazir.className} ${"text-black"}`}></span>" was deleted.</p>
-													</div>
-												</div>
-											</div>
-											<div id="section-edited-modal" className="hidden section-deleted-modal modal fixed top-0 left-0 flex justify-center w-full">
-												<div className="flex flex-col justify-center items-end section-modal bg-transparent-black-10 backdrop-blur-sm px-5 py-2 m-5 max-w-8xl mt-[72px] max-h-[80vh] shadow-md rounded-full">
-													<div className="flex items-center space-x-2 text-gray-600">
-														<GrStatusGood className="text-gray-600 text-lg" />
-														<p className="text-lg text-gray-600">Changes applied.</p>
-													</div>
-												</div>
-											</div>
-											<div id="edit-title-modal" className="hidden modal fixed top-0 left-0 flex justify-center items-center w-full h-full bg-transparent-black-50 ms-0 z-30" onClick={documentClickCloseModal}>
-												<div className="flex flex-col justify-center items-end section-modal bg-white px-5 py-3 m-5 max-w-8xl mt-[72px] max-h-[80vh] lg:w-5/12 w-full rounded-2xl">
-													<button className="h-fit" type="button" onClick={closeTitleModal}><IoCloseOutline className="hover:bg-hover-gray hover:text-gray-700 text-gray-400 p-1 box-content rounded-lg lg:text-2xl text-xl duration-100" /></button>
-													<div className="felx w-full max-h-[60vh] overflow-y-scroll no-scrollbar">
-														<div className="flex justify-between items-center">
-															<h1 className="text-lg font-bold nunito">Title</h1>
-														</div>
-														<input id="edit-title-input" className="outline-none bg-[#f7f7f794] border-2 border-gray-150 rounded-lg text-sm py-2 px-4 w-full vazir" type="text" />
-													</div>
-													<div className="flex w-full justify-end pt-3 gap-3">
-														<button className="hover:text-gray-700 bg-gray-100 text-gray-500 border-[1px] border-gray-300 px-5 py-1 rounded-lg duration-100" type="button" onClick={closeTitleModal}>Cancel</button>
-														<button className="bg-Blue text-white px-6 py-1 rounded-lg" type="button" onClick={editEpisodeTitle}>Save</button>
-													</div>
-												</div>
-											</div>
-											<div id="edit-description-modal" className="hidden modal fixed top-0 left-0 flex justify-center items-center w-full h-full bg-transparent-black-50 ms-0 z-30" onClick={documentClickCloseModal}>
-												<div className="flex flex-col justify-center items-end section-modal bg-white px-5 py-3 m-5 max-w-8xl mt-[72px] max-h-[80vh] lg:w-5/12 w-full rounded-2xl">
-													<button className="h-fit" type="button" onClick={closeDescriptionModal}><IoCloseOutline className="hover:bg-hover-gray hover:text-gray-700 text-gray-400 p-1 box-content rounded-lg lg:text-2xl text-xl duration-100" /></button>
-													<div className="felx w-full max-h-[60vh] overflow-y-scroll no-scrollbar">
-													<h1 className="text-xl font-bold nunito">Description</h1>
-														<div className="w-full">
-															<textarea id="edit-description-input" className="min-h-[150px] w-full bg-[#f7f7f794] resize-none outline-none text-sm border-2 border-gray-150 rounded-lg vazir p-3" rows="2" ></textarea>
-														</div>
-													</div>
-													<div className="flex w-full justify-end pt-3 gap-3">
-														<button className="hover:text-gray-700 bg-gray-100 text-gray-500 border-[1px] border-gray-300 px-5 py-1 rounded-lg duration-100" type="button" onClick={closeDescriptionModal}>Cancel</button>
-														<button className="bg-Blue text-white px-6 py-1 rounded-lg" type="button" onClick={editEpisodeDescription}>Save</button>
-													</div>
-												</div>
-											</div>
-											<div className="relative flex flex-col justify-center items-center text-gray-300 w-full px-4 py-2 rounded-lg ">
-												<div className="flex justify-center add-button ">
-													<IoAddOutline className="hover:bg-gray-100 hover:text-gray-400 hover:border-gray-400 border-[2px] border-border-gray text-4xl rounded-full duration-100 cursor-pointer mt-3" onClick={addSectionModal} />
-													<span className="tooltip absolute top-[-24px] rounded-md px-2 py-[5px] bg-gray-500 text-white z-2">click to add section</span>
-													<span className="tooltip w-1 h-4 absolute top-[0px] rotate-45 rounded px-2 py-1 bg-gray-500 z-1"></span>
-												</div>
-											</div>
-										</div>
-									</div>
-									<div className="flex w-full justify-end px-6 py-3 gap-3">
-										<Link href='/'><button className="flex items-center justify-between hover:text-gray-700 bg-gray-100 text-gray-500 border-[1px] border-gray-300 px-6 py-2 rounded-lg duration-100"><IoIosArrowRoundBack className="text-2xl" /> Back</button></Link>
 									</div>
 								</div>
-							</form>
+								<div className="flex flex-col w-full bg-White rounded-xl border-[1px] border-border-gray-400">
+									<div className="bg-White lg:px-6 px-4 lg:py-6 py-3 border-b-[1px] border-border-gray rounded-t-xl">
+										<h1 className="text-xl font-bold nunito">Sections</h1>
+									</div>
+									<div id="section-details" className="flex flex-col w-full bg-white lg:px-6 py-3 rounded-b-xl">
+										{
+											sections.map((section) => (
+												<div className="section grid grid-cols-12 lg:space-x-6 lg:gap-12 gap-1 border-b-[1px] border-border-gray lg:py-6 ps-4 pe-6 py-4">
+													<div className={`${vazir.className} ${"lg:col-span-10 col-span-11"}`}>
+														<div className="grid grid-cols-12 ">
+															<div className="flex items-center justify-center col-span-1">
+																<h1 className="lg:col-span-1 lg:text-xl text-lg text-gray-600">{+section.number + 1}</h1>
+															</div>
+															<div className="col-span-11 lg:ms-0 ms-4">
+																<h1 className="text-sm sm:text-md font-semibold">{section.title}</h1>
+																<p className="text-gray-600 text-xs sm:text-sm pe-4 truncate">{section.summary}</p>
+																<p className="flex lg:hidden text-sm text-gray-600">duration: <span className="ms-1">{Math.round(section.duration / 3600)}</span> : <span> {Math.round(section.duration % 3600 / 60 )} </span>  : <span>{Math.round(section.duration % 60 )}</span></p>
+															</div>
+														</div>
+													</div>
+													<div className="hidden lg:flex justify-center items-center xl:col-span-1 lg:col-span-2 col-span-1">
+														<p className="flex text-gray-600 text-md">duration: <span className="ms-1">{Math.round(section.duration / 3600)}</span> : <span> {Math.round(section.duration % 3600 / 60 )} </span>  : <span>{Math.round(section.duration % 60 )}</span></p>
+													</div>
+													<div className="section-more-body flex justify-center items-center col-span-1 relative">
+														<div className="ul-more-section-button section-more-button hover:bg-hover-gray p-2 rounded-full duration-150 cursor-pointer z-1 border-[1px] border-border-gray" onClick={sectionShowMore}>
+															<FiMoreHorizontal />
+														</div>
+														<ul className="section-more-menu section-more hidden absolute top-12 right-8 bg-white min-w-[200px] border-[1px] border-border-gray p-2 shadow-md rounded-xl z-10" number={section.number}>
+															<li className="hover:bg-hover-gray py-2 px-3 rounded-lg duration-150 cursor-pointer" onClick={openModal}>Edit</li>
+															<li className="hover:bg-SupLightRed text-red-600 py-2 px-3 rounded-lg duration-150 cursor-pointer" onClick={openDeleteModal}>Delete</li>
+														</ul>
+													</div>
+												</div>
+											))
+										}
+										<div id="modal" className="hidden modal fixed top-0 left-0 flex justify-center items-center w-full h-full bg-transparent-black-50 ms-0 z-30" onClick={documentClickCloseModal}>
+											<div className="flex flex-col justify-center items-end section-modal bg-white px-5 py-3 m-5 max-w-8xl mt-[72px] max-h-[80vh] rounded-2xl">
+												<button className="h-fit" type="button" onClick={closeModal}><IoCloseOutline className="hover:bg-hover-gray hover:text-gray-700 text-gray-400 p-1 box-content rounded-lg lg:text-2xl text-xl duration-100" /></button>
+												<div className="max-h-[60vh] overflow-y-scroll no-scrollbar">
+													<div className="flex justify-between items-center">
+														<h1 className="text-lg font-bold nunito">Title</h1>
+													</div>
+													<input id="section-title" className="value section-title outline-none bg-[#f7f7f794] border-2 border-gray-150 rounded-lg text-sm py-2 px-4 w-full vazir" type="text" placeholder="Section Title"/>
+													<div className="mt-6">
+														<h1 className="text-lg mb-1 font-bold nunito">Time Start</h1>
+														<div className="flex flex-col gap-4">
+															<div className="flex items-end">
+																<div className="flex flex-col justify-center lg:w-2/12 w-4/12 ">
+																	<p className="text-xs ms-1">Hours</p>
+																	<input id="section-hour" className="value section-hour number-input bg-[#f7f7f794] outline-none border-2 border-gray-150 rounded-lg text-sm py-2 lg:px-4 px-3 w-full vazir" type="number" placeholder="hour" />
+																</div> <span className="text-xl mx-2 pb-2">:</span>
+																<div className="flex flex-col lg:w-2/12 w-4/12 ">
+																	<p className="text-xs ms-1">Minutes</p>
+																	<input id="section-minute" className="value section-minute number-input bg-[#f7f7f794] outline-none border-2 border-gray-150 rounded-lg text-sm py-2 lg:px-4 px-3 w-full vazir" type="number" placeholder="minute" />
+																</div> <span className="text-xl mx-2 pb-2">:</span>
+																<div className="flex flex-col lg:w-2/12 w-4/12 ">
+																	<p className="text-xs ms-1">Seconds</p>
+																	<input id="section-second" className="value section-second section-hour number-input bg-[#f7f7f794] outline-none border-2 border-gray-150 rounded-lg text-sm py-2 lg:px-4 px-3 w-full vazir" type="number" placeholder="second" />
+																</div>
+															</div>
+															<div className="flex flex-col">
+																<p className="text-xs ms-1">Duration</p>
+																<input id="section-duration" className="value section-duration section-hour number-input bg-[#f7f7f794] outline-none border-2 border-gray-150 rounded-lg text-sm py-2 lg:px-4 px-3 lg:w-2/12 w-4/12 vazir" type="number" placeholder="duration" />
+															</div>
+															<div id="edit-section-complete-error" className="hidden flex items-center space-x-1 text-red-500">
+																<PiWarningCircle />
+																<p className="text-red-500">Please fill in the required fields.</p>
+															</div>
+															<div id="edit-section-negative-error" className="hidden flex items-center space-x-1 text-red-500">
+																<PiWarningCircle />
+																<p className="text-red-500">Entered numbers must not be negative.</p>
+															</div>
+														</div>
+													</div>
+													<div className="flex flex-col w-full mt-5">
+														<h1 className="text-xl font-bold nunito">Summary</h1>
+														<div className="w-full">
+															<textarea id="section-summary" className="value section-summary min-h-[150px] w-full bg-[#f7f7f794] resize-none outline-none text-sm border-2 border-gray-150 rounded-lg vazir p-3" rows="2" ></textarea>
+														</div>
+													</div>
+													<div className="flex flex-col w-full mt-5">
+														<h1 className="text-xl font-bold nunito">Transcript</h1>
+														<div className="w-full">
+															<textarea id="section-transcript" className="value section-transcript min-h-[150px] w-full bg-[#f7f7f794] resize-none outline-none text-sm border-2 border-gray-150 rounded-lg vazir p-3" rows="2" ></textarea>
+														</div>
+													</div>
+													<div className="flex flex-col w-full mt-5">
+														<h1 className="text-xl font-bold nunito">Refrences</h1>
+														<div className="w-full">
+															<textarea id="section-refrences" className="value section-refrences min-h-[150px] w-full bg-[#f7f7f794] resize-none outline-none text-sm border-2 border-gray-150 rounded-lg vazir p-3" rows="2" ></textarea>
+														</div>
+													</div>
+												</div>
+												<div className="flex w-full justify-end pt-3 gap-3">
+													<button className="hover:text-gray-700 bg-gray-100 text-gray-500 border-[1px] border-gray-300 px-5 py-1 rounded-lg duration-100" type="button" onClick={closeModal}>Cancel</button>
+													<button className="bg-Blue text-white px-6 py-1 rounded-lg" type="button" onClick={editSection}>Save</button>
+												</div>
+											</div>
+										</div>
+										<div id="add-modal" className="hidden modal fixed top-0 left-0 flex justify-center items-center w-full h-full bg-transparent-black-50 ms-0 z-30" onClick={documentClickCloseModal}>
+											<div className="flex flex-col justify-center items-end section-modal bg-white px-5 py-3 m-5 max-w-8xl mt-[72px] max-h-[80vh] rounded-2xl">
+												<button className="h-fit" type="button" onClick={closeAddModal}><IoCloseOutline className="hover:bg-hover-gray hover:text-gray-700 text-gray-400 p-1 box-content rounded-lg lg:text-2xl text-xl duration-100" /></button>
+												<div className="max-h-[60vh] overflow-y-scroll no-scrollbar">
+													<div className="flex justify-between items-center">
+														<h1 className="text-lg font-bold nunito">Title</h1>
+													</div>
+													<input id="section-title" className="value section-title outline-none bg-[#f7f7f794] border-2 border-gray-150 rounded-lg text-sm py-2 px-4 lg:w-6/12 w-full vazir" type="text" placeholder="Section Title" />
+													<div className="mt-6">
+														<h1 className="text-lg mb-1 font-bold nunito">Time Start</h1>
+														<div className="flex flex-col gap-4">
+															<div className="flex items-end">
+																<div className="flex flex-col justify-center lg:w-2/12 w-4/12 ">
+																	<p className="text-xs ms-1">Hours</p>
+																	<input id="section-hour" className="value section-hour number-input bg-[#f7f7f794] outline-none border-2 border-gray-150 rounded-lg text-sm py-2 lg:px-4 px-3 w-full vazir" type="number" placeholder="hour" />
+																</div> <span className="text-xl mx-2 pb-2">:</span>
+																<div className="flex flex-col lg:w-2/12 w-4/12 ">
+																	<p className="text-xs ms-1">Minutes</p>
+																	<input id="section-minute" className="value section-minute number-input bg-[#f7f7f794] outline-none border-2 border-gray-150 rounded-lg text-sm py-2 lg:px-4 px-3 w-full vazir" type="number" placeholder="minute" />
+																</div> <span className="text-xl mx-2 pb-2">:</span>
+																<div className="flex flex-col lg:w-2/12 w-4/12 ">
+																	<p className="text-xs ms-1">Seconds</p>
+																	<input id="section-second" className="value section-second section-hour number-input bg-[#f7f7f794] outline-none border-2 border-gray-150 rounded-lg text-sm py-2 lg:px-4 px-3 w-full vazir" type="number" placeholder="second" />
+																</div>
+															</div>
+															<div className="flex flex-col">
+																<p className="text-xs ms-1">Duration</p>
+																<input id="section-duration" className="value section-duration section-hour number-input bg-[#f7f7f794] outline-none border-2 border-gray-150 rounded-lg text-sm py-2 lg:px-4 px-3 lg:w-2/12 w-4/12 vazir" type="number" placeholder="duration" />
+															</div>
+															<div id="add-section-complete-error" className="hidden flex items-center space-x-1 text-red-500">
+																<PiWarningCircle />
+																<p className="text-red-500">Please fill in the required fields.</p>
+															</div>
+															<div id="add-section-negative-error" className="hidden flex items-center space-x-1 text-red-500">
+																<PiWarningCircle />
+																<p className="text-red-500">Entered numbers must not be negative.</p>
+															</div>
+														</div>
+													</div>
+													<div className="flex flex-col w-full mt-5">
+														<h1 className="text-xl font-bold nunito">Summary</h1>
+														<div className="w-full">
+															<textarea id="section-summary" className="value section-summary min-h-[150px] w-full bg-[#f7f7f794] resize-none outline-none text-sm border-2 border-gray-150 rounded-lg vazir p-3" rows="2" ></textarea>
+														</div>
+													</div>
+													<div className="flex flex-col w-full mt-5">
+														<h1 className="text-xl font-bold nunito">Transcript</h1>
+														<div className="w-full">
+															<textarea id="section-transcript" className="value section-transcript min-h-[150px] w-full bg-[#f7f7f794] resize-none outline-none text-sm border-2 border-gray-150 rounded-lg vazir p-3" rows="2" ></textarea>
+														</div>
+													</div>
+													<div className="flex flex-col w-full mt-5">
+														<h1 className="text-xl font-bold nunito">Refrences</h1>
+														<div className="w-full">
+															<textarea id="section-refrences" className="value section-refrences min-h-[150px] w-full bg-[#f7f7f794] resize-none outline-none text-sm border-2 border-gray-150 rounded-lg vazir p-3" rows="2" ></textarea>
+														</div>
+													</div>
+												</div>
+												<div className="flex w-full justify-end pt-3 gap-3">
+													<button className="hover:text-gray-700 bg-gray-100 text-gray-500 border-[1px] border-gray-300 px-5 py-1 rounded-lg duration-100" type="button" onClick={closeAddModal}>Cancel</button>
+													<button className="bg-Blue text-white px-6 py-1 rounded-lg" type="button" onClick={addSectionData}>Save</button>
+												</div>
+											</div>
+										</div>
+										<div id="delete-modal" className="hidden modal fixed top-0 left-0 flex justify-center items-center w-full h-full bg-transparent-black-50 ms-0 z-30" onClick={documentClickCloseModal}>
+											<div className="flex flex-col justify-center items-end section-modal bg-white px-5 py-3 m-5 max-w-8xl mt-[72px] max-h-[80vh] rounded-2xl">
+												<button className="h-fit" type="button" onClick={closeDeleteModal}><IoCloseOutline className="hover:bg-hover-gray hover:text-gray-700 text-gray-400 p-1 box-content rounded-lg lg:text-2xl text-xl duration-100" /></button>
+												<div className="max-h-[60vh] overflow-y-scroll no-scrollbar">
+													<div>
+														<p className="text-lg text-gray-600">Do you want to delete section "<span className={`${vazir.className} ${"text-black"}`}></span>"?</p>
+														<p className=" text-gray-600">You will no longer be able to return it.</p>
+													</div>
+												</div>
+												<div className="flex w-full pt-3 gap-3">
+													<button className="hover:bg-gray-100 hover:text-gray-700  text-gray-500 px-5 py-2 w-1/2 rounded-md duration-100" type="button" onClick={closeDeleteModal}>Cancel</button>
+													<button className="hover:bg-red-100 hover:text-red-600 text-red-500 px-5 py-2 w-1/2 rounded-md duration-100" type="button" onClick={deleteSection}>Delete</button>
+												</div>
+											</div>
+										</div>
+										<div id="section-deleted-modal" className="hidden section-deleted-modal modal fixed top-0 left-0 flex justify-center w-full">
+											<div className="flex flex-col justify-center items-end section-modal bg-transparent-black-10 backdrop-blur-sm px-5 py-2 m-5 max-w-8xl mt-[72px] max-h-[80vh] shadow-md rounded-full">
+												<div className="flex items-center space-x-2">
+													<PiWarningCircle className="text-gray-600 text-lg" />
+													<p className="text-lg text-gray-600">Section "<span className={`${vazir.className} ${"text-black"}`}></span>" was deleted.</p>
+												</div>
+											</div>
+										</div>
+										<div id="section-edited-modal" className="hidden section-deleted-modal modal fixed top-0 left-0 flex justify-center w-full">
+											<div className="flex flex-col justify-center items-end section-modal bg-transparent-black-10 backdrop-blur-sm px-5 py-2 m-5 max-w-8xl mt-[72px] max-h-[80vh] shadow-md rounded-full">
+												<div className="flex items-center space-x-2 text-gray-600">
+													<GrStatusGood className="text-gray-600 text-lg" />
+													<p className="text-lg text-gray-600">Changes applied.</p>
+												</div>
+											</div>
+										</div>
+										<div id="edit-title-modal" className="hidden modal fixed top-0 left-0 flex justify-center items-center w-full h-full bg-transparent-black-50 ms-0 z-30" onClick={documentClickCloseModal}>
+											<div className="flex flex-col justify-center items-end section-modal bg-white px-5 py-3 m-5 max-w-8xl mt-[72px] max-h-[80vh] lg:w-5/12 w-full rounded-2xl">
+												<button className="h-fit" type="button" onClick={closeTitleModal}><IoCloseOutline className="hover:bg-hover-gray hover:text-gray-700 text-gray-400 p-1 box-content rounded-lg lg:text-2xl text-xl duration-100" /></button>
+												<div className="felx w-full max-h-[60vh] overflow-y-scroll no-scrollbar">
+													<div className="flex justify-between items-center">
+														<h1 className="text-lg font-bold nunito">Title</h1>
+													</div>
+													<input id="edit-title-input" className="outline-none bg-[#f7f7f794] border-2 border-gray-150 rounded-lg text-sm py-2 px-4 w-full vazir" type="text" />
+												</div>
+												<div className="flex w-full justify-end pt-3 gap-3">
+													<button className="hover:text-gray-700 bg-gray-100 text-gray-500 border-[1px] border-gray-300 px-5 py-1 rounded-lg duration-100" type="button" onClick={closeTitleModal}>Cancel</button>
+													<button className="bg-Blue text-white px-6 py-1 rounded-lg" type="button" onClick={editEpisodeTitle}>Save</button>
+												</div>
+											</div>
+										</div>
+										<div id="edit-description-modal" className="hidden modal fixed top-0 left-0 flex justify-center items-center w-full h-full bg-transparent-black-50 ms-0 z-30" onClick={documentClickCloseModal}>
+											<div className="flex flex-col justify-center items-end section-modal bg-white px-5 py-3 m-5 max-w-8xl mt-[72px] max-h-[80vh] lg:w-5/12 w-full rounded-2xl">
+												<button className="h-fit" type="button" onClick={closeDescriptionModal}><IoCloseOutline className="hover:bg-hover-gray hover:text-gray-700 text-gray-400 p-1 box-content rounded-lg lg:text-2xl text-xl duration-100" /></button>
+												<div className="felx w-full max-h-[60vh] overflow-y-scroll no-scrollbar">
+												<h1 className="text-xl font-bold nunito">Description</h1>
+													<div className="w-full">
+														<textarea id="edit-description-input" className="min-h-[150px] w-full bg-[#f7f7f794] resize-none outline-none text-sm border-2 border-gray-150 rounded-lg vazir p-3" rows="2" ></textarea>
+													</div>
+												</div>
+												<div className="flex w-full justify-end pt-3 gap-3">
+													<button className="hover:text-gray-700 bg-gray-100 text-gray-500 border-[1px] border-gray-300 px-5 py-1 rounded-lg duration-100" type="button" onClick={closeDescriptionModal}>Cancel</button>
+													<button className="bg-Blue text-white px-6 py-1 rounded-lg" type="button" onClick={editEpisodeDescription}>Save</button>
+												</div>
+											</div>
+										</div>
+										<div className="relative flex flex-col justify-center items-center text-gray-300 w-full px-4 py-2 rounded-lg ">
+											<div className="flex justify-center add-button ">
+												<IoAddOutline className="hover:bg-gray-100 hover:text-gray-400 hover:border-gray-400 border-[2px] border-border-gray text-4xl rounded-full duration-100 cursor-pointer mt-3" onClick={addSectionModal} />
+												<span className="tooltip absolute top-[-24px] rounded-md px-2 py-[5px] bg-gray-500 text-white z-2">click to add section</span>
+												<span className="tooltip w-1 h-4 absolute top-[0px] rotate-45 rounded px-2 py-1 bg-gray-500 z-1"></span>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div className="flex w-full justify-end px-6 py-3 gap-3">
+									<Link href='/'><button className="flex items-center justify-between hover:text-gray-700 bg-gray-100 text-gray-500 border-[1px] border-gray-300 px-6 py-2 rounded-lg duration-100"><IoIosArrowRoundBack className="text-2xl" /> Back</button></Link>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div> : <div className="flex justify-center items-center w-full h-[100vh]">You are not allowed to access this page.</div> }
