@@ -1,5 +1,6 @@
 'use client'
-import { nunito, vazir } from "../utils/fonts"
+import TagPage from "@/app/components/Tag";
+import { lalezar, nunito, vazir } from "../utils/fonts"
 import Link from "next/link";
 import { server } from "@/app/lib/server"
 import { useRouter } from "next/navigation";
@@ -19,6 +20,8 @@ const EditSection = ({ id, data }) => {
 	const [loading, setLoading] = useState(false)
 	const [ulMoreSectionIndex, setUlMoreSectionIndex] = useState(null)
 	const [isulMoreSectionIndex, setIsUlMoreSectionIndex] = useState(false)
+	const [isFirstTurn, setIsFirstTurn] = useState(true)
+	const [currentIndex, setCurrentIndex] = useState(0)
 	const router = useRouter();
 	const episodes = data[1].episodes;
 	const episode = episodes.filter((episode) => episode.id === id )[0];
@@ -68,6 +71,33 @@ const EditSection = ({ id, data }) => {
 		router.refresh();
 	}
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	const addSectionData = async () => {
 		const modal = document.querySelector('#add-modal');
 		// let sectionId = Math.floor(Math.random() * (10 ** 15)).toString();
@@ -81,6 +111,16 @@ const EditSection = ({ id, data }) => {
 		let sectionTranscript = modal.querySelector('#section-transcript').value;
 		let sectionRefrences = modal.querySelector('#section-refrences').value;
 		let sectionTimeStart = Number(sectionHour * 3600) + Number(sectionMinute * 60) + Number(sectionSecond);
+		const tagsInDom = modal.querySelectorAll('.tag')
+
+		const tags = []
+		
+		tagsInDom.forEach((tag) => {
+			tags.push({
+				id: tag.getAttribute('tagid'),
+				name: tag.firstElementChild.innerText
+			});
+		});
 		
 		const sectionsList = {
 			"id" : sectionId,
@@ -90,7 +130,8 @@ const EditSection = ({ id, data }) => {
 			"title" : sectionTitle,
 			"summary" : sectionSummary,
 			"transcript" : sectionTranscript,
-			"refrences" : sectionRefrences
+			"refrences" : sectionRefrences,
+			"tags": tags
 		}
 
 		if (sectionTitle.length !== 0 && sectionHour.length !== 0 && sectionMinute.length !== 0 && sectionSecond.length !== 0 && sectionDuration.length !== 0) {
@@ -289,7 +330,7 @@ const EditSection = ({ id, data }) => {
 		let sectionRefrences = modal.querySelector('#section-refrences');
 		const sectionIndex = sections.findIndex((section) => {
 			return section.number == index;
-		})
+		});
 		modal.setAttribute("section-id", sections[sectionIndex].id);
 		sectionTitle.value = sections[sectionIndex].title;
 		sectionHour.value = Math.floor(sections[sectionIndex].timeStart / 3600);
@@ -337,11 +378,41 @@ const EditSection = ({ id, data }) => {
 		router.refresh();
 
 		await setNumberSections();
-		
+		setCurrentIndex(0);
 		setTimeout(() => {
 			toggleSectionDeletedModal(episode.sections[sectionIndex].title)
 		}, 1000);
 	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 	const editSection = async () => {
 		const modal = document.querySelector('#modal');
@@ -355,9 +426,19 @@ const EditSection = ({ id, data }) => {
 		let sectionTranscript = modal.querySelector('#section-transcript').value;
 		let sectionRefrences = modal.querySelector('#section-refrences').value;
 		let sectionTimeStart = Number(sectionHour * 3600) + Number(sectionMinute * 60) + Number(sectionSecond);
+		const tagsInDom = modal.querySelectorAll('.tag')
 
 		let sectionIndex = sections.findIndex(section => {
 			return section.id === sectionId;
+		});
+
+		const tags = []
+		
+		tagsInDom.forEach((tag) => {
+			tags.push({
+				id: tag.getAttribute('tagid'),
+				name: tag.firstElementChild.innerText
+			});
 		});
 
 		const sectionsList = {
@@ -368,7 +449,8 @@ const EditSection = ({ id, data }) => {
 			"title" : sectionTitle,
 			"summary" : sectionSummary,
 			"transcript" : sectionTranscript,
-			"refrences" : sectionRefrences
+			"refrences" : sectionRefrences,
+			"tags": tags
 		}
 
 		if (sectionTitle.length !== 0 && sectionHour.length !== 0 && sectionMinute.length !== 0 && sectionSecond.length !== 0 && sectionDuration.length !== 0) {
@@ -708,12 +790,28 @@ const EditSection = ({ id, data }) => {
 			}
 		}
 	}
+	
+	const getCurrentIndex = (index) => {
+		const sectionIndex = sections.findIndex((section) => {
+			return section.number == index;
+		});
+		setCurrentIndex(sectionIndex);
+	}
+
+
+
+
+
+
+
+
 
 	const openModal = (e) => {
 		const modal = document.querySelector('#modal');
 		modal.classList.remove('hidden');
 		const sectionNumber = e.target.parentElement.getAttribute('number')
 		setDataOfSection(sectionNumber);
+		getCurrentIndex(sectionNumber);
 		closeAllUlMoreSectionMenu()
 	}
 
@@ -823,6 +921,241 @@ const EditSection = ({ id, data }) => {
 		}
 	}
 
+	
+
+
+
+
+
+
+
+
+
+	const validInput = (currentInput, tagsParent)=> {
+		const input = currentInput
+	
+		const Space = input.value.indexOf(" ")
+		const Dot = input.value.indexOf(".")
+		const ExclamationMark = input.value.indexOf("!")
+		const Atsign = input.value.indexOf("@")
+		const Dollarsign = input.value.indexOf("$")
+		const Percent = input.value.indexOf("%")
+		const Caret = input.value.indexOf("^")
+		const And = input.value.indexOf("&")
+		const Asterisk = input.value.indexOf("*")
+		const Colon = input.value.indexOf(":")
+		const LeftCurlyBracket = input.value.indexOf("{")
+		const RightCurlyBracket = input.value.indexOf("}")
+		const DivisionSign = input.value.indexOf("÷")
+		const EqualsSign = input.value.indexOf("=")
+		const OneHalfrFractionn = input.value.indexOf("½")
+		const OneQuarterFractionn = input.value.indexOf("¼")
+		const OneThirdFractionn = input.value.indexOf("⅓")
+		const ThreeQuartersFractionn = input.value.indexOf("¾")
+		const TwoThirdsFractionn = input.value.indexOf("⅔")
+		const GraveAccent = input.value.indexOf("`")
+		const GreaterThanSign = input.value.indexOf(">")
+		const LessThanSign = input.value.indexOf("<")
+		const Hyphen = input.value.indexOf("-")
+		const MultiplicationSign = input.value.indexOf("×")
+		const LeftParenthesis = input.value.indexOf("(")
+		const RightParenthesis = input.value.indexOf(")")
+		const PlusSign = input.value.indexOf("+")
+		const QuestionMark = input.value.indexOf("?")
+		const QuestionMark2 = input.value.indexOf("؟")
+		const QuotationMarks = input.value.indexOf(`"`)
+		const Apostrophe = input.value.indexOf(`'`)
+		const Semicolon = input.value.indexOf(";")
+		const Slash = input.value.indexOf("/")
+		const LeftBracket = input.value.indexOf("[")
+		const RightBracket = input.value.indexOf("]")
+		const SuperscriptOne = input.value.indexOf("¹")
+		const SuperscriptTwo = input.value.indexOf("²")
+		const SuperscriptThree = input.value.indexOf("³")
+		const TradeMarkSign = input.value.indexOf("™")
+		const VerticalLine = input.value.indexOf("|")
+	
+		const array = [Space , Dot , ExclamationMark , Atsign , Dollarsign , Percent , Caret , And , Asterisk , Colon , LeftCurlyBracket ,
+			RightCurlyBracket , DivisionSign , EqualsSign , OneHalfrFractionn , OneQuarterFractionn , OneThirdFractionn ,
+			ThreeQuartersFractionn , TwoThirdsFractionn ,GraveAccent , GreaterThanSign , LessThanSign , Hyphen , MultiplicationSign ,
+			LeftParenthesis , RightParenthesis , PlusSign , QuestionMark , QuestionMark2 , QuotationMarks , Apostrophe , Semicolon , 
+			Slash , LeftBracket , RightBracket , SuperscriptOne , SuperscriptTwo , SuperscriptThree , TradeMarkSign , VerticalLine]
+	
+		const Character = (e) => e !== -1
+	
+		if (!input.value) {
+			console.log("type things");
+			input.classList.add('placeholder:text-red-500');	
+	
+		} else if (input.value[0] !== "#") {
+			console.log("no #");
+			input.classList.add("text-red-500");
+	
+		} else if (array.some(Character)) {
+			console.log('erorr');
+			input.classList.add("text-red-500");
+	
+		} else if (input.value === '#') {
+			console.log('only #');
+			input.classList.add("text-red-500");
+	
+		} else {			
+			console.log('object');
+			input.classList.remove("text-red-500");
+			input.classList.remove('placeholder:text-red-500');	
+			input.classList.add("black");
+			// addTag();
+			enterAddTag(currentInput, tagsParent)
+		}
+	
+	}
+
+	const enterHandler = (addTag) => {
+		const ENTER = 13;
+		if (addTag.keyCode === ENTER)
+		validInput(addTag.target, addTag.target.parentElement.parentElement.parentElement.parentElement);
+	};
+	
+	const deleteTag = (e) => {
+		const selectCurrentTag = e.target.parentElement
+		selectCurrentTag.parentElement.removeChild(selectCurrentTag)
+		setIsFirstTurn(true);
+	}
+
+	const enterAddTag = (currentInput, tagsParent) => {
+		// const input = modal.querySelector('#tag-input')
+		addTag(currentInput.value, tagsParent);
+		currentInput.value = ''
+	}
+
+	const addTag = (event, tagsParent) => {
+		const tags = tagsParent.querySelectorAll('.tag');
+		const tagContainer = tagsParent.querySelector('#tag-container');
+		let parentDiv = document.createElement('div');
+		let childDiv = document.createElement('div');
+		let closeDiv = document.createElement('div');
+
+		parentDiv.className = 'tag flex items-center mt-[5px] rounded-md ms-1 overflow-hidden h-[25px] bg-blue-100 text-blue-500';
+		parentDiv.setAttribute('tagId', uuidv4());
+		childDiv.className = 'px-2 pt-[4px] w-full h-full items-center text-xs sm:text-sm';
+		closeDiv.className = 'hover:bg-blue-200 items-center select-none pb-[27px] w-full h-full px-[4px] text-xl';
+		closeDiv.id = 'close-tag';
+		childDiv.innerText = event
+		closeDiv.innerText = "×"
+		
+		parentDiv.appendChild(childDiv)
+		parentDiv.appendChild(closeDiv)
+		tagContainer.insertBefore(parentDiv, tagContainer.children[tags.length]);
+		closeDiv.addEventListener("click" , deleteTag )
+	}
+
+	const editModalClickCloseDropDown = (e) => {
+		const dropdown = document.querySelector('#edit-modal-dropdown');
+		const tagInput = document.querySelector('#edit-modal-tag-input');
+		
+		let thisContains = e.target.contains(tagInput)
+		if (thisContains && e.target !== dropdown) {
+			dropdown.classList.remove('hidden');
+		}
+
+		if (!thisContains && e.target !== dropdown) {
+			dropdown.classList.add('hidden');
+		}
+	}
+
+	const addModalClickCloseDropDown = (e) => {
+		const dropdown = document.querySelector('#add-modal-dropdown');
+		const tagInput = document.querySelector('#add-modal-tag-input');
+		
+		let thisContains = e.target.contains(tagInput)
+		if (thisContains && e.target !== dropdown) {
+			dropdown.classList.remove('hidden');
+		}
+
+		if (!thisContains && e.target !== dropdown) {
+			dropdown.classList.add('hidden');
+		}
+	}
+	
+	const selectTag = (currentInput ,tagsParent) => {
+		const input = currentInput
+		const tags = tagsParent.querySelectorAll('.tag');
+		const tagContainer = tagsParent.querySelector('#tag-container');
+		const lastTag = tagContainer.children[tags.length - 1]
+		if (input.value == '' && lastTag !== undefined) {
+			const removeTag = lastTag.lastChild;
+			lastTag.classList.remove('bg-blue-100')
+			lastTag.classList.add('bg-blue-200')
+			removeTag.classList.add('hover:bg-blue-300');
+		}
+	}
+
+	const deSelectTag = (lastTag) => {
+		const removeTag = lastTag.lastChild;
+		lastTag.classList.remove('bg-blue-200')
+		lastTag.classList.add('bg-blue-100')
+		removeTag.classList.remove('hover:bg-blue-300');
+		removeTag.classList.add('hover:bg-blue-200');
+	}
+
+	const deleteTagWithBackspace = (tagsParent) => {
+		const tagContainer = tagsParent.querySelector('#tag-container')
+		const tags = tagsParent.querySelectorAll('.tag')
+		const lastTag = tagContainer.children[tags.length - 1]
+		if (lastTag !== undefined){
+			lastTag.parentElement.removeChild(lastTag)
+
+		}
+	}
+
+	const backspace = (deleteTagBackspace) => {
+		const tagContainer = deleteTagBackspace.target.parentElement.parentElement.parentElement.parentElement.querySelector('#tag-container');
+		const tags = deleteTagBackspace.target.parentElement.parentElement.parentElement.parentElement.querySelectorAll('.tag');
+		const lastTag = tagContainer.children[tags.length - 1]
+		const input = deleteTagBackspace.target
+		const BACKSPACE = 8
+		if (deleteTagBackspace.keyCode === BACKSPACE) {
+			if (input.value === ''){
+				if (!isFirstTurn) {
+					deleteTagWithBackspace(deleteTagBackspace.target.parentElement.parentElement.parentElement.parentElement)
+					selectTag(input, deleteTagBackspace.target.parentElement.parentElement.parentElement.parentElement)
+					
+				} else {
+					selectTag(input, deleteTagBackspace.target.parentElement.parentElement.parentElement.parentElement)
+					setIsFirstTurn(false);
+				}
+			}
+		} else {
+			if (tags.length !== 0) {
+				deSelectTag(lastTag)
+			}
+			setIsFirstTurn(true);
+		}
+	}
+	
+	const deSelectOfferTag = (lastTag) => {
+		setIsFirstTurn(true);
+		const removeTag = lastTag.lastChild
+		lastTag.classList.remove('bg-blue-200')
+		lastTag.classList.add('bg-blue-100')
+		removeTag.classList.remove('hover:bg-blue-300');
+		removeTag.classList.add('hover:bg-blue-200');
+	}
+
+	const addOffer = (e) => {
+		const offer = e.target.innerText
+		const tags = e.target.parentElement.parentElement.parentElement.parentElement.querySelectorAll('.tag');
+		const tagContainer = e.target.parentElement.parentElement.parentElement.parentElement.querySelector('#tag-container');
+		const lastTag = tagContainer.children[tags.length - 1];
+		addTag(offer, e.target.parentElement.parentElement.parentElement.parentElement)
+		if (tags.length !== 0) {
+			deSelectOfferTag(lastTag)
+		}
+	}
+
+	
+	
+
 	return (
 		<>
 		{loading ? <Loading /> : <> 
@@ -883,7 +1216,7 @@ const EditSection = ({ id, data }) => {
 											))
 										}
 										<div id="modal" className="hidden modal fixed top-0 left-0 flex justify-center items-center w-full h-full bg-transparent-black-50 ms-0 z-30" onClick={documentClickCloseModal}>
-											<div className="flex flex-col justify-center items-end section-modal bg-white px-5 py-3 m-5 max-w-8xl mt-[72px] max-h-[80vh] rounded-2xl">
+											<div className="flex flex-col justify-center items-end section-modal bg-white px-5 py-3 m-5 max-w-8xl mt-[72px] max-h-[80vh] rounded-2xl" onClick={editModalClickCloseDropDown}>
 												<button className="h-fit" type="button" onClick={closeModal}><IoCloseOutline className="hover:bg-hover-gray hover:text-gray-700 text-gray-400 p-1 box-content rounded-lg lg:text-2xl text-xl duration-100" /></button>
 												<div className="max-h-[60vh] overflow-y-scroll no-scrollbar">
 													<div className="flex justify-between items-center">
@@ -939,6 +1272,57 @@ const EditSection = ({ id, data }) => {
 															<textarea id="section-refrences" className="value section-refrences min-h-[150px] w-full bg-[#f7f7f794] resize-none outline-none text-sm border-2 border-gray-150 rounded-lg vazir p-3" rows="2" ></textarea>
 														</div>
 													</div>
+
+													
+
+
+
+
+
+
+
+													<div id="tags-parent-element">
+														<div className={`${vazir.className} ${"mt-5"}`}>
+															<h1 className="text-xl font-bold nunito">Tags</h1>
+															<div className="relative w-[320px] sm:w-[388px] md:w-[633px] space-x-2">
+																<div id="tag-container" className="relative flex flex-wrap w-full bg-[#f7f7f794] p-3 border-2 border-gray-150 rounded-lg">
+																	{
+																		sections[currentIndex].tags.map((tag) => (
+																			<div className="tag flex items-center mt-[5px] ms-1 rounded-md overflow-hidden h-[25px] bg-blue-100 text-blue-500" tagId={tag.id}>
+																				<div id="content" className="px-2 sm:pt-[4px] pt-[5px] w-full h-full items-center text-xs sm:text-sm ">
+																					{tag.name}
+																				</div>
+																				{/* <IoCloseOutline id="close-tag" className="bg-blue-100 text-blue-500 hover:bg-blue-200 w-full h-full px-[2px]" onClick={deleteTag} /> */}
+																				<div id="close-tag" className="hover:bg-blue-200 items-center select-none pb-[27px] px-[4px] w-full h-full text-xl" onClick={deleteTag} >×</div>
+																			</div>
+																		))
+																	}
+																	{/* <input onKeyDown={(addTag) => enterHandler(addTag)} id="tag-input" placeholder="Enter Tags..." type="text" className="outline-none text-sm items-center pt-1 w-0 grow ms-2 bg-[#f7f7f794] min-w-[80px] h-full mt-[5px]" /> */}
+																	<input onKeyDown={(addTag) => enterHandler(addTag)} onKeyUp={(deleteTagBackspace) => backspace(deleteTagBackspace)}  id="edit-modal-tag-input" placeholder="Enter Tags..." type="text"  className="outline-none text-sm items-center pt-1 w-0 grow ms-2 bg-[#f7f7f794] min-w-[80px] h-full mt-[5px]" />
+																</div>
+															</div>
+															<div id="edit-modal-dropdown" className="hidden w-full bg-[#ddd] rounded-lg mb-5 gap-y-2 overflow-auto border-[1px] border-gray-150 max-h-44 no-scrollbar cursor-pointer">
+																<div>
+																	<div className="hover:bg-slate-50 w-full mt-[1px] px-7 py-2 text-sm sm:text-md bg-white text-gray-500 duration-150" onClick={addOffer}>#tags</div>
+																	<div className="hover:bg-slate-50 w-full mt-[1px] px-7 py-2 text-sm sm:text-md bg-white text-gray-500 duration-150" onClick={addOffer}>#radio_rah</div>
+																	<div className="hover:bg-slate-50 w-full mt-[1px] px-7 py-2 text-sm sm:text-md bg-white text-gray-500 duration-150" onClick={addOffer}>#رادیو_راه</div>
+																	<div className="hover:bg-slate-50 w-full mt-[1px] px-7 py-2 text-sm sm:text-md bg-white text-gray-500 duration-150" onClick={addOffer}>#پادکست_پرسه </div>
+																	<div className="hover:bg-slate-50 w-full mt-[1px] px-7 py-2 text-sm sm:text-md bg-white text-gray-500 duration-150" onClick={addOffer}>#castplus</div>
+																	<div className="hover:bg-slate-50 w-full mt-[1px] px-7 py-2 text-sm sm:text-md bg-white text-gray-500 duration-150" onClick={addOffer}>#podcast</div>
+																</div>
+															</div>
+														</div>
+													</div>
+
+
+
+
+
+
+
+
+
+													
 												</div>
 												<div className="flex w-full justify-end pt-3 gap-3">
 													<button className="hover:text-gray-700 bg-gray-100 text-gray-500 border-[1px] border-gray-300 px-5 py-1 rounded-lg duration-100" type="button" onClick={closeModal}>Cancel</button>
@@ -947,7 +1331,7 @@ const EditSection = ({ id, data }) => {
 											</div>
 										</div>
 										<div id="add-modal" className="hidden modal fixed top-0 left-0 flex justify-center items-center w-full h-full bg-transparent-black-50 ms-0 z-30" onClick={documentClickCloseModal}>
-											<div className="flex flex-col justify-center items-end section-modal bg-white px-5 py-3 m-5 max-w-8xl mt-[72px] max-h-[80vh] rounded-2xl">
+											<div className="flex flex-col justify-center items-end section-modal bg-white px-5 py-3 m-5 max-w-8xl mt-[72px] max-h-[80vh] rounded-2xl" onClick={addModalClickCloseDropDown}>
 												<button className="h-fit" type="button" onClick={closeAddModal}><IoCloseOutline className="hover:bg-hover-gray hover:text-gray-700 text-gray-400 p-1 box-content rounded-lg lg:text-2xl text-xl duration-100" /></button>
 												<div className="max-h-[60vh] overflow-y-scroll no-scrollbar">
 													<div className="flex justify-between items-center">
@@ -1003,6 +1387,30 @@ const EditSection = ({ id, data }) => {
 															<textarea id="section-refrences" className="value section-refrences min-h-[150px] w-full bg-[#f7f7f794] resize-none outline-none text-sm border-2 border-gray-150 rounded-lg vazir p-3" rows="2" ></textarea>
 														</div>
 													</div>
+
+													<div id="tags-parent-element">
+														<div className={`${vazir.className} ${"mt-5"}`}>
+															<h1 className="text-xl font-bold nunito">Tags</h1>
+															<div className="relative w-[320px] sm:w-[388px] md:w-[633px] space-x-2">
+																<div id="tag-container" className="relative flex flex-wrap w-full bg-[#f7f7f794] p-3 border-2 border-gray-150 rounded-lg">
+																	
+																	{/* <input onKeyDown={(addTag) => enterHandler(addTag)} id="tag-input" placeholder="Enter Tags..." type="text" className="outline-none text-sm items-center pt-1 w-0 grow ms-2 bg-[#f7f7f794] min-w-[80px] h-full mt-[5px]" /> */}
+																	<input onKeyDown={(addTag) => enterHandler(addTag)} onKeyUp={(deleteTagBackspace) => backspace(deleteTagBackspace)}  id="add-modal-tag-input" placeholder="Enter Tags..." type="text"  className="outline-none text-sm items-center pt-1 w-0 grow ms-2 bg-[#f7f7f794] min-w-[80px] h-full mt-[5px]" />
+																</div>
+															</div>
+															<div id="add-modal-dropdown" className="hidden w-full bg-[#ddd] rounded-lg mb-5 gap-y-2 overflow-auto border-[1px] border-gray-150 max-h-44 no-scrollbar cursor-pointer">
+																<div>
+																	<div className="hover:bg-slate-50 w-full mt-[1px] px-7 py-2 text-sm sm:text-md bg-white text-gray-500 duration-150" onClick={addOffer}>#tags</div>
+																	<div className="hover:bg-slate-50 w-full mt-[1px] px-7 py-2 text-sm sm:text-md bg-white text-gray-500 duration-150" onClick={addOffer}>#radio_rah</div>
+																	<div className="hover:bg-slate-50 w-full mt-[1px] px-7 py-2 text-sm sm:text-md bg-white text-gray-500 duration-150" onClick={addOffer}>#رادیو_راه</div>
+																	<div className="hover:bg-slate-50 w-full mt-[1px] px-7 py-2 text-sm sm:text-md bg-white text-gray-500 duration-150" onClick={addOffer}>#پادکست_پرسه </div>
+																	<div className="hover:bg-slate-50 w-full mt-[1px] px-7 py-2 text-sm sm:text-md bg-white text-gray-500 duration-150" onClick={addOffer}>#castplus</div>
+																	<div className="hover:bg-slate-50 w-full mt-[1px] px-7 py-2 text-sm sm:text-md bg-white text-gray-500 duration-150" onClick={addOffer}>#podcast</div>
+																</div>
+															</div>
+														</div>
+													</div>
+
 												</div>
 												<div className="flex w-full justify-end pt-3 gap-3">
 													<button className="hover:text-gray-700 bg-gray-100 text-gray-500 border-[1px] border-gray-300 px-5 py-1 rounded-lg duration-100" type="button" onClick={closeAddModal}>Cancel</button>

@@ -114,6 +114,7 @@
     display: block;
 }
 
+
 @keyframes wave {
     0% {
         transform: scaleY(0.3);
