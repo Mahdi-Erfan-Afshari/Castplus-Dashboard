@@ -59,26 +59,7 @@ export async function DELETE(request, { params }){
 		{ $pull: { "episodes.$[element].sections" : { "id": data.sectionsList.id } } },
 		{ arrayFilters: [
 			 {"element.id": episodeId},
-			//  {"elem.id": data.sectionsList.id }
 		  ] , upsert: true}
 	);
 	return NextResponse.json(episode)       
 }
-
-// export async function UPDATETITLE(request, { params }){
-// 	const client = await clientPromise
-// 	let db = client.db('castplus')
-// 	const data = await request.json();
-// 	const { id } = params;
-// 	const { episodeId } = data;
-// 	let episode = await db.collection("podcasts").findOneAndUpdate(
-// 		{
-// 			id: id,
-// 		},
-// 		{ $set: { "episodes.$[element].id" : data.newTitle } },
-// 		{ arrayFilters: [
-// 			 {"element.id": episodeId},
-// 		  ] }
-// 	);
-// 	return NextResponse.json(episode)       
-// }
