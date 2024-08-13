@@ -1,3 +1,4 @@
+'use client'
 import { vazir } from "../utils/fonts"
 import { server } from "@/app/lib/server"
 import { useRouter } from "next/navigation";
