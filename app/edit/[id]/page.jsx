@@ -1,4 +1,4 @@
-import EditSection from "@/app/components/EditSection"
+import EditEpisode from "@/app/components/EditEpisode"
 import { server } from "@/app/lib/server"
 
 const fetchPodcasts = async () => {
@@ -14,7 +14,7 @@ const editCurrentEpisode = async ({ params: { id } }) => {
 	const data = await fetchPodcasts()
   return (
 	<div>
-		<EditSection id={id} data={data} />
+		<EditEpisode id={id} data={data} />
 	</div>
   )
 }
