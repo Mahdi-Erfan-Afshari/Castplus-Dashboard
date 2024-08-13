@@ -663,8 +663,8 @@ const EditEpisode = ({ id, data }) => {
 											))
 										}
 										
-										<EditSectionModal documentClickCloseModal={documentClickCloseModal} deleteTag={deleteTag} addOffer={addOffer} enterHandler={enterHandler} backspace={backspace} tags={sections[currentIndex].tags} data={data} episode={episode} sections={sections} setLoading={setLoading} />
-										<AddSectionModal documentClickCloseModal={documentClickCloseModal} addOffer={addOffer} enterHandler={enterHandler} backspace={backspace}data={data} episode={episode}  sections={sections} setLoading={setLoading} />
+										<EditSectionModal documentClickCloseModal={documentClickCloseModal} deleteTag={deleteTag} addOffer={addOffer} enterHandler={enterHandler} backspace={backspace} tags={sections[currentIndex].tags} data={data} episode={episode} sections={sections} setLoading={setLoading} router={router} />
+										<AddSectionModal documentClickCloseModal={documentClickCloseModal} addOffer={addOffer} enterHandler={enterHandler} backspace={backspace}data={data} episode={episode}  sections={sections} setLoading={setLoading} router={router} />
 
 										<div id="delete-modal" className="hidden modal fixed top-0 left-0 flex justify-center items-center w-full h-full bg-transparent-black-50 ms-0 z-30" onClick={documentClickCloseModal}>
 											<div className="flex flex-col justify-center items-end section-modal bg-white px-5 py-3 m-5 max-w-8xl mt-[72px] max-h-[80vh] rounded-2xl">

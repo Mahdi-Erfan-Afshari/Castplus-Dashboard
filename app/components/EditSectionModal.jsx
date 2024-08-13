@@ -5,8 +5,8 @@ import { IoCloseOutline, IoAddOutline  } from "react-icons/io5";
 import { PiWarningCircle } from "react-icons/pi";
 import { GrStatusGood } from "react-icons/gr";
 
-const EditSectionModal = ({documentClickCloseModal, addOffer, deleteTag, enterHandler, backspace, tags, data, episode, sections, setLoading}) => {
-	const router = useRouter();
+const EditSectionModal = ({documentClickCloseModal, addOffer, deleteTag, enterHandler, backspace, tags, data, episode, sections, setLoading, router}) => {
+	// const router = useRouter();
 
 	const toggleSectionEditedModal = () => {
 		const changesAapplied = document.querySelector('.section-edited-modal');

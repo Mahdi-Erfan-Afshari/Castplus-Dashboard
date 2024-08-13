@@ -5,8 +5,8 @@ import { v4 as uuidv4 } from 'uuid';
 import { IoCloseOutline, IoAddOutline  } from "react-icons/io5";
 import { PiWarningCircle } from "react-icons/pi";
 
-const AddSectionModal = ({ documentClickCloseModal, addOffer, enterHandler, backspace, sections, data, episode, setLoading }) => {
-	const router = useRouter();
+const AddSectionModal = ({ documentClickCloseModal, addOffer, enterHandler, backspace, sections, data, episode, setLoading, router }) => {
+	// const router = useRouter();
 
 	const addSectionData = async () => {
 		const modal = document.querySelector('#add-modal');
