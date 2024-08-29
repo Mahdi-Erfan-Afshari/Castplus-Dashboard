@@ -663,7 +663,10 @@ const EditEpisode = ({ id, data }) => {
 											))
 										}
 										
-										<EditSectionModal documentClickCloseModal={documentClickCloseModal} deleteTag={deleteTag} addOffer={addOffer} enterHandler={enterHandler} backspace={backspace} tags={sections[currentIndex].tags} data={data} episode={episode} sections={sections} setLoading={setLoading} router={router} />
+										<EditSectionModal documentClickCloseModal={documentClickCloseModal} deleteTag={deleteTag}
+										addOffer={addOffer} enterHandler={enterHandler} backspace={backspace}
+										tags={sections.length !== 0 ? sections[currentIndex].tags : ''} data={data} episode={episode}
+										sections={sections} setLoading={setLoading} router={router} />
 										<AddSectionModal documentClickCloseModal={documentClickCloseModal} addOffer={addOffer} enterHandler={enterHandler} backspace={backspace}data={data} episode={episode}  sections={sections} setLoading={setLoading} router={router} />
 
 										<div id="delete-modal" className="hidden modal fixed top-0 left-0 flex justify-center items-center w-full h-full bg-transparent-black-50 ms-0 z-30" onClick={documentClickCloseModal}>

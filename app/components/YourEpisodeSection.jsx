@@ -15,7 +15,7 @@ const fetchPodcasts = async () => {
 
 const YourEpisodeSection = async ({ data }) => {
 	const datas = await fetchPodcasts()
-	const episodes = datas[1].episodes;
+	const episodes = datas[3].episodes;
 	return (
 	<div className="container mx-auto lg:mt-[100px] mt-[70px] mb-6">
 		<div className={`${nunito.className} ${""}`}>

@@ -1,13 +1,11 @@
 'use client'
 import { vazir } from "../utils/fonts"
 import { server } from "@/app/lib/server"
-import { useRouter } from "next/navigation";
 import { IoCloseOutline, IoAddOutline  } from "react-icons/io5";
 import { PiWarningCircle } from "react-icons/pi";
 import { GrStatusGood } from "react-icons/gr";
 
 const EditSectionModal = ({documentClickCloseModal, addOffer, deleteTag, enterHandler, backspace, tags, data, episode, sections, setLoading, router}) => {
-	// const router = useRouter();
 
 	const toggleSectionEditedModal = () => {
 		const changesAapplied = document.querySelector('.section-edited-modal');
@@ -286,7 +284,7 @@ const EditSectionModal = ({documentClickCloseModal, addOffer, deleteTag, enterHa
 								<h1 className="text-xl font-bold nunito">Tags</h1>
 								<div className="relative w-[320px] sm:w-[388px] md:w-[633px] space-x-2">
 									<div className="tag-container relative flex flex-wrap w-full bg-[#f7f7f794] p-3 border-2 border-gray-150 rounded-lg">
-										{
+										{ tags !== '' ?
 											tags.map((tag) => (
 												<div className="tag flex items-center mt-[5px] ms-1 rounded-md overflow-hidden h-[25px] bg-blue-100 text-blue-500" tagId={tag.id}>
 													<div className="px-2 sm:pt-[4px] pt-[5px] w-full h-full items-center text-xs sm:text-sm ">
@@ -295,6 +293,7 @@ const EditSectionModal = ({documentClickCloseModal, addOffer, deleteTag, enterHa
 													<div className="hover:bg-blue-200 items-center select-none pb-[27px] px-[4px] w-full h-full text-xl" onClick={deleteTag} >×</div>
 												</div>
 											))
+											: ''
 										}
 										<input onKeyDown={(addTag) => enterHandler(addTag)} onKeyUp={(deleteTagBackspace) => backspace(deleteTagBackspace)}  id="edit-modal-tag-input" placeholder="Enter Tags..." type="text"  className="outline-none text-sm items-center pt-1 w-0 grow ms-2 bg-[#f7f7f794] min-w-[80px] h-full mt-[5px]" />
 									</div>
@@ -319,7 +318,7 @@ const EditSectionModal = ({documentClickCloseModal, addOffer, deleteTag, enterHa
 					</div>
 				</div>
 			</div>
-			<div className="hidden section-edited-modal modal fixed top-0 left-0 flex justify-center w-full">
+			<div className="section-edited-modal modal hidden fixed top-0 left-0 flex justify-center w-full">
 				<div className="flex flex-col justify-center items-end section-modal bg-transparent-black-10 backdrop-blur-sm px-5 py-2 m-5 max-w-8xl mt-[72px] max-h-[80vh] shadow-md rounded-full">
 					<div className="flex items-center space-x-2 text-gray-600">
 						<GrStatusGood className="text-gray-600 text-lg" />
