@@ -23,7 +23,12 @@ const EditEpisode = ({ id, data }) => {
 	const [isFirstTurn, setIsFirstTurn] = useState(true)
 	const [currentIndex, setCurrentIndex] = useState(0)
 	const router = useRouter();
-	const episodes = data[1].episodes;
+
+	const podcastIndex = data.findIndex((podcast) => {
+		return podcast.owner === session.user.email
+	})
+
+	const episodes = data[podcastIndex].episodes;
 	const episode = episodes.filter((episode) => episode.id === id )[0];
 	const sections = episode.sections;
 
@@ -37,7 +42,7 @@ const EditEpisode = ({ id, data }) => {
 			cache: "no-store",
 		})
 		const data = await res.json();
-		const episodesData = data[1].episodes;
+		const episodesData = data[podcastIndex].episodes;
 		const episodeData = episodesData.filter((episode) => episode.id === id )[0];
 		const sectionsData = episodeData.sections;
 
@@ -55,7 +60,7 @@ const EditEpisode = ({ id, data }) => {
 			},
         	cache:'no-cache',
         	body:JSON.stringify({
-				'id': data[1].id,
+				'id': data[podcastIndex].id,
 				'episodeId': episode.id,
 				sectionsList
 			})
@@ -119,7 +124,7 @@ const EditEpisode = ({ id, data }) => {
 		}
 
 		setLoading(true)
-		await fetch(`${server}/api/podcasts/${data[1].id}`,{
+		await fetch(`${server}/api/podcasts/${data[podcastIndex].id}`,{
         	method:'DELETE',
 			headers: {
 				"Content-type": "application/json"
@@ -155,7 +160,7 @@ const EditEpisode = ({ id, data }) => {
         	method:'PUT',
         	cache:'no-cache',
         	body:JSON.stringify({
-				'id': data[1].id,
+				'id': data[podcastIndex].id,
 				'episodeId': episode.id,
 				newTitle
 			})
@@ -179,7 +184,7 @@ const EditEpisode = ({ id, data }) => {
         	method:'PUT',
         	cache:'no-cache',
         	body:JSON.stringify({
-				'id': data[1].id,
+				'id': data[podcastIndex].id,
 				'episodeId': episode.id,
 				newDescription
 			})
@@ -667,7 +672,7 @@ const EditEpisode = ({ id, data }) => {
 										addOffer={addOffer} enterHandler={enterHandler} backspace={backspace}
 										tags={sections.length !== 0 ? sections[currentIndex].tags : ''} data={data} episode={episode}
 										sections={sections} setLoading={setLoading} router={router} />
-										<AddSectionModal documentClickCloseModal={documentClickCloseModal} addOffer={addOffer} enterHandler={enterHandler} backspace={backspace}data={data} episode={episode}  sections={sections} setLoading={setLoading} router={router} />
+										<AddSectionModal documentClickCloseModal={documentClickCloseModal} addOffer={addOffer} enterHandler={enterHandler} backspace={backspace} data={data} episode={episode}  sections={sections} setLoading={setLoading} router={router} />
 
 										<div id="delete-modal" className="hidden modal fixed top-0 left-0 flex justify-center items-center w-full h-full bg-transparent-black-50 ms-0 z-30" onClick={documentClickCloseModal}>
 											<div className="flex flex-col justify-center items-end section-modal bg-white px-5 py-3 m-5 max-w-8xl mt-[72px] max-h-[80vh] rounded-2xl">
