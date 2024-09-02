@@ -3,7 +3,7 @@ import { nunito, vazir } from "../utils/fonts"
 import Link from "next/link";
 import { server } from "@/app/lib/server"
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { v4 as uuidv4 } from 'uuid';
 import { useSession } from "next-auth/react";
 import Loading from '@/app/components/Loading'
@@ -12,10 +12,10 @@ import { IoCloseOutline, IoAddOutline  } from "react-icons/io5";
 import { PiWarningCircle } from "react-icons/pi";
 import { TbEdit } from "react-icons/tb";
 import { IoIosArrowRoundBack } from "react-icons/io";
-import AddSectionModal from "@/app/components/AddSectionModal";
-import EditSectionModal from "@/app/components/EditSectionModal";
+import CreatePodacastAddSectionModal from "@/app/components/CreatePodacastAddSectionModal";
+import CreatePodacastEditSectionModal from "@/app/components/CreatePodacastEditSectionModal";
 
-const EditEpisode = ({ id, data }) => {
+const CreateEpisode = () => {
 	const { data:session } = useSession();
 	const [loading, setLoading] = useState(false)
 	const [ulMoreSectionIndex, setUlMoreSectionIndex] = useState(null)
@@ -24,56 +24,89 @@ const EditEpisode = ({ id, data }) => {
 	const [currentIndex, setCurrentIndex] = useState(0)
 	const router = useRouter();
 
-	const podcastIndex = data.findIndex((podcast) => {
-		return podcast.owner === session.user.email
-	})
+	const episodeTitleRef = useRef()
+	const episodeDescriptionRef = useRef()
+	const episodeId = uuidv4();
 
-	const episodes = data[podcastIndex].episodes;
-	const episode = episodes.filter((episode) => episode.id === id )[0];
-	const sections = episode.sections;
+	const episode = {
+		id: uuidv4(),
+		title: '',
+		description: '',
+		published_date: '',
+		published_time: '',
+		thumbnail: '',
+		url: '',
+		type: '',
+		duration: '',
+		count: 0,
+		sections: [{
+			id: "98d38585-5c4e-4bd8-86eb-74560fabce5f",
+			number: 0,
+			timeStart: 0,
+			duration: "0",
+			title: "asfda",
+			summary: "",
+			transcript: "",
+			refrences: "",
+			tags: [
+				{
+					id: "70e43293-a8e9-4223-b9c8-7d7383c96fe2",
+					name: "#پادکست_پرسه"
+				}
+			]
+		}],
+	}
+
+	// const podcastIndex = data.findIndex((podcast) => {
+	// 	return podcast.owner === session.user.email
+	// })
+
+	// const episodes = data[podcastIndex].episodes;
+	// const episode = episodes.filter((episode) => episode.id === id )[0];
+	// const sections = episode.sections;
 
 	const addSectionModal = () => {
-		const modal = document.querySelector('#add-modal');
+		const modal = document.querySelector('#create-episode-add-modal');
 		modal.classList.remove('hidden');
 	}
 	
 	const setNumberSections = async () => {
-		const res = await fetch(`${server}/api/podcasts`, {
-			cache: "no-store",
-		})
-		const data = await res.json();
-		const episodesData = data[podcastIndex].episodes;
-		const episodeData = episodesData.filter((episode) => episode.id === id )[0];
-		const sectionsData = episodeData.sections;
+		// const res = await fetch(`${server}/api/podcasts`, {
+		// 	cache: "no-store",
+		// })
+		// const data = await res.json();
+		// const episodesData = data[podcastIndex].episodes;
+		// const episodeData = episodesData.filter((episode) => episode.id === id )[0];
+		// const sectionsData = episodeData.sections;
 
-		for (var index = 0; index < sectionsData.length; index++) {
-			sectionsData[index].number = index;
+		for (var index = 0; index < episode.sections.length; index++) {
+			episode.sections[index].number = index;
 		}
 
-		const sectionsList = sectionsData;
+		// const sectionsList = sectionsData;
 
-		setLoading(true);
-		await fetch(`${server}/api/podcasts/episode/sections`,{
-        	method:'PUT',
-			headers: {
-				"Content-type": "application/json"
-			},
-        	cache:'no-cache',
-        	body:JSON.stringify({
-				'id': data[podcastIndex].id,
-				'episodeId': episode.id,
-				sectionsList
-			})
-    	})
-		.then((response) => response.json())
-			.then((data) => {
-				setLoading(false)
-			})
-			.catch((error) => {
-				console.error(error);
-			});
+		// setLoading(true);
+		// await fetch(`${server}/api/podcasts/episode/sections`,{
+        // 	method:'PUT',
+		// 	headers: {
+		// 		"Content-type": "application/json"
+		// 	},
+        // 	cache:'no-cache',
+        // 	body:JSON.stringify({
+		// 		'id': data[podcastIndex].id,
+		// 		'episodeId': episode.id,
+		// 		sectionsList
+		// 	})
+    	// })
+		// .then((response) => response.json())
+		// 	.then((data) => {
+		// 		setLoading(false)
+		// 	})
+		// 	.catch((error) => {
+		// 		console.error(error);
+		// 	});
 
-		router.refresh();
+		// router.refresh();
 	}
 
 	const openDeleteModal = (e) => {
@@ -87,7 +120,7 @@ const EditEpisode = ({ id, data }) => {
 	}
 
 	const setDataOfSection = (index) => {
-		const modal = document.querySelector('#modal');
+		const modal = document.querySelector('#create-episode-edit-modal');
 		let sectionTitle = modal.querySelector('.section-title');
 		let sectionHour = modal.querySelector('.section-hour');
 		let sectionMinute = modal.querySelector('.section-minute');
@@ -96,54 +129,60 @@ const EditEpisode = ({ id, data }) => {
 		let sectionSummary = modal.querySelector('.section-summary');
 		let sectionTranscript = modal.querySelector('.section-transcript');
 		let sectionRefrences = modal.querySelector('.section-refrences');
-		const sectionIndex = sections.findIndex((section) => {
+		// let tags = modal.querySelectorAll('.tag')
+		// console.log(tags);
+		const sectionIndex = episode.sections.findIndex((section) => {
 			return section.number == index;
 		});
-		modal.setAttribute("section-id", sections[sectionIndex].id);
-		sectionTitle.value = sections[sectionIndex].title;
-		sectionHour.value = Math.floor(sections[sectionIndex].timeStart / 3600);
-		sectionMinute.value = Math.floor(sections[sectionIndex].timeStart % 3600 / 60);
-		sectionSecond.value = Math.floor(sections[sectionIndex].timeStart % 60);
-		sectionDuration.value = sections[sectionIndex].duration;
-		sectionSummary.value = sections[sectionIndex].summary;
-		sectionTranscript.value = sections[sectionIndex].transcript;
-		sectionRefrences.value = sections[sectionIndex].refrences;
+		modal.setAttribute("section-id", episode.sections[sectionIndex].id);
+		sectionTitle.value = episode.sections[sectionIndex].title;
+		sectionHour.value = Math.floor(episode.sections[sectionIndex].timeStart / 3600);
+		sectionMinute.value = Math.floor(episode.sections[sectionIndex].timeStart % 3600 / 60);
+		sectionSecond.value = Math.floor(episode.sections[sectionIndex].timeStart % 60);
+		sectionDuration.value = episode.sections[sectionIndex].duration;
+		sectionSummary.value = episode.sections[sectionIndex].summary;
+		sectionTranscript.value = episode.sections[sectionIndex].transcript;
+		sectionRefrences.value = episode.sections[sectionIndex].refrences;
+
+		// episode.sections[sectionIndex].tags.forEach((tag, index) => {
+		// 	tags[index].firstElementChild.innerText = tag.name;
+		// })
 	}
 
 	const deleteSection = async (e) => {
 		const modal = document.querySelector('#delete-modal');
 		const sectionIndex = modal.getAttribute('number');
-		const sectionsList = {
-			"id": episode.sections[sectionIndex].id,
-			"number": sectionIndex,
-			"timeStart": episode.sections[sectionIndex].timeStart,
-			"title": episode.sections[sectionIndex].title,
-			"summary": episode.sections[sectionIndex].summary,
-			"transcript": episode.sections[sectionIndex].transcript,
-			"refrences": episode.sections[sectionIndex].refrences,
-		}
+		// const sectionsList = {
+		// 	"id": episode.sections[sectionIndex].id,
+		// 	"number": sectionIndex,
+		// 	"timeStart": episode.sections[sectionIndex].timeStart,
+		// 	"title": episode.sections[sectionIndex].title,
+		// 	"summary": episode.sections[sectionIndex].summary,
+		// 	"transcript": episode.sections[sectionIndex].transcript,
+		// 	"refrences": episode.sections[sectionIndex].refrences,
+		// }
 
-		setLoading(true)
-		await fetch(`${server}/api/podcasts/${data[podcastIndex].id}`,{
-        	method:'DELETE',
-			headers: {
-				"Content-type": "application/json"
-			},
-        	cache:'no-cache',
-        	body:JSON.stringify({
-				'episodeId': episode.id,
-				sectionsList
-			})
-    	})
-		.then((response) => response.json())
-			.then((data) => {
+		// setLoading(true)
+		// await fetch(`${server}/api/podcasts/${data[podcastIndex].id}`,{
+        // 	method:'DELETE',
+		// 	headers: {
+		// 		"Content-type": "application/json"
+		// 	},
+        // 	cache:'no-cache',
+        // 	body:JSON.stringify({
+		// 		'episodeId': episode.id,
+		// 		sectionsList
+		// 	})
+    	// })
+		// .then((response) => response.json())
+		// 	.then((data) => {
 
-			})
-			.catch((error) => {
-				console.error(error);
-			});
+		// 	})
+		// 	.catch((error) => {
+		// 		console.error(error);
+		// 	});
 
-		router.refresh();
+		// router.refresh();
 
 		await setNumberSections();
 		setCurrentIndex(0);
@@ -154,50 +193,56 @@ const EditEpisode = ({ id, data }) => {
 
 	const editEpisodeTitle = async () => {
 		const newTitle = document.querySelector('#edit-title-input').value;
-
-		setLoading(true)
-		await fetch(`${server}/api/podcasts/episode/title`,{
-        	method:'PUT',
-        	cache:'no-cache',
-        	body:JSON.stringify({
-				'id': data[podcastIndex].id,
-				'episodeId': episode.id,
-				newTitle
-			})
-    	})
-		.then((response) => response.json())
-			.then((data) => {
-				setLoading(false)
-				getSearchResults(data);
-			})
-			.catch((error) => {
-				console.error(error);
-		});
-		router.refresh()
+		episodeTitleRef.current.innerText = newTitle;
+		episode.title = newTitle;
+		closeTitleModal()
+		console.log(episode);
+		// setLoading(true)
+		// await fetch(`${server}/api/podcasts/episode/title`,{
+        // 	method:'PUT',
+        // 	cache:'no-cache',
+        // 	body:JSON.stringify({
+		// 		'id': data[podcastIndex].id,
+		// 		'episodeId': episode.id,
+		// 		newTitle
+		// 	})
+    	// })
+		// .then((response) => response.json())
+		// 	.then((data) => {
+		// 		setLoading(false)
+		// 		getSearchResults(data);
+		// 	})
+		// 	.catch((error) => {
+		// 		console.error(error);
+		// });
+		// router.refresh()
 	}
 
 	const editEpisodeDescription = async () => {
 		const newDescription = document.querySelector('#edit-description-input').value;
-
-		setLoading(true)
-		await fetch(`${server}/api/podcasts/episode/description`,{
-        	method:'PUT',
-        	cache:'no-cache',
-        	body:JSON.stringify({
-				'id': data[podcastIndex].id,
-				'episodeId': episode.id,
-				newDescription
-			})
-    	})
-		.then((response) => response.json())
-			.then((data) => {
-				setLoading(false)
-				getSearchResults(data);
-			})
-			.catch((error) => {
-				console.error(error);
-		});
-		router.refresh()
+		episodeDescriptionRef.current.innerText = newDescription;
+		episode.description = newDescription;
+		console.log(episode);
+		closeDescriptionModal();
+		// setLoading(true)
+		// await fetch(`${server}/api/podcasts/episode/description`,{
+        // 	method:'PUT',
+        // 	cache:'no-cache',
+        // 	body:JSON.stringify({
+		// 		'id': data[podcastIndex].id,
+		// 		'episodeId': episode.id,
+		// 		newDescription
+		// 	})
+    	// })
+		// .then((response) => response.json())
+		// 	.then((data) => {
+		// 		setLoading(false)
+		// 		getSearchResults(data);
+		// 	})
+		// 	.catch((error) => {
+		// 		console.error(error);
+		// });
+		// router.refresh()
 	}
 
 	const closeAllUlMoreSectionMenu = (isThereMenu) => {
@@ -318,14 +363,14 @@ const EditEpisode = ({ id, data }) => {
 	}
 	
 	const getCurrentIndex = (index) => {
-		const sectionIndex = sections.findIndex((section) => {
+		const sectionIndex = episode.sections.findIndex((section) => {
 			return section.number == index;
 		});
 		setCurrentIndex(sectionIndex);
 	}
 
 	const openModal = (e) => {
-		const modal = document.querySelector('#modal');
+		const modal = document.querySelector('#create-episode-edit-modal');
 		modal.classList.remove('hidden');
 		const sectionNumber = e.target.parentElement.getAttribute('number')
 		setDataOfSection(sectionNumber);
@@ -385,8 +430,8 @@ const EditEpisode = ({ id, data }) => {
 	}
 
 	const documentClickCloseModal = (e) => {
-		const editSectionModal = document.querySelector('#modal');
-		const addSectionModal = document.querySelector('#add-modal');
+		const editSectionModal = document.querySelector('#create-episode-edit-modal');
+		const addSectionModal = document.querySelector('#create-episode-add-modal');
 		const deleteSectionModal = document.querySelector('#delete-modal');
 		const editDescriptionModal = document.querySelector('#edit-description-modal');
 		const editTitleModal = document.querySelector('#edit-title-modal');
@@ -607,9 +652,8 @@ const EditEpisode = ({ id, data }) => {
 			deSelectOfferTag(lastTag)
 		}
 	}
-
-	return (
-		<>
+  return (
+	<>
 		{loading ? <Loading /> : <> 
 			{ session ? <div>
 				{ (session.user.email === "mahdiafshar2413@gmail.com" || session.user.email === "mr.rahimi.live@gmail.com") ? <div>
@@ -620,14 +664,14 @@ const EditEpisode = ({ id, data }) => {
 									<div className="">
 										<h1 className="text-xl font-bold nunito">Title</h1>
 										<div className="flex justify-between items-center border-b-2 border-border-gray px-3">
-											<p className={`${vazir.className} ${"episode-title outline-none rounded-lg text-sm pb-2 pt-0 lg:w-6/12 w-full vazir truncate"}`} type="text">{episode.title}</p>
+											<p ref={episodeTitleRef} className={`${vazir.className} ${"episode-title outline-none rounded-lg text-sm pb-2 pt-0 lg:w-6/12 w-full vazir truncate"}`} type="text"></p>
 											<div className="hover:bg-hover-gray hover:text-gray-600 text-gray-400 p-1 rounded-md box-contect cursor-pointer mb-1" onClick={openTitleModal}><TbEdit className="text-xl"/></div>
 										</div>
 									</div>
 									<div className="mt-8">
 										<h1 className="text-xl font-bold nunito">Description</h1>
 										<div className="flex justify-between items-center border-b-2 border-border-gray px-3">
-											<p className={`${vazir.className} ${"episode-description w-full outline-none text-sm rounded-lg vazir pb-2 pt-0 truncate"}`}>{episode.description}</p>
+											<p ref={episodeDescriptionRef} className={`${vazir.className} ${"episode-description w-full outline-none text-sm rounded-lg vazir pb-2 pt-0 truncate"}`}></p>
 											<div className="hover:bg-hover-gray hover:text-gray-600 text-gray-400 p-1 rounded-md box-contect cursor-pointer mb-1" onClick={openDescriptionModal}><TbEdit className="text-xl"/></div>
 										</div>
 									</div>
@@ -638,7 +682,7 @@ const EditEpisode = ({ id, data }) => {
 									</div>
 									<div id="section-details" className="flex flex-col w-full bg-white lg:px-6 py-3 rounded-b-xl">
 										{
-											sections.map((section) => (
+											episode.sections.map((section) => (
 												<div className="section grid grid-cols-12 lg:space-x-6 lg:gap-12 gap-1 border-b-[1px] border-border-gray lg:py-6 ps-4 pe-6 py-4">
 													<div className={`${vazir.className} ${"lg:col-span-10 col-span-11"}`}>
 														<div className="grid grid-cols-12 ">
@@ -648,7 +692,7 @@ const EditEpisode = ({ id, data }) => {
 															<div className="col-span-11 lg:ms-0 ms-4">
 																<h1 className="text-sm sm:text-md font-semibold">{section.title}</h1>
 																<p className="text-gray-600 text-xs sm:text-sm pe-4 truncate">{section.summary}</p>
-																<p className="flex lg:hidden text-sm text-gray-600">duration: <span className="ms-1">{Math.round(section.duration / 3600)}</span> : <span> {Math.round(section.duration % 3600 / 60 )} </span>  : <span>{Math.round(section.duration % 60 )}</span></p>
+																<p className="flex text-gray-600 text-md">duration: <span className="ms-1">{Math.round(section.duration / 3600)}</span> : <span> {Math.round(section.duration % 3600 / 60 )} </span>  : <span>{Math.round(section.duration % 60 )}</span></p>
 															</div>
 														</div>
 													</div>
@@ -659,7 +703,7 @@ const EditEpisode = ({ id, data }) => {
 														<div className="ul-more-section-button section-more-button hover:bg-hover-gray p-2 rounded-full duration-150 cursor-pointer z-1 border-[1px] border-border-gray" onClick={sectionShowMore}>
 															<FiMoreHorizontal />
 														</div>
-														<ul className="section-more-menu section-more hidden absolute top-12 right-8 bg-white min-w-[200px] border-[1px] border-border-gray p-2 shadow-md rounded-xl z-10" number={section.number}>
+														<ul className="section-more-menu section-more hidden absolute top-12 right-8 bg-white min-w-[200px] border-[1px] border-border-gray p-2 shadow-md rounded-xl z-10" number={''}>
 															<li className="hover:bg-hover-gray py-2 px-3 rounded-lg duration-150 cursor-pointer" onClick={openModal}>Edit</li>
 															<li className="hover:bg-SupLightRed text-red-600 py-2 px-3 rounded-lg duration-150 cursor-pointer" onClick={openDeleteModal}>Delete</li>
 														</ul>
@@ -668,14 +712,22 @@ const EditEpisode = ({ id, data }) => {
 											))
 										}
 										
-										<EditSectionModal documentClickCloseModal={documentClickCloseModal} deleteTag={deleteTag}
+										{/* <EditSectionModal documentClickCloseModal={documentClickCloseModal} deleteTag={deleteTag}
 										addOffer={addOffer} enterHandler={enterHandler} backspace={backspace}
 										tags={sections.length !== 0 ? sections[currentIndex].tags : ''} data={data[podcastIndex]}
 										episode={episode} sections={sections} setLoading={setLoading} router={router} />
 										
 										<AddSectionModal documentClickCloseModal={documentClickCloseModal} addOffer={addOffer}
 										enterHandler={enterHandler} backspace={backspace} data={data[podcastIndex]} episode={episode}
-										sections={sections} setLoading={setLoading} router={router} />
+										sections={sections} setLoading={setLoading} router={router} /> */}
+
+
+										<CreatePodacastEditSectionModal documentClickCloseModal={documentClickCloseModal} deleteTag={deleteTag}
+										addOffer={addOffer} enterHandler={enterHandler} backspace={backspace}
+										setLoading={setLoading} router={router} episode={episode} tags={episode.sections.length !== 0 ? episode.sections[currentIndex].tags : ''} />
+										
+										<CreatePodacastAddSectionModal documentClickCloseModal={documentClickCloseModal} addOffer={addOffer}
+										enterHandler={enterHandler} backspace={backspace} setLoading={setLoading} router={router} episode={episode} tags={episode.sections.length !== 0 ? episode.sections[currentIndex].tags : ''} />
 
 										<div id="delete-modal" className="hidden modal fixed top-0 left-0 flex justify-center items-center w-full h-full bg-transparent-black-50 ms-0 z-30" onClick={documentClickCloseModal}>
 											<div className="flex flex-col justify-center items-end section-modal bg-white px-5 py-3 m-5 max-w-8xl mt-[72px] max-h-[80vh] rounded-2xl">
@@ -752,4 +804,4 @@ const EditEpisode = ({ id, data }) => {
   )
 }
 
-export default EditEpisode
+export default CreateEpisode

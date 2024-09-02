@@ -5,10 +5,10 @@ import { v4 as uuidv4 } from 'uuid';
 import { IoCloseOutline, IoAddOutline  } from "react-icons/io5";
 import { PiWarningCircle } from "react-icons/pi";
 
-const AddSectionModal = ({ documentClickCloseModal, addOffer, enterHandler, backspace, sections, data, episode, setLoading, router }) => {
+const CreatePodacastAddSectionModal = ({ documentClickCloseModal, addOffer, enterHandler, backspace, sections, data, episode, setLoading, router }) => {
 
 	const addSectionData = async () => {
-		const modal = document.querySelector('#add-modal');
+		const modal = document.querySelector('#create-episode-add-modal');
 		let sectionId = uuidv4();
 		let sectionTitle = modal.querySelector('.section-title').value;
 		let sectionHour = modal.querySelector('.section-hour').value;
@@ -30,9 +30,9 @@ const AddSectionModal = ({ documentClickCloseModal, addOffer, enterHandler, back
 			});
 		});
 		
-		const sectionsList = {
+		const sectionInfo = {
 			"id" : sectionId,
-			"number" : sections.length,
+			"number" : episode.sections.length,
 			"timeStart" : sectionTimeStart,
 			"duration" : sectionDuration,
 			"title" : sectionTitle,
@@ -45,27 +45,32 @@ const AddSectionModal = ({ documentClickCloseModal, addOffer, enterHandler, back
 		if (sectionTitle.length !== 0 && sectionHour.length !== 0 && sectionMinute.length !== 0 && sectionSecond.length !== 0 && sectionDuration.length !== 0) {
 			modal.querySelector('#add-section-complete-error').classList.add('hidden');
 			if (Number(sectionHour) >= 0 && Number(sectionMinute) >= 0 && Number(sectionSecond) >= 0 && Number(sectionDuration) >= 0) {
-				setLoading(true)
-				await fetch(`${server}/api/podcasts/${data.id}`,{
-        			method:'POST',
-					headers: {
-						"Content-type": "application/json"
-					},
-        			cache:'no-cache',
-        			body:JSON.stringify({
-						'episodeId': episode.id,
-						sectionsList
-					})
-    			})
-				.then((response) => response.json())
-					.then((data) => {
-						setLoading(false)
-					})
-					.catch((error) => {
-						console.error(error);
-					});
-				
-				router.refresh();
+				modal.querySelector('.section-hour').classList.remove('border-red-500');
+				modal.querySelector('.section-hour').classList.remove('text-red-500');
+				modal.querySelector('.section-hour').classList.remove('placeholder:text-red-500');
+				modal.querySelector('.section-hour').classList.add('border-gray-150');
+				modal.querySelector('.section-minute').classList.remove('border-red-500');
+				modal.querySelector('.section-minute').classList.remove('text-red-500');
+				modal.querySelector('.section-minute').classList.remove('placeholder:text-red-500');
+				modal.querySelector('.section-minute').classList.add('border-gray-150');
+				modal.querySelector('.section-second').classList.remove('border-red-500');
+				modal.querySelector('.section-second').classList.remove('text-red-500');
+				modal.querySelector('.section-second').classList.remove('placeholder:text-red-500');
+				modal.querySelector('.section-second').classList.add('border-gray-150');
+				modal.querySelector('.section-duration').classList.remove('border-red-500');
+				modal.querySelector('.section-duration').classList.remove('text-red-500');
+				modal.querySelector('.section-duration').classList.remove('placeholder:text-red-500');
+				modal.querySelector('.section-duration').classList.add('border-gray-150');
+				modal.querySelector('.section-title').classList.remove('border-red-500');
+				modal.querySelector('.section-title').classList.remove('text-red-500');
+				modal.querySelector('.section-title').classList.remove('placeholder:text-red-500');
+				modal.querySelector('.section-title').classList.add('border-gray-150');
+
+				episode.sections.push(sectionInfo)
+				episode.count = episode.sections.length
+				console.log(episode);
+				console.log(episode.sections.length);
+				closeAddModal()
 			} else {
 				modal.querySelector('#add-section-negative-error').classList.remove('hidden');
 				modal.querySelector('#add-section-negative-error').scrollIntoView({ behavior: "smooth", block: "end", inline: "nearest" });
@@ -184,8 +189,8 @@ const AddSectionModal = ({ documentClickCloseModal, addOffer, enterHandler, back
 	}
 	
 	const addModalClickCloseDropDown = (e) => {
-		const dropdown = document.querySelector('#add-modal-dropdown');
-		const tagInput = document.querySelector('#add-modal-tag-input');
+		const dropdown = document.querySelector('#create-episode-add-modal-dropdown');
+		const tagInput = document.querySelector('#create-episode-add-modal-tag-input');
 		
 		let thisContains = e.target.contains(tagInput)
 		if (thisContains && e.target !== dropdown) {
@@ -198,7 +203,7 @@ const AddSectionModal = ({ documentClickCloseModal, addOffer, enterHandler, back
 	}
 
 	const closeAddModal = () => {
-		const modal = document.querySelector('#add-modal');
+		const modal = document.querySelector('#create-episode-add-modal');
 		modal.classList.add('hidden');
 		let inputsValue = document.querySelectorAll('.value');
 		inputsValue.forEach(inputValue => {
@@ -209,7 +214,7 @@ const AddSectionModal = ({ documentClickCloseModal, addOffer, enterHandler, back
 
 	return (
 	<>
-		<div id="add-modal" className="hidden modal fixed top-0 left-0 flex justify-center items-center w-full h-full bg-transparent-black-50 ms-0 z-30" onClick={documentClickCloseModal}>
+		<div id="create-episode-add-modal" className="hidden modal fixed top-0 left-0 flex justify-center items-center w-full h-full bg-transparent-black-50 ms-0 z-30" onClick={documentClickCloseModal}>
 			<div className="flex flex-col justify-center items-end section-modal bg-white px-5 py-3 m-5 max-w-8xl mt-[72px] max-h-[80vh] rounded-2xl" onClick={addModalClickCloseDropDown}>
 				<button className="h-fit" type="button" onClick={closeAddModal}><IoCloseOutline className="hover:bg-hover-gray hover:text-gray-700 text-gray-400 p-1 box-content rounded-lg lg:text-2xl text-xl duration-100" /></button>
 				<div className="max-h-[60vh] overflow-y-scroll no-scrollbar">
@@ -273,10 +278,10 @@ const AddSectionModal = ({ documentClickCloseModal, addOffer, enterHandler, back
 							<div className="relative w-[320px] sm:w-[388px] md:w-[633px] space-x-2">
 								<div className="tag-container relative flex flex-wrap w-full bg-[#f7f7f794] p-3 border-2 border-gray-150 rounded-lg">
 
-									<input onKeyDown={(addTag) => enterHandler(addTag)} onKeyUp={(deleteTagBackspace) => backspace(deleteTagBackspace)}  id="add-modal-tag-input" placeholder="Enter Tags..." type="text"  className="outline-none text-sm items-center pt-1 w-0 grow ms-2 bg-[#f7f7f794] min-w-[80px] h-full mt-[5px]" />
+									<input onKeyDown={(addTag) => enterHandler(addTag)} onKeyUp={(deleteTagBackspace) => backspace(deleteTagBackspace)}  id="create-episode-add-modal-tag-input" placeholder="Enter Tags..." type="text"  className="outline-none text-sm items-center pt-1 w-0 grow ms-2 bg-[#f7f7f794] min-w-[80px] h-full mt-[5px]" />
 								</div>
 							</div>
-							<div id="add-modal-dropdown" className="hidden w-full bg-[#ddd] rounded-lg mb-5 gap-y-2 overflow-auto border-[1px] border-gray-150 max-h-44 no-scrollbar cursor-pointer">
+							<div id="create-episode-add-modal-dropdown" className="hidden w-full bg-[#ddd] rounded-lg mb-5 gap-y-2 overflow-auto border-[1px] border-gray-150 max-h-44 no-scrollbar cursor-pointer">
 								<div>
 									<div className="hover:bg-slate-50 w-full mt-[1px] px-7 py-2 text-sm sm:text-md bg-white text-gray-500 duration-150" onClick={addOffer}>#tags</div>
 									<div className="hover:bg-slate-50 w-full mt-[1px] px-7 py-2 text-sm sm:text-md bg-white text-gray-500 duration-150" onClick={addOffer}>#radio_rah</div>
@@ -300,4 +305,4 @@ const AddSectionModal = ({ documentClickCloseModal, addOffer, enterHandler, back
   )
 }
 
-export default AddSectionModal
+export default CreatePodacastAddSectionModal

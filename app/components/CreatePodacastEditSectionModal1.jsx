@@ -1,11 +1,16 @@
 'use client'
 import { vazir } from "../utils/fonts"
 import { server } from "@/app/lib/server"
-import { IoCloseOutline  } from "react-icons/io5";
+import { IoCloseOutline, IoAddOutline  } from "react-icons/io5";
 import { PiWarningCircle } from "react-icons/pi";
 import { GrStatusGood } from "react-icons/gr";
 
-const EditSectionModal = ({documentClickCloseModal, addOffer, deleteTag, enterHandler, backspace, tags, data, episode, sections, setLoading, router}) => {
+const CreatePodacastEditSectionModal = ({documentClickCloseModal, addOffer, deleteTag, enterHandler, backspace, tags, data, episode, sections, setLoading, router}) => {
+
+	// const podcast = {
+	// 	id: uuidv4(),
+	// 	name: ''
+	// }
 
 	const toggleSectionEditedModal = () => {
 		const changesAapplied = document.querySelector('.section-edited-modal');
@@ -16,7 +21,7 @@ const EditSectionModal = ({documentClickCloseModal, addOffer, deleteTag, enterHa
 	}
 
 	const editSection = async () => {
-		const modal = document.querySelector('#modal');
+		const modal = document.querySelector('#create-episode-edit-modal');
 		let sectionId = modal.getAttribute("section-id");
 		let sectionTitle = modal.querySelector('.section-title').value;
 		let sectionHour = modal.querySelector('.section-hour').value;
@@ -29,7 +34,7 @@ const EditSectionModal = ({documentClickCloseModal, addOffer, deleteTag, enterHa
 		let sectionTimeStart = Number(sectionHour * 3600) + Number(sectionMinute * 60) + Number(sectionSecond);
 		const tagsInDom = modal.querySelectorAll('.tag')
 
-		let sectionIndex = sections.findIndex(section => {
+		let sectionIndex = episode.sections.findIndex(section => {
 			return section.id === sectionId;
 		});
 
@@ -42,47 +47,79 @@ const EditSectionModal = ({documentClickCloseModal, addOffer, deleteTag, enterHa
 			});
 		});
 
-		const sectionsList = {
-			"id" : sectionId,
-			"number" : sectionIndex,
-			"timeStart" : sectionTimeStart,
-			"duration" : sectionDuration,
-			"title" : sectionTitle,
-			"summary" : sectionSummary,
-			"transcript" : sectionTranscript,
-			"refrences" : sectionRefrences,
-			"tags": tags
-		}
+		// episode.sections
+
+		// const sectionsList = {
+		// 	"id" : sectionId,
+		// 	"number" : sectionIndex,
+		// 	"timeStart" : sectionTimeStart,
+		// 	"duration" : sectionDuration,
+		// 	"title" : sectionTitle,
+		// 	"summary" : sectionSummary,
+		// 	"transcript" : sectionTranscript,
+		// 	"refrences" : sectionRefrences,
+		// 	"tags": tags
+		// }
 
 		if (sectionTitle.length !== 0 && sectionHour.length !== 0 && sectionMinute.length !== 0 && sectionSecond.length !== 0 && sectionDuration.length !== 0) {
 			modal.querySelector('#edit-section-complete-error').classList.add('hidden');
 			if (Number(sectionHour) >= 0 && Number(sectionMinute) >= 0 && Number(sectionSecond) >= 0 && Number(sectionDuration) >= 0) {
-				setLoading(true)
-				await fetch(`${server}/api/podcasts/${data.id}`,{
-					method:'PUT',
-					headers: {
-						"Content-type": "application/json"
-					},
-					cache:'no-cache',
-					body:JSON.stringify({
-						'episodeId': episode.id,
-						sectionsList
-					})
-				})
-				.then((response) => response.json())
-					.then((data) => {
-						setLoading(false)
-					})
-					.catch((error) => {
-						console.error(error);
-					});
+				modal.querySelector('.section-title').classList.remove('border-red-500');
+				modal.querySelector('.section-title').classList.remove('text-red-500');
+				modal.querySelector('.section-title').classList.remove('placeholder:text-red-500');
+				modal.querySelector('.section-title').classList.add('border-gray-150');
+				modal.querySelector('.section-hour').classList.remove('border-red-500');
+				modal.querySelector('.section-hour').classList.remove('text-red-500');
+				modal.querySelector('.section-hour').classList.remove('placeholder:text-red-500');
+				modal.querySelector('.section-hour').classList.add('border-gray-150');
+				modal.querySelector('.section-minute').classList.remove('border-red-500');
+				modal.querySelector('.section-minute').classList.remove('text-red-500');
+				modal.querySelector('.section-minute').classList.remove('placeholder:text-red-500');
+				modal.querySelector('.section-minute').classList.add('border-gray-150');
+				modal.querySelector('.section-second').classList.remove('border-red-500');
+				modal.querySelector('.section-second').classList.remove('text-red-500');
+				modal.querySelector('.section-second').classList.remove('placeholder:text-red-500');
+				modal.querySelector('.section-second').classList.add('border-gray-150');
+				modal.querySelector('.section-duration').classList.remove('border-red-500');
+				modal.querySelector('.section-duration').classList.remove('text-red-500');
+				modal.querySelector('.section-duration').classList.remove('placeholder:text-red-500');
+				modal.querySelector('.section-duration').classList.add('border-gray-150');
+				
+				episode.sections[sectionIndex].number = sectionIndex
+				episode.sections[sectionIndex].timeStart = sectionTimeStart
+				episode.sections[sectionIndex].duration = sectionDuration
+				episode.sections[sectionIndex].title = sectionTitle
+				episode.sections[sectionIndex].summary = sectionSummary
+				episode.sections[sectionIndex].transcript = sectionTranscript
+				episode.sections[sectionIndex].refrences = sectionRefrences
+				episode.sections[sectionIndex].tags = tags;
+				console.log(episode);
+				// setLoading(true)
+				// await fetch(`${server}/api/podcasts/${data.id}`,{
+				// 	method:'PUT',
+				// 	headers: {
+				// 		"Content-type": "application/json"
+				// 	},
+				// 	cache:'no-cache',
+				// 	body:JSON.stringify({
+				// 		'episodeId': episode.id,
+				// 		sectionsList
+				// 	})
+				// })
+				// .then((response) => response.json())
+				// 	.then((data) => {
+				// 		setLoading(false)
+				// 	})
+				// 	.catch((error) => {
+				// 		console.error(error);
+				// 	});
 		
-				router.refresh();
-				modal.removeAttribute('section-id');
+				// router.refresh();
+				// modal.removeAttribute('section-id');
 		
-				setTimeout(() => {
-					toggleSectionEditedModal();
-				}, 1000);
+				// setTimeout(() => {
+				// 	toggleSectionEditedModal();
+				// }, 1000);
 			} else {
 				modal.querySelector('#edit-section-negative-error').classList.remove('hidden');
 				modal.querySelector('#edit-section-negative-error').scrollIntoView({ behavior: "smooth", block: "end", inline: "nearest" });
@@ -221,7 +258,7 @@ const EditSectionModal = ({documentClickCloseModal, addOffer, deleteTag, enterHa
 
 	return (
 		<>
-			<div id="modal" className="hidden modal fixed top-0 left-0 flex justify-center items-center w-full h-full bg-transparent-black-50 ms-0 z-30" onClick={documentClickCloseModal}>
+			<div id="create-episode-edit-modal" className="hidden modal fixed top-0 left-0 flex justify-center items-center w-full h-full bg-transparent-black-50 ms-0 z-30" onClick={documentClickCloseModal}>
 				<div className="flex flex-col justify-center items-end section-modal bg-white px-5 py-3 m-5 max-w-8xl mt-[72px] max-h-[80vh] rounded-2xl" onClick={editModalClickCloseDropDown}>
 					<button className="h-fit" type="button" onClick={closeModal}><IoCloseOutline className="hover:bg-hover-gray hover:text-gray-700 text-gray-400 p-1 box-content rounded-lg lg:text-2xl text-xl duration-100" /></button>
 					<div className="max-h-[60vh] overflow-y-scroll no-scrollbar">
@@ -286,7 +323,7 @@ const EditSectionModal = ({documentClickCloseModal, addOffer, deleteTag, enterHa
 									<div className="tag-container relative flex flex-wrap w-full bg-[#f7f7f794] p-3 border-2 border-gray-150 rounded-lg">
 										{ tags !== '' ?
 											tags.map((tag) => (
-												<div className="tag flex items-center mt-[5px] ms-1 rounded-md overflow-hidden h-[25px] bg-blue-100 text-blue-500" tagId={tag.id}>
+												<div className="tag flex items-center mt-[5px] ms-1 rounded-md overflow-hidden h-[25px] bg-blue-100 text-blue-500" tagId={'tag.id'}>
 													<div className="px-2 sm:pt-[4px] pt-[5px] w-full h-full items-center text-xs sm:text-sm ">
 														{tag.name}
 													</div>
@@ -330,4 +367,4 @@ const EditSectionModal = ({documentClickCloseModal, addOffer, deleteTag, enterHa
 	)
 }
 
-export default EditSectionModal
+export default CreatePodacastEditSectionModal
