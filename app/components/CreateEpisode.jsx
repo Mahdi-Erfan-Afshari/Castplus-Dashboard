@@ -67,7 +67,7 @@ const CreateEpisode = ({ data }) => {
 								<div className="">
 									<h1 className="text-xl font-bold nunito">Title</h1>
 									<div className="flex justify-between items-center border-b-2 border-border-gray px-3">
-										<input ref={episodeTitleRef} className={`${vazir.className} ${"episode-title outline-none rounded-lg text-base pt-2 lg:w-6/12 w-full vazir truncate"}`} type="text" placeholder="Enter Title" />
+										<input ref={episodeTitleRef} className={`${vazir.className} ${"episode-title outline-none rounded-lg text-base pt-2 w-full vazir truncate"}`} type="text" placeholder="Enter Title" />
 									</div>
 								</div>
 								<div className="mt-8">

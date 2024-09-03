@@ -9,7 +9,7 @@ const EditPodcastModal = ({ sendPodcastModalRef, podcastId, setLoading, podcast 
 	const editPodcastModalRef = useRef()
 	const router = useRouter()
 
-	sendPodcastModalRef(editPodcastModalRef)
+	sendPodcastModalRef(editPodcastModalRef, podcastNameRef, podcastAboutRef)
 
 	const documentClickCloseModal = (e) => {
 		const editTitleModal = document.querySelector('#edit-podcast-modal');
@@ -62,13 +62,13 @@ const EditPodcastModal = ({ sendPodcastModalRef, podcastId, setLoading, podcast 
 						<div className="flex justify-between items-center">
 							<h1 className="text-lg font-bold nunito">Name</h1>
 						</div>
-						<input ref={podcastNameRef} id="edit-name-input" className="outline-none bg-[#f7f7f794] border-2 border-gray-150 rounded-lg text-sm py-2 px-4 w-full vazir" type="text" placeholder="Enter Name" defaultValue={podcast.name} />
+						<input ref={podcastNameRef} id="edit-name-input" className="outline-none bg-[#f7f7f794] border-2 border-gray-150 rounded-lg text-sm py-2 px-4 w-full vazir" type="text" placeholder="Enter Name" />
 					</div>
 					<div className="felx w-full max-h-[60vh] overflow-y-scroll no-scrollbar mt-4">
 						<div className="flex justify-between items-center">
 							<h1 className="text-lg font-bold nunito">About Me</h1>
 						</div>
-						<textarea ref={podcastAboutRef} id="edit-about-input" className="outline-none resize-none bg-[#f7f7f794] border-2 border-gray-150 rounded-lg text-sm py-2 px-4 w-full vazir no-scrollbar" rows={4} placeholder="Enter About Me" defaultValue={podcast.about} />
+						<textarea ref={podcastAboutRef} id="edit-about-input" className="outline-none resize-none bg-[#f7f7f794] border-2 border-gray-150 rounded-lg text-sm py-2 px-4 w-full vazir no-scrollbar" rows={4} placeholder="Enter About Me" />
 					</div>
 					<div className="flex w-full justify-end pt-3 gap-3">
 						<button className="hover:text-gray-700 bg-gray-100 text-gray-500 border-[1px] border-gray-300 px-5 py-1 rounded-lg duration-100" type="button" onClick={closePodcastModal}>Cancel</button>

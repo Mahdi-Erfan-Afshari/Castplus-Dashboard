@@ -18,6 +18,8 @@ import EditPodcastModal from "./EditPodcastModal";
 const YourEpisodeSection = ({ data }) => {
 	const [loading, setLoading] = useState(false)
 	const [podcastModalRef, setPodcastModalRef] = useState(null)
+	const [podcastNameRef, setPodcastNameRef] = useState(null)
+	const [podcastAboutRef, setPodcastAboutRef] = useState(null)
 	const { data: session } = useSession();
 	
 	const podcasts = data;
@@ -77,17 +79,20 @@ const YourEpisodeSection = ({ data }) => {
 		}
 	}
 
-	const getEditPodcastModalRef = (event) => {
-		setPodcastModalRef(event)
+	const getEditPodcastModalRef = (podcastModal, podcastName, podcastAbout) => {
+		setPodcastModalRef(podcastModal);
+		setPodcastNameRef(podcastName);
+		setPodcastAboutRef(podcastAbout);
 	}
 
 	const openPodcastModal = () => {
 		podcastModalRef.current.classList.remove('hidden');
+		podcastNameRef.current.value = podcasts[podcastIndex].name;
+		podcastAboutRef.current.value = podcasts[podcastIndex].about
 	}
 
 	return (
-	<Suspense fallback={<Loading />}>
-		<> {loading ? <Loading /> :
+	<> {loading ? <Loading /> :
 		<> {session ? 
 			<div className="container mx-auto lg:mt-[100px] mt-[70px] mb-6">
 				{podcastIndex !== -1 ? 
@@ -203,9 +208,8 @@ const YourEpisodeSection = ({ data }) => {
 				</div>
 			</div> }
 		</>}
-		</>
-	</Suspense >
-  )
+	</>
+	)
 }
 
 export default YourEpisodeSection
