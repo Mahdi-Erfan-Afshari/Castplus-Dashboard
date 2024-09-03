@@ -3,7 +3,7 @@ import { nunito, vazir } from "../utils/fonts"
 import Link from "next/link";
 import { server } from "@/app/lib/server"
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { v4 as uuidv4 } from 'uuid';
 import { useSession } from "next-auth/react";
 import Loading from '@/app/components/Loading'
@@ -169,7 +169,7 @@ const EditEpisode = ({ id, data }) => {
 		.then((response) => response.json())
 			.then((data) => {
 				setLoading(false)
-				getSearchResults(data);
+				// getSearchResults(data);
 			})
 			.catch((error) => {
 				console.error(error);
@@ -193,7 +193,7 @@ const EditEpisode = ({ id, data }) => {
 		.then((response) => response.json())
 			.then((data) => {
 				setLoading(false)
-				getSearchResults(data);
+				// getSearchResults(data);
 			})
 			.catch((error) => {
 				console.error(error);
@@ -611,6 +611,7 @@ const EditEpisode = ({ id, data }) => {
 
 	return (
 		<>
+		<Suspense>
 		{loading ? <Loading /> : <> 
 			{ session ? <div>
 				<div className={`${nunito.className} ${"container mx-auto flex justify-center w-full lg:mt-[100px] mt-[70px]"}`} onClick={documentClick}>
@@ -747,6 +748,7 @@ const EditEpisode = ({ id, data }) => {
 				</div>
 			</div> : <div className="flex justify-center items-center w-full h-[100vh]">Please Sign In</div> }
 		</> }
+		</Suspense>
 	</>
   )
 }

@@ -1,7 +1,7 @@
 'use client'
 import { useRouter } from 'next/navigation'
 import { nunito } from '../utils/fonts';
-import { useState , useEffect} from 'react';
+import { useState , useEffect, Suspense} from 'react';
 import {VscEye, VscEyeClosed} from 'react-icons/vsc'
 import GoogleSignInButton from '../components/GoogleSignInButton';
 import Image from 'next/image';
@@ -16,7 +16,8 @@ const LoginSignUpPage = () => {
 		setLoading(false);
 	}, [session])
   return (
-	<> {loading ? <Loading /> :
+	<Suspense fallback={<Loading />}> 
+	{loading ? <Loading /> :
 		<div className='flex justify-center items-center h-[100vh]'>
 			<div className={`${nunito.className} ${"flex justify-center"}`}>
 				<div className="relative flex flex-col justify-center items-center md:w-[480px] sm:w-[550px] w-[340px] shadow-lg h-full overflow-hidden bg-white rounded-2xl my-12">
@@ -29,8 +30,9 @@ const LoginSignUpPage = () => {
 					</div>
 				</div>
 			</div>
-		</div>}
-	</>
+		</div>
+		}
+	</Suspense>
   )
 }
 

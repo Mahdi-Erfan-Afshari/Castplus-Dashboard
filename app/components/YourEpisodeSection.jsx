@@ -10,7 +10,7 @@ import { BsPerson } from "react-icons/bs";
 import LogoWhite from '@/app/img/logo CastPlus white blue.svg'
 import { FiMoreVertical } from "react-icons/fi";
 import { IoCloseOutline, IoAddOutline } from "react-icons/io5";
-import { useRef, useState } from "react";
+import { Suspense, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Loading from "./Loading";
 import EditPodcastModal from "./EditPodcastModal";
@@ -86,7 +86,8 @@ const YourEpisodeSection = ({ data }) => {
 	}
 
 	return (
-	<> {loading ? <Loading /> :
+	<Suspense fallback={<Loading />}>
+		<> {loading ? <Loading /> :
 		<> {session ? 
 			<div className="container mx-auto lg:mt-[100px] mt-[70px] mb-6">
 				{podcastIndex !== -1 ? 
@@ -202,7 +203,8 @@ const YourEpisodeSection = ({ data }) => {
 				</div>
 			</div> }
 		</>}
-	</>
+		</>
+	</Suspense >
   )
 }
 
