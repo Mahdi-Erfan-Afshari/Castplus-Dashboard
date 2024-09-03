@@ -27,5 +27,27 @@ export async function PUT(request){
 		}
 	);
 
-	return NextResponse.json(podcast)       
+	return NextResponse.json(podcast)
+}
+
+export async function POST(request, { params }){
+	const client = await clientPromise;
+	let db = client.db('castplus');
+	const data = await request.json();
+	const { id } = data;
+	const { podcastName } = data;
+	const { podcastAbout } = data;
+	let podcast = await db.collection("podcasts").updateMany(
+		{
+			id: id,
+		},
+		{
+		  $set: {
+			"name": podcastName,
+			"about": podcastAbout,
+		  },
+		}
+	);
+
+	return NextResponse.json(podcast)   
 }
