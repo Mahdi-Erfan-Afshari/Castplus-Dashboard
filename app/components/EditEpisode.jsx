@@ -23,13 +23,14 @@ const EditEpisode = ({ id, data }) => {
 	const [isFirstTurn, setIsFirstTurn] = useState(true)
 	const [currentIndex, setCurrentIndex] = useState(0)
 	const router = useRouter();
+	const podcasts = data
 
-	const podcastIndex = data.findIndex((podcast) => {
+	const podcastIndex = session ? podcasts.findIndex((podcast) => {
 		return podcast.owner === session.user.email
-	})
+	}) : null
 
-	const episodes = data[podcastIndex].episodes;
-	const episode = episodes.filter((episode) => episode.id === id )[0];
+	const episodes = session ? podcasts[podcastIndex].episodes : null;
+	const episode = session ? episodes.filter((episode) => episode.id === id )[0] : null;
 	const sections = episode.sections;
 
 	const addSectionModal = () => {

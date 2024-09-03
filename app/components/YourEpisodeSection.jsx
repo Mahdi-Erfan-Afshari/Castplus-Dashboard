@@ -18,7 +18,6 @@ import EditPodcastModal from "./EditPodcastModal";
 const YourEpisodeSection = ({ data }) => {
 	const [loading, setLoading] = useState(false)
 	const [podcastModalRef, setPodcastModalRef] = useState(null)
-	const moreRef = useRef()
 	const { data: session } = useSession();
 	
 	const podcasts = data;
@@ -82,16 +81,9 @@ const YourEpisodeSection = ({ data }) => {
 		setPodcastModalRef(event)
 	}
 
-	const showMore = () => {
-		moreRef.current.classList.toggle('hidden');
-	}
-
 	const openPodcastModal = () => {
 		podcastModalRef.current.classList.remove('hidden');
 	}
-
-
-	console.log(podcastModalRef);
 
 	return (
 	<> {loading ? <Loading /> :
@@ -99,19 +91,11 @@ const YourEpisodeSection = ({ data }) => {
 			<div className="container mx-auto lg:mt-[100px] mt-[70px] mb-6">
 				{podcastIndex !== -1 ? 
 					<div className={`${nunito.className} ${""}`}>
-						<section className="grid lg:grid-cols-12 grid-cols-1 gap-8 h-full w-full rtl">
-							<div className='relative bg-white overflow-hidden rounded-xl mb-8 pb-4 border-[1px] border-border-gray col-span-4 lg:sticky lg:top-10 lg:right-0 w-full h-fit ltr'>
-								<div className='relative flex flex-col pt-3 px-6'>
-									<div className="flex justify-end">
-										<div className="hover:bg-gray-100 p-2 rounded-full cursor-pointer" onClick={showMore}>
-											<FiMoreVertical className="text-gray-500" />
-										</div>
-										<ul ref={moreRef} className="section-more-menu section-more hidden absolute top-12 right-8 bg-white min-w-[200px] border-[1px] border-border-gray p-2 shadow-md rounded-xl z-10">
-											<li className="hover:bg-hover-gray py-2 px-3 rounded-lg duration-150 cursor-pointer" onClick={openPodcastModal}>Edit</li>
-										</ul>
-									</div>
+						<section className="grid lg:grid-cols-12 grid-cols-1 lg:gap-8 gap-0 h-full w-full rtl">
+							<div className='relative bg-white overflow-hidden rounded-xl mb-8 border-[1px] border-border-gray col-span-4 lg:sticky lg:top-10 lg:right-0 w-full h-fit ltr'>
+								<div className='relative flex flex-col py-3 px-6'>
 									<div className='relative flex space-x-3'>
-										<div className='md:w-24 md:h-24 h-24'>
+										<div className='w-20 h-20'>
 											{ podcasts[podcastIndex].thumbnail !== '' ? <Image className='rounded-full w-full h-full object-cover' src={podcasts[podcastIndex].thumbnail} alt='podcast logo' width='300' height='300'/> : <BsPerson className="text-7xl" /> }
 										</div>
 										<div className='flex flex-col items-center justify-center'>
@@ -124,19 +108,21 @@ const YourEpisodeSection = ({ data }) => {
 										</div>
 									</div>
 									<div className='flex lg:flex-row flex-col justify-between w-full h-full mt-2'>
-										<div className='flex flex-col h-full lg:ms-4 ms-0'>
-											<h1 className={`${vazirBold.className} ${'lg:text-start text-center md:text-lg sm:text-md text-sm font-black'}`}>{podcasts[podcastIndex].name}</h1>
-											<p className={`${vazir.className} ${'lg:text-start text-center text-xs text-Gray mt-1 2xl:max-w-[550px] xl:max-w-[450px] lg:max-w-[380px]'}`}>{podcasts[podcastIndex].about}</p>
+										<div className='flex flex-col h-full'>
+											<h1 className={`${vazirBold.className} ${'md:text-lg sm:text-md text-sm font-black'}`}>{podcasts[podcastIndex].name}</h1>
+											<p className={`${vazir.className} ${'text-xs text-Gray mt-1 2xl:max-w-[550px] xl:max-w-[450px] lg:max-w-[380px]'}`}>{podcasts[podcastIndex].about}</p>
 										</div>
+									</div>
+									<div className="mt-4">
+										<button className="hover:bg-gray-200 bg-gray-100 text-sm w-full rounded-lg py-1 px-3 duration-100" onClick={openPodcastModal}>Edit Profile</button>
 									</div>
 								</div>
 							</div>
-							{/* </div> */}
 			    			<div className={`${vazir.className} ${"no-scrollbar lg:col-span-8 col-span-1 w-full space-y-4 ltr"}`}>
 								<div className="flex items-center justify-between w-full">
 									<p className={`${nunito.className} ${"text-xl font-bold mx-3"}`}>Episodes</p>
 									<Link href={'create-episode'}>
-										<button className={`${nunito.className} ${"hover:bg-blue-700 flex items-center justify-center text-sm bg-Blue text-white px-3 py-2 mt-3 duration-150 rounded-full"}`}>
+										<button className={`${nunito.className} ${"hover:bg-blue-700 flex items-center justify-center text-sm bg-Blue text-white px-3 py-2 duration-150 rounded-full"}`}>
 											<IoAddOutline className="text-lg" />
 											<span>Create</span>
 										</button>
@@ -147,7 +133,7 @@ const YourEpisodeSection = ({ data }) => {
 										<p className="text-gray-600">There are no episodes yet</p>
 									</div> : 
 									episodes.map((episode, index) => (
-										<div index={index} key={index} className="bg-white border-[1px] p-5 rounded-xl text-sm lg:text-md justify-center truncate">
+										<div key={index} className="bg-white border-[1px] p-5 rounded-xl text-sm lg:text-md justify-center truncate">
 											<div className="flex w-full justify-between">
 												<p className="lg:ps-2 text-sm lg:text-md font-semibold truncate">{episode.title}</p>
 												<div className="flex col-span-3 space-x-1 lg:space-x-1 justify-end">
@@ -177,7 +163,7 @@ const YourEpisodeSection = ({ data }) => {
 								</div>
 							</div>
 
-							<EditPodcastModal sendPodcastModalRef={getEditPodcastModalRef} podcastId={podcasts[podcastIndex].id} setLoading={setLoading} />
+							<EditPodcastModal sendPodcastModalRef={getEditPodcastModalRef} podcastId={podcasts[podcastIndex].id} setLoading={setLoading} podcast={podcasts[podcastIndex]} />
 						</section>
 					</div> :
 					<div>
