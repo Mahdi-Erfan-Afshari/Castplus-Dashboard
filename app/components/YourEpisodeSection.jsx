@@ -8,9 +8,8 @@ import { HiOutlineTrash } from "react-icons/hi2";
 import { server } from "../lib/server";
 import { BsPerson } from "react-icons/bs";
 import LogoWhite from '@/app/img/logo CastPlus white blue.svg'
-import { FiMoreVertical } from "react-icons/fi";
 import { IoCloseOutline, IoAddOutline } from "react-icons/io5";
-import { Suspense, useRef, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Loading from "./Loading";
 import EditPodcastModal from "./EditPodcastModal";
@@ -121,7 +120,7 @@ const YourEpisodeSection = ({ data }) => {
 										</div>
 									</div>
 									<div className="mt-4">
-										<button className="hover:bg-gray-200 bg-gray-100 text-sm w-full rounded-lg py-1 px-3 duration-100" onClick={openPodcastModal}>Edit Profile</button>
+										<button className="hover:bg-gray-200 bg-gray-100 text-sm w-full rounded-lg py-[6px] px-3 duration-100" onClick={openPodcastModal}>Edit Profile</button>
 									</div>
 								</div>
 							</div>
@@ -149,7 +148,7 @@ const YourEpisodeSection = ({ data }) => {
 												</div>
 											</div>
 											<p className="text-md w-full truncate text-gray-600">{episode.description}</p>
-											<p className={`${lalezar.className} ${"px-1 pt-[2px] rounded-md mt-5  text-xs lg:text-md truncate text-blue-600 bg-blue-100 w-fit"}`}>Number of sections: {episode.count}</p>
+											<p className={`${lalezar.className} ${"px-1 pt-[2px] rounded-md mt-5  text-xs lg:text-md truncate text-blue-600 bg-blue-100 w-fit"}`}>Number of sections: {episode.sections.length}</p>
 										</div>
 									))
 								}
