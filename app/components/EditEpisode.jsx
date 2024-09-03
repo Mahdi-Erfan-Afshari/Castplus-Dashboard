@@ -31,7 +31,7 @@ const EditEpisode = ({ id, data }) => {
 
 	const episodes = session ? podcasts[podcastIndex].episodes : null;
 	const episode = session ? episodes.filter((episode) => episode.id === id )[0] : null;
-	const sections = episode.sections;
+	const sections = session ? episode.sections: null;
 
 	const addSectionModal = () => {
 		const modal = document.querySelector('#add-modal');
