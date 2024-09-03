@@ -613,140 +613,138 @@ const EditEpisode = ({ id, data }) => {
 		<>
 		{loading ? <Loading /> : <> 
 			{ session ? <div>
-				{ (session.user.email === "mahdiafshar2413@gmail.com" || session.user.email === "mr.rahimi.live@gmail.com") ? <div>
-					<div className={`${nunito.className} ${"container mx-auto flex justify-center w-full lg:mt-[100px] mt-[70px]"}`} onClick={documentClick}>
-						<div id="right-section" className="h-full w-full">
-							<div className="flex flex-col gap-y-4 lg:p-6">
-								<div className="flex flex-col w-full bg-white border-[1px] border-border-gray lg:px-6 px-4 py-6 rounded-xl">
-									<div className="">
-										<h1 className="text-xl font-bold nunito">Title</h1>
-										<div className="flex justify-between items-center border-b-2 border-border-gray px-3">
-											<p className={`${vazir.className} ${"episode-title outline-none rounded-lg text-sm pb-2 pt-0 lg:w-6/12 w-full vazir truncate"}`} type="text">{episode.title}</p>
-											<div className="hover:bg-hover-gray hover:text-gray-600 text-gray-400 p-1 rounded-md box-contect cursor-pointer mb-1" onClick={openTitleModal}><TbEdit className="text-xl"/></div>
-										</div>
-									</div>
-									<div className="mt-8">
-										<h1 className="text-xl font-bold nunito">Description</h1>
-										<div className="flex justify-between items-center border-b-2 border-border-gray px-3">
-											<p className={`${vazir.className} ${"episode-description w-full outline-none text-sm rounded-lg vazir pb-2 pt-0 truncate"}`}>{episode.description}</p>
-											<div className="hover:bg-hover-gray hover:text-gray-600 text-gray-400 p-1 rounded-md box-contect cursor-pointer mb-1" onClick={openDescriptionModal}><TbEdit className="text-xl"/></div>
-										</div>
+				<div className={`${nunito.className} ${"container mx-auto flex justify-center w-full lg:mt-[100px] mt-[70px]"}`} onClick={documentClick}>
+					<div id="right-section" className="h-full w-full">
+						<div className="flex flex-col gap-y-4 lg:p-6">
+							<div className="flex flex-col w-full bg-white border-[1px] border-border-gray lg:px-6 px-4 py-6 rounded-xl">
+								<div className="">
+									<h1 className="text-xl font-bold nunito">Title</h1>
+									<div className="flex justify-between items-center border-b-2 border-border-gray px-3">
+										<p className={`${vazir.className} ${"episode-title outline-none rounded-lg text-sm pb-2 pt-0 lg:w-6/12 w-full vazir truncate"}`} type="text">{episode.title}</p>
+										<div className="hover:bg-hover-gray hover:text-gray-600 text-gray-400 p-1 rounded-md box-contect cursor-pointer mb-1" onClick={openTitleModal}><TbEdit className="text-xl"/></div>
 									</div>
 								</div>
-								<div className="flex flex-col w-full bg-White rounded-xl border-[1px] border-border-gray-400">
-									<div className="bg-White lg:px-6 px-4 lg:py-6 py-3 border-b-[1px] border-border-gray rounded-t-xl">
-										<h1 className="text-xl font-bold nunito">Sections</h1>
+								<div className="mt-8">
+									<h1 className="text-xl font-bold nunito">Description</h1>
+									<div className="flex justify-between items-center border-b-2 border-border-gray px-3">
+										<p className={`${vazir.className} ${"episode-description w-full outline-none text-sm rounded-lg vazir pb-2 pt-0 truncate"}`}>{episode.description}</p>
+										<div className="hover:bg-hover-gray hover:text-gray-600 text-gray-400 p-1 rounded-md box-contect cursor-pointer mb-1" onClick={openDescriptionModal}><TbEdit className="text-xl"/></div>
 									</div>
-									<div id="section-details" className="flex flex-col w-full bg-white lg:px-6 py-3 rounded-b-xl">
-										{
-											sections.map((section) => (
-												<div className="section grid grid-cols-12 lg:space-x-6 lg:gap-12 gap-1 border-b-[1px] border-border-gray lg:py-6 ps-4 pe-6 py-4">
-													<div className={`${vazir.className} ${"lg:col-span-10 col-span-11"}`}>
-														<div className="grid grid-cols-12 ">
-															<div className="flex items-center justify-center col-span-1">
-																<h1 className="lg:col-span-1 lg:text-xl text-lg text-gray-600">{+section.number + 1}</h1>
-															</div>
-															<div className="col-span-11 lg:ms-0 ms-4">
-																<h1 className="text-sm sm:text-md font-semibold">{section.title}</h1>
-																<p className="text-gray-600 text-xs sm:text-sm pe-4 truncate">{section.summary}</p>
-																<p className="flex lg:hidden text-sm text-gray-600">duration: <span className="ms-1">{Math.round(section.duration / 3600)}</span> : <span> {Math.round(section.duration % 3600 / 60 )} </span>  : <span>{Math.round(section.duration % 60 )}</span></p>
-															</div>
+								</div>
+							</div>
+							<div className="flex flex-col w-full bg-White rounded-xl border-[1px] border-border-gray-400">
+								<div className="bg-White lg:px-6 px-4 lg:py-6 py-3 border-b-[1px] border-border-gray rounded-t-xl">
+									<h1 className="text-xl font-bold nunito">Sections</h1>
+								</div>
+								<div id="section-details" className="flex flex-col w-full bg-white lg:px-6 py-3 rounded-b-xl">
+									{
+										sections.map((section) => (
+											<div className="section grid grid-cols-12 lg:space-x-6 lg:gap-12 gap-1 border-b-[1px] border-border-gray lg:py-6 ps-4 pe-6 py-4">
+												<div className={`${vazir.className} ${"lg:col-span-10 col-span-11"}`}>
+													<div className="grid grid-cols-12 ">
+														<div className="flex items-center justify-center col-span-1">
+															<h1 className="lg:col-span-1 lg:text-xl text-lg text-gray-600">{+section.number + 1}</h1>
 														</div>
-													</div>
-													<div className="hidden lg:flex justify-center items-center xl:col-span-1 lg:col-span-2 col-span-1">
-														<p className="flex text-gray-600 text-md">duration: <span className="ms-1">{Math.round(section.duration / 3600)}</span> : <span> {Math.round(section.duration % 3600 / 60 )} </span>  : <span>{Math.round(section.duration % 60 )}</span></p>
-													</div>
-													<div className="section-more-body flex justify-center items-center col-span-1 relative">
-														<div className="ul-more-section-button section-more-button hover:bg-hover-gray p-2 rounded-full duration-150 cursor-pointer z-1 border-[1px] border-border-gray" onClick={sectionShowMore}>
-															<FiMoreHorizontal />
+														<div className="col-span-11 lg:ms-0 ms-4">
+															<h1 className="text-sm sm:text-md font-semibold">{section.title}</h1>
+															<p className="text-gray-600 text-xs sm:text-sm pe-4 truncate">{section.summary}</p>
+															<p className="flex lg:hidden text-sm text-gray-600">duration: <span className="ms-1">{Math.round(section.duration / 3600)}</span> : <span> {Math.round(section.duration % 3600 / 60 )} </span>  : <span>{Math.round(section.duration % 60 )}</span></p>
 														</div>
-														<ul className="section-more-menu section-more hidden absolute top-12 right-8 bg-white min-w-[200px] border-[1px] border-border-gray p-2 shadow-md rounded-xl z-10" number={section.number}>
-															<li className="hover:bg-hover-gray py-2 px-3 rounded-lg duration-150 cursor-pointer" onClick={openModal}>Edit</li>
-															<li className="hover:bg-SupLightRed text-red-600 py-2 px-3 rounded-lg duration-150 cursor-pointer" onClick={openDeleteModal}>Delete</li>
-														</ul>
 													</div>
 												</div>
-											))
-										}
-										
-										<EditSectionModal documentClickCloseModal={documentClickCloseModal} deleteTag={deleteTag}
-										addOffer={addOffer} enterHandler={enterHandler} backspace={backspace}
-										tags={sections.length !== 0 ? sections[currentIndex].tags : ''} data={data[podcastIndex]}
-										episode={episode} sections={sections} setLoading={setLoading} router={router} />
-										
-										<AddSectionModal documentClickCloseModal={documentClickCloseModal} addOffer={addOffer}
-										enterHandler={enterHandler} backspace={backspace} data={data[podcastIndex]} episode={episode}
-										sections={sections} setLoading={setLoading} router={router} />
+												<div className="hidden lg:flex justify-center items-center xl:col-span-1 lg:col-span-2 col-span-1">
+													<p className="flex text-gray-600 text-md">duration: <span className="ms-1">{Math.round(section.duration / 3600)}</span> : <span> {Math.round(section.duration % 3600 / 60 )} </span>  : <span>{Math.round(section.duration % 60 )}</span></p>
+												</div>
+												<div className="section-more-body flex justify-center items-center col-span-1 relative">
+													<div className="ul-more-section-button section-more-button hover:bg-hover-gray p-2 rounded-full duration-150 cursor-pointer z-1 border-[1px] border-border-gray" onClick={sectionShowMore}>
+														<FiMoreHorizontal />
+													</div>
+													<ul className="section-more-menu section-more hidden absolute top-12 right-8 bg-white min-w-[200px] border-[1px] border-border-gray p-2 shadow-md rounded-xl z-10" number={section.number}>
+														<li className="hover:bg-hover-gray py-2 px-3 rounded-lg duration-150 cursor-pointer" onClick={openModal}>Edit</li>
+														<li className="hover:bg-SupLightRed text-red-600 py-2 px-3 rounded-lg duration-150 cursor-pointer" onClick={openDeleteModal}>Delete</li>
+													</ul>
+												</div>
+											</div>
+										))
+									}
+									
+									<EditSectionModal documentClickCloseModal={documentClickCloseModal} deleteTag={deleteTag}
+									addOffer={addOffer} enterHandler={enterHandler} backspace={backspace}
+									tags={sections.length !== 0 ? sections[currentIndex].tags : ''} data={data[podcastIndex]}
+									episode={episode} sections={sections} setLoading={setLoading} router={router} />
+									
+									<AddSectionModal documentClickCloseModal={documentClickCloseModal} addOffer={addOffer}
+									enterHandler={enterHandler} backspace={backspace} data={data[podcastIndex]} episode={episode}
+									sections={sections} setLoading={setLoading} router={router} />
 
-										<div id="delete-modal" className="hidden modal fixed top-0 left-0 flex justify-center items-center w-full h-full bg-transparent-black-50 ms-0 z-30" onClick={documentClickCloseModal}>
-											<div className="flex flex-col justify-center items-end section-modal bg-white px-5 py-3 m-5 max-w-8xl mt-[72px] max-h-[80vh] rounded-2xl">
-												<button className="h-fit" type="button" onClick={closeDeleteModal}><IoCloseOutline className="hover:bg-hover-gray hover:text-gray-700 text-gray-400 p-1 box-content rounded-lg lg:text-2xl text-xl duration-100" /></button>
-												<div className="max-h-[60vh] overflow-y-scroll no-scrollbar">
-													<div>
-														<p className="text-lg text-gray-600">Do you want to delete section "<span className={`${vazir.className} ${"text-black"}`}></span>"?</p>
-														<p className=" text-gray-600">You will no longer be able to return it.</p>
-													</div>
-												</div>
-												<div className="flex w-full pt-3 gap-3">
-													<button className="hover:bg-gray-100 hover:text-gray-700  text-gray-500 px-5 py-2 w-1/2 rounded-md duration-100" type="button" onClick={closeDeleteModal}>Cancel</button>
-													<button className="hover:bg-red-100 hover:text-red-600 text-red-500 px-5 py-2 w-1/2 rounded-md duration-100" type="button" onClick={deleteSection}>Delete</button>
+									<div id="delete-modal" className="hidden modal fixed top-0 left-0 flex justify-center items-center w-full h-full bg-transparent-black-50 ms-0 z-30" onClick={documentClickCloseModal}>
+										<div className="flex flex-col justify-center items-end section-modal bg-white px-5 py-3 m-5 max-w-8xl mt-[72px] max-h-[80vh] rounded-2xl">
+											<button className="h-fit" type="button" onClick={closeDeleteModal}><IoCloseOutline className="hover:bg-hover-gray hover:text-gray-700 text-gray-400 p-1 box-content rounded-lg lg:text-2xl text-xl duration-100" /></button>
+											<div className="max-h-[60vh] overflow-y-scroll no-scrollbar">
+												<div>
+													<p className="text-lg text-gray-600">Do you want to delete section "<span className={`${vazir.className} ${"text-black"}`}></span>"?</p>
+													<p className=" text-gray-600">You will no longer be able to return it.</p>
 												</div>
 											</div>
-										</div>
-										<div id="section-deleted-modal" className="hidden section-deleted-modal modal fixed top-0 left-0 flex justify-center w-full">
-											<div className="flex flex-col justify-center items-end section-modal bg-transparent-black-10 backdrop-blur-sm px-5 py-2 m-5 max-w-8xl mt-[72px] max-h-[80vh] shadow-md rounded-full">
-												<div className="flex items-center space-x-2">
-													<PiWarningCircle className="text-gray-600 text-lg" />
-													<p className="text-lg text-gray-600">Section "<span className={`${vazir.className} ${"text-black"}`}></span>" was deleted.</p>
-												</div>
-											</div>
-										</div>
-										<div id="edit-title-modal" className="hidden modal fixed top-0 left-0 flex justify-center items-center w-full h-full bg-transparent-black-50 ms-0 z-30" onClick={documentClickCloseModal}>
-											<div className="flex flex-col justify-center items-end section-modal bg-white px-5 py-3 m-5 max-w-8xl mt-[72px] max-h-[80vh] lg:w-5/12 w-full rounded-2xl">
-												<button className="h-fit" type="button" onClick={closeTitleModal}><IoCloseOutline className="hover:bg-hover-gray hover:text-gray-700 text-gray-400 p-1 box-content rounded-lg lg:text-2xl text-xl duration-100" /></button>
-												<div className="felx w-full max-h-[60vh] overflow-y-scroll no-scrollbar">
-													<div className="flex justify-between items-center">
-														<h1 className="text-lg font-bold nunito">Title</h1>
-													</div>
-													<input id="edit-title-input" className="outline-none bg-[#f7f7f794] border-2 border-gray-150 rounded-lg text-sm py-2 px-4 w-full vazir" type="text" />
-												</div>
-												<div className="flex w-full justify-end pt-3 gap-3">
-													<button className="hover:text-gray-700 bg-gray-100 text-gray-500 border-[1px] border-gray-300 px-5 py-1 rounded-lg duration-100" type="button" onClick={closeTitleModal}>Cancel</button>
-													<button className="bg-Blue text-white px-6 py-1 rounded-lg" type="button" onClick={editEpisodeTitle}>Save</button>
-												</div>
-											</div>
-										</div>
-										<div id="edit-description-modal" className="hidden modal fixed top-0 left-0 flex justify-center items-center w-full h-full bg-transparent-black-50 ms-0 z-30" onClick={documentClickCloseModal}>
-											<div className="flex flex-col justify-center items-end section-modal bg-white px-5 py-3 m-5 max-w-8xl mt-[72px] max-h-[80vh] lg:w-5/12 w-full rounded-2xl">
-												<button className="h-fit" type="button" onClick={closeDescriptionModal}><IoCloseOutline className="hover:bg-hover-gray hover:text-gray-700 text-gray-400 p-1 box-content rounded-lg lg:text-2xl text-xl duration-100" /></button>
-												<div className="felx w-full max-h-[60vh] overflow-y-scroll no-scrollbar">
-												<h1 className="text-xl font-bold nunito">Description</h1>
-													<div className="w-full">
-														<textarea id="edit-description-input" className="min-h-[150px] w-full bg-[#f7f7f794] resize-none outline-none text-sm border-2 border-gray-150 rounded-lg vazir p-3" rows="2" ></textarea>
-													</div>
-												</div>
-												<div className="flex w-full justify-end pt-3 gap-3">
-													<button className="hover:text-gray-700 bg-gray-100 text-gray-500 border-[1px] border-gray-300 px-5 py-1 rounded-lg duration-100" type="button" onClick={closeDescriptionModal}>Cancel</button>
-													<button className="bg-Blue text-white px-6 py-1 rounded-lg" type="button" onClick={editEpisodeDescription}>Save</button>
-												</div>
-											</div>
-										</div>
-										<div className="relative flex flex-col justify-center items-center text-gray-300 w-full px-4 py-2 rounded-lg ">
-											<div className="flex justify-center add-button ">
-												<IoAddOutline className="hover:bg-gray-100 hover:text-gray-400 hover:border-gray-400 border-[2px] border-border-gray text-4xl rounded-full duration-100 cursor-pointer mt-3" onClick={addSectionModal} />
-												<span className="tooltip absolute top-[-24px] rounded-md px-2 py-[5px] bg-gray-500 text-white z-2">click to add section</span>
-												<span className="tooltip w-1 h-4 absolute top-[0px] rotate-45 rounded px-2 py-1 bg-gray-500 z-1"></span>
+											<div className="flex w-full pt-3 gap-3">
+												<button className="hover:bg-gray-100 hover:text-gray-700  text-gray-500 px-5 py-2 w-1/2 rounded-md duration-100" type="button" onClick={closeDeleteModal}>Cancel</button>
+												<button className="hover:bg-red-100 hover:text-red-600 text-red-500 px-5 py-2 w-1/2 rounded-md duration-100" type="button" onClick={deleteSection}>Delete</button>
 											</div>
 										</div>
 									</div>
+									<div id="section-deleted-modal" className="hidden section-deleted-modal modal fixed top-0 left-0 flex justify-center w-full">
+										<div className="flex flex-col justify-center items-end section-modal bg-transparent-black-10 backdrop-blur-sm px-5 py-2 m-5 max-w-8xl mt-[72px] max-h-[80vh] shadow-md rounded-full">
+											<div className="flex items-center space-x-2">
+												<PiWarningCircle className="text-gray-600 text-lg" />
+												<p className="text-lg text-gray-600">Section "<span className={`${vazir.className} ${"text-black"}`}></span>" was deleted.</p>
+											</div>
+										</div>
+									</div>
+									<div id="edit-title-modal" className="hidden modal fixed top-0 left-0 flex justify-center items-center w-full h-full bg-transparent-black-50 ms-0 z-30" onClick={documentClickCloseModal}>
+										<div className="flex flex-col justify-center items-end section-modal bg-white px-5 py-3 m-5 max-w-8xl mt-[72px] max-h-[80vh] lg:w-5/12 w-full rounded-2xl">
+											<button className="h-fit" type="button" onClick={closeTitleModal}><IoCloseOutline className="hover:bg-hover-gray hover:text-gray-700 text-gray-400 p-1 box-content rounded-lg lg:text-2xl text-xl duration-100" /></button>
+											<div className="felx w-full max-h-[60vh] overflow-y-scroll no-scrollbar">
+												<div className="flex justify-between items-center">
+													<h1 className="text-lg font-bold nunito">Title</h1>
+												</div>
+												<input id="edit-title-input" className="outline-none bg-[#f7f7f794] border-2 border-gray-150 rounded-lg text-sm py-2 px-4 w-full vazir" type="text" />
+											</div>
+											<div className="flex w-full justify-end pt-3 gap-3">
+												<button className="hover:text-gray-700 bg-gray-100 text-gray-500 border-[1px] border-gray-300 px-5 py-1 rounded-lg duration-100" type="button" onClick={closeTitleModal}>Cancel</button>
+												<button className="bg-Blue text-white px-6 py-1 rounded-lg" type="button" onClick={editEpisodeTitle}>Save</button>
+											</div>
+										</div>
+									</div>
+									<div id="edit-description-modal" className="hidden modal fixed top-0 left-0 flex justify-center items-center w-full h-full bg-transparent-black-50 ms-0 z-30" onClick={documentClickCloseModal}>
+										<div className="flex flex-col justify-center items-end section-modal bg-white px-5 py-3 m-5 max-w-8xl mt-[72px] max-h-[80vh] lg:w-5/12 w-full rounded-2xl">
+											<button className="h-fit" type="button" onClick={closeDescriptionModal}><IoCloseOutline className="hover:bg-hover-gray hover:text-gray-700 text-gray-400 p-1 box-content rounded-lg lg:text-2xl text-xl duration-100" /></button>
+											<div className="felx w-full max-h-[60vh] overflow-y-scroll no-scrollbar">
+											<h1 className="text-xl font-bold nunito">Description</h1>
+												<div className="w-full">
+													<textarea id="edit-description-input" className="min-h-[150px] w-full bg-[#f7f7f794] resize-none outline-none text-sm border-2 border-gray-150 rounded-lg vazir p-3" rows="2" ></textarea>
+												</div>
+											</div>
+											<div className="flex w-full justify-end pt-3 gap-3">
+												<button className="hover:text-gray-700 bg-gray-100 text-gray-500 border-[1px] border-gray-300 px-5 py-1 rounded-lg duration-100" type="button" onClick={closeDescriptionModal}>Cancel</button>
+												<button className="bg-Blue text-white px-6 py-1 rounded-lg" type="button" onClick={editEpisodeDescription}>Save</button>
+											</div>
+										</div>
+									</div>
+									<div className="relative flex flex-col justify-center items-center text-gray-300 w-full px-4 py-2 rounded-lg ">
+										<div className="flex justify-center add-button ">
+											<IoAddOutline className="hover:bg-gray-100 hover:text-gray-400 hover:border-gray-400 border-[2px] border-border-gray text-4xl rounded-full duration-100 cursor-pointer mt-3" onClick={addSectionModal} />
+											<span className="tooltip absolute top-[-24px] rounded-md px-2 py-[5px] bg-gray-500 text-white z-2">click to add section</span>
+											<span className="tooltip w-1 h-4 absolute top-[0px] rotate-45 rounded px-2 py-1 bg-gray-500 z-1"></span>
+										</div>
+									</div>
 								</div>
-								<div className="flex w-full justify-end px-6 py-3 gap-3">
-									<Link href='/'><button className="flex items-center justify-between hover:text-gray-700 bg-gray-100 text-gray-500 border-[1px] border-gray-300 px-6 py-2 rounded-lg duration-100"><IoIosArrowRoundBack className="text-2xl" /> Back</button></Link>
-								</div>
+							</div>
+							<div className="flex w-full justify-end px-6 py-3 gap-3">
+								<Link href='/'><button className="flex items-center justify-between hover:text-gray-700 bg-gray-100 text-gray-500 border-[1px] border-gray-300 px-6 py-2 rounded-lg duration-100"><IoIosArrowRoundBack className="text-2xl" /> Back</button></Link>
 							</div>
 						</div>
 					</div>
-				</div> : <div className="flex justify-center items-center w-full h-[100vh]">You are not allowed to access this page.</div> }
+				</div>
 			</div> : <div className="flex justify-center items-center w-full h-[100vh]">Please Sign In</div> }
 		</> }
 	</>
