@@ -9,8 +9,8 @@ export async function GET(req) {
 }
 
 export async function PUT(request){
-	const client = await clientPromise
-	let db = client.db('castplus')
+	const client = await clientPromise;
+	let db = client.db('castplus');
 	const data = await request.json();
 	const { id } = data;
 	const { podcastName } = data;

@@ -23,7 +23,6 @@ const EditPodcastModal = ({ sendPodcastModalRef, podcastId, setLoading, podcast 
 	const closePodcastModal = () => {
 		const editPodcastModal = editPodcastModalRef.current;
 		editPodcastModal.classList.add('hidden');
-		console.log('closePodcastModal');
 	}
 
 	const editPodcast = async () => {
