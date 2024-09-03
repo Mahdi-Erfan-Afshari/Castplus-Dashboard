@@ -96,7 +96,8 @@ const YourEpisodeSection = ({ data }) => {
 								<div className='relative flex flex-col py-3 px-6'>
 									<div className='relative flex space-x-3'>
 										<div className='w-20 h-20'>
-											{ podcasts[podcastIndex].thumbnail !== '' ? <Image className='rounded-full w-full h-full object-cover' src={podcasts[podcastIndex].thumbnail} alt='podcast logo' width='300' height='300'/> : <BsPerson className="text-7xl" /> }
+											{ podcasts[podcastIndex].thumbnail !== '' ? <Image className='rounded-full w-full h-full object-cover' src={podcasts[podcastIndex].thumbnail} alt='podcast logo' width='300' height='300'/> : 
+											<div className="flex items-center justify-center w-20 h-20 rounded-full bg-gray-200"><BsPerson className="text-5xl text-gray-600" /></div> }
 										</div>
 										<div className='flex flex-col items-center justify-center'>
 											<div className='relative flex items-center space-x-2'>
